@@ -5,7 +5,7 @@ publish_to: 'none'
 version: 8.0.12+309
 
 environment:
-  sdk: '>=3.10.1 <4.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   flutter:
@@ -103,7 +103,7 @@ dependencies:
   integral_isolates: ^0.5.1
   screen_brightness: ^2.1.7
   crypto: ^3.0.7
-  csv: ^8.0.0
+  csv: ^6.0.0
   dotted_border: ^3.1.0
   j_downloader:
     git: https://github.com/jiangtian616/JDownloader
