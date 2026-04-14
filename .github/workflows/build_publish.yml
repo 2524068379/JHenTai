@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FLUTTER_VERSION: 3.41.6
+      GRADLE_OPTS: -Xmx4g
     outputs:
       version: ${{ steps.get_version.outputs.version }}
     steps:
