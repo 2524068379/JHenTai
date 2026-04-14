@@ -132,7 +132,7 @@ class TagSearchOrderOptimizationService with JHLifeCircleBeanErrorCatch implemen
       rows = await compute(
         (List<int> bytes) async {
           String csv = utf8.decode(bytes);
-          return const CsvToListConverter(eol: '\n', textDelimiter: '\'', allowInvalid: false).convert(csv);
+          return Csv().decode(csv);
         },
         bytes,
       );
