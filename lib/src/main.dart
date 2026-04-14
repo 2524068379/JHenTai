@@ -1,4 +1,3 @@
-import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -23,11 +22,9 @@ import 'package:jhentai/src/service/quick_search_service.dart';
 import 'package:jhentai/src/service/schedule_service.dart';
 import 'package:jhentai/src/service/search_history_service.dart';
 import 'package:jhentai/src/service/storage_service.dart';
-import 'package:jhentai/src/service/super_resolution_service.dart';
 import 'package:jhentai/src/service/tag_search_order_service.dart';
 import 'package:jhentai/src/service/tag_translation_service.dart';
 import 'package:jhentai/src/service/volume_service.dart';
-import 'package:jhentai/src/service/windows_service.dart';
 import 'package:jhentai/src/setting/advanced_setting.dart';
 import 'package:jhentai/src/setting/archive_bot_setting.dart';
 import 'package:jhentai/src/setting/download_setting.dart';
@@ -75,11 +72,9 @@ List<JHLifeCircleBean> lifeCircleBeans = [
   scheduleService,
   searchHistoryService,
   storageService,
-  superResolutionService,
   tagTranslationService,
   tagSearchOrderOptimizationService,
   volumeService,
-  windowService,
   advancedSetting,
   downloadSetting,
   archiveBotSetting,
@@ -100,10 +95,6 @@ List<JHLifeCircleBean> lifeCircleBeans = [
 ];
 
 void main(List<String> args) async {
-  if (GetPlatform.isDesktop && runWebViewTitleBarWidget(args)) {
-    return;
-  }
-
   WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(

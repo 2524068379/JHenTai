@@ -8,7 +8,6 @@ import 'package:jhentai/src/pages/gallery_image/gallery_image_page.dart';
 import 'package:jhentai/src/pages/gallerys/dashboard/dashboard_page.dart';
 import 'package:jhentai/src/pages/history/history_page.dart';
 import 'package:jhentai/src/pages/gallerys/simple/gallerys_page.dart';
-import 'package:jhentai/src/pages/layout/desktop/desktop_home_page.dart';
 import 'package:jhentai/src/pages/lock_page.dart';
 import 'package:jhentai/src/pages/popular/popular_page.dart';
 import 'package:jhentai/src/pages/ranklist/ranklist_page.dart';
@@ -44,12 +43,9 @@ import 'package:jhentai/src/setting/preference_setting.dart';
 import '../pages/blank_page.dart';
 import '../pages/details/comment/comment_page.dart';
 import '../pages/favorite/favorite_page.dart';
-import '../pages/layout/mobile_v2/mobile_layout_page_v2.dart';
-import '../pages/search/desktop/desktop_search_page.dart';
 import '../pages/setting/account/setting_account_page.dart';
 import '../pages/setting/advanced/loglist/log/log_page.dart';
 import '../pages/setting/advanced/loglist/log_list_page.dart';
-import '../pages/setting/advanced/super_resolution/setting_super_resolution_page.dart';
 import '../pages/setting/download/archive_bot/archive_bot_settings_page.dart';
 import '../pages/setting/preference/block_rule/add_block_rule/configure_blocking_rule_page.dart';
 import '../pages/setting/style/page_list_style/setting_page_list_style_page.dart';
@@ -65,9 +61,6 @@ class Routes {
   static const String read = "/read";
   static const String singleImagePage = "/single_image_page";
 
-  /// left
-  static const String desktopHome = "/desktop_home";
-  static const String mobileLayoutV2 = "/mobile_layout_v2";
   static const String gallerys = "/gallerys";
   static const String dashboard = "/dashboard";
   static const String popular = "/popular";
@@ -77,11 +70,9 @@ class Routes {
   static const String history = "/history";
   static const String download = "/download";
   static const String setting = "/setting";
-  static const String desktopSearch = "/desktop_search";
   static const String mobileV2Search = "/mobile_v2_search";
   static const String downloadSearch = "/download_search";
 
-  /// right
   static const String details = "/details";
   static const String comment = "/comment";
   static const String thumbnails = "/thumbnails";
@@ -121,8 +112,6 @@ class Routes {
 
   static const String extraGalleryScanPath = "/setting_download/extraGalleryScanPath";
   static const String archiveBotSettings = '/setting/download/archive_bot';
-
-  static const String superResolution = "/setting_advanced/superResolution";
   static const String logList = "/setting_advanced/logList";
   static const String log = "/setting_advanced/logList/log";
 
@@ -135,50 +124,32 @@ class Routes {
       name: home,
       page: () => const HomePage(),
       transition: Transition.fade,
-      side: Side.fullScreen,
     ),
     EHPage(
       name: lock,
       page: () => const LockPage(),
       transition: Transition.fade,
-      side: Side.fullScreen,
       popGesture: false,
     ),
     EHPage(
       name: blank,
       page: () => const BlankPage(),
       transition: defaultTransition,
-      side: Side.right,
     ),
     EHPage(
       name: read,
       page: () => ReadPage(),
       transition: defaultTransition,
-      side: Side.fullScreen,
     ),
     EHPage(
       name: gallerys,
       page: () => const GallerysPage(),
       transition: defaultTransition,
-      side: Side.left,
     ),
     EHPage(
       name: dashboard,
       page: () => const DashboardPage(),
       transition: defaultTransition,
-      side: Side.left,
-    ),
-    EHPage(
-      name: desktopHome,
-      page: () => DesktopHomePage(),
-      transition: defaultTransition,
-      side: Side.left,
-    ),
-    EHPage(
-      name: mobileLayoutV2,
-      page: () => MobileLayoutPageV2(),
-      transition: defaultTransition,
-      side: Side.left,
     ),
     EHPage(
       name: details,
@@ -194,61 +165,46 @@ class Routes {
       name: popular,
       page: () => PopularPage(showTitle: true, name: 'popular'.tr),
       transition: defaultTransition,
-      side: Side.left,
     ),
     EHPage(
       name: ranklist,
       page: () => const RanklistPage(),
       transition: defaultTransition,
-      side: Side.left,
     ),
     EHPage(
       name: favorite,
       page: () => const FavoritePage(),
       transition: defaultTransition,
-      side: Side.left,
     ),
     EHPage(
       name: setting,
       page: () => const SettingPage(),
       transition: defaultTransition,
-      side: Side.left,
     ),
     EHPage(
       name: watched,
       page: () => const WatchedPage(),
       transition: defaultTransition,
-      side: Side.left,
     ),
     EHPage(
       name: history,
       page: () => HistoryPage(),
       transition: defaultTransition,
-      side: Side.left,
     ),
     EHPage(
       name: download,
       page: () => const DownloadPage(),
       transition: defaultTransition,
-      side: Side.left,
-    ),
-    EHPage(
-      name: desktopSearch,
-      page: () => const DesktopSearchPage(),
-      transition: defaultTransition,
-      side: Side.left,
     ),
     EHPage(
       name: mobileV2Search,
       page: () => SearchPageMobileV2(),
       transition: defaultTransition,
-      side: Side.left,
     ),
     EHPage(
       name: downloadSearch,
       page: () => DownloadSearchPage(),
       transition: defaultTransition,
-      side: Side.left,
     ),
     EHPage(
       name: singleImagePage,
@@ -401,12 +357,6 @@ class Routes {
     EHPage(
       name: archiveBotSettings,
       page: () => const ArchiveBotSettingsPage().withEscOrFifthButton2BackRightRoute(),
-      transition: defaultTransition,
-      offAllBefore: false,
-    ),
-    EHPage(
-      name: superResolution,
-      page: () => const SettingSuperResolutionPage().withEscOrFifthButton2BackRightRoute(),
       transition: defaultTransition,
       offAllBefore: false,
     ),

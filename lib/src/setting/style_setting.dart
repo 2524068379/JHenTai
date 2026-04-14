@@ -1,8 +1,5 @@
 import 'dart:convert';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:jhentai/src/config/ui_config.dart';
 import 'package:jhentai/src/enum/config_enum.dart';
 import 'package:jhentai/src/service/jh_service.dart';
@@ -23,11 +20,7 @@ class StyleSetting with JHLifeCircleBeanWithConfigStorage implements JHLifeCircl
   RxnInt crossAxisCountInDetailPage = RxnInt(null);
   RxMap<String, ListMode> pageListMode = <String, ListMode>{}.obs;
   RxBool moveCover2RightSide = false.obs;
-  Rx<LayoutMode> layout = PlatformDispatcher.instance.views.first.physicalSize.width / PlatformDispatcher.instance.views.first.devicePixelRatio < 600
-      ? LayoutMode.mobileV2.obs
-      : GetPlatform.isDesktop
-          ? LayoutMode.desktop.obs
-          : LayoutMode.tabletV2.obs;
+  Rx<LayoutMode> layout = LayoutMode.mobileV2.obs;
 
   bool get isInWaterFlowListMode =>
       listMode.value == ListMode.waterfallFlowBig || listMode.value == ListMode.waterfallFlowSmall || listMode.value == ListMode.waterfallFlowMedium;
@@ -38,22 +31,13 @@ class StyleSetting with JHLifeCircleBeanWithConfigStorage implements JHLifeCircl
           ? Brightness.light
           : Brightness.dark;
 
-  /// If the current window width is too small, App will degrade to mobile mode. Use [actualLayout] to indicate actual layout.
-  LayoutMode actualLayout = PlatformDispatcher.instance.views.first.physicalSize.width / PlatformDispatcher.instance.views.first.devicePixelRatio < 600
-      ? LayoutMode.mobileV2
-      : GetPlatform.isDesktop
-          ? LayoutMode.desktop
-          : LayoutMode.tabletV2;
+  LayoutMode actualLayout = LayoutMode.mobileV2;
 
-  bool get isInMobileLayout => actualLayout == LayoutMode.mobileV2 || actualLayout == LayoutMode.mobile;
-
-  bool get isInTabletLayout => actualLayout == LayoutMode.tabletV2 || actualLayout == LayoutMode.tablet;
-
-  bool get isInV1Layout => actualLayout == LayoutMode.mobile || actualLayout == LayoutMode.tablet;
-
-  bool get isInV2Layout => actualLayout == LayoutMode.mobileV2 || actualLayout == LayoutMode.tabletV2;
-
-  bool get isInDesktopLayout => actualLayout == LayoutMode.desktop;
+  bool get isInMobileLayout => true;
+  bool get isInTabletLayout => false;
+  bool get isInV1Layout => false;
+  bool get isInV2Layout => true;
+  bool get isInDesktopLayout => false;
 
   @override
   ConfigEnum get configEnum => ConfigEnum.styleSetting;
@@ -72,17 +56,8 @@ class StyleSetting with JHLifeCircleBeanWithConfigStorage implements JHLifeCircl
     crossAxisCountInDetailPage.value = map['crossAxisCountInDetailPage'];
     pageListMode.value = Map.from(map['pageListMode']?.map((route, listModeIndex) => MapEntry(route, ListMode.values[listModeIndex])) ?? {});
     moveCover2RightSide.value = map['moveCover2RightSide'] ?? moveCover2RightSide.value;
-    layout.value = LayoutMode.values[map['layout'] ?? layout.value.index];
-
-    /// old layout has been removed in v5.0.0
-    if (isInV1Layout) {
-      layout = PlatformDispatcher.instance.views.first.physicalSize.width / PlatformDispatcher.instance.views.first.devicePixelRatio < 600
-          ? LayoutMode.mobileV2.obs
-          : GetPlatform.isDesktop
-              ? LayoutMode.desktop.obs
-              : LayoutMode.tabletV2.obs;
-    }
-    actualLayout = layout.value;
+    layout.value = LayoutMode.mobileV2;
+    actualLayout = LayoutMode.mobileV2;
   }
 
   @override

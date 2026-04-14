@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:get/get.dart';
 import 'package:jhentai/src/enum/config_enum.dart';
@@ -24,7 +23,7 @@ class ReadSetting with JHLifeCircleBeanWithConfigStorage implements JHLifeCircle
   RxBool enableTapDragToScaleUp = false.obs;
   RxBool enableBottomMenu = false.obs;
   Rx<DeviceDirection> deviceDirection = DeviceDirection.followSystem.obs;
-  Rx<ReadDirection> readDirection = GetPlatform.isMobile ? ReadDirection.top2bottomList.obs : ReadDirection.left2rightList.obs;
+  Rx<ReadDirection> readDirection = ReadDirection.top2bottomList.obs;
   RxBool notchOptimization = false.obs;
   RxInt imageRegionWidthRatio = 100.obs;
   RxInt gestureRegionWidthRatio = 60.obs;
@@ -34,16 +33,13 @@ class ReadSetting with JHLifeCircleBeanWithConfigStorage implements JHLifeCircle
   Rx<AutoModeStyle> autoModeStyle = AutoModeStyle.turnPage.obs;
   Rx<TurnPageMode> turnPageMode = TurnPageMode.adaptive.obs;
   RxInt preloadDistance = 1.obs;
-  RxInt preloadDistanceLocal = GetPlatform.isIOS ? 3.obs : 8.obs;
+  RxInt preloadDistanceLocal = 8.obs;
   RxInt preloadPageCount = 1.obs;
   RxInt preloadPageCountLocal = 3.obs;
   RxBool displayFirstPageAlone = true.obs;
   RxBool reverseTurnPageDirection = false.obs;
   RxBool disablePageTurningOnTap = false.obs;
-  RxBool enableMaxImageKilobyte =
-      (GetPlatform.isDesktop || PlatformDispatcher.instance.views.first.physicalSize.width / PlatformDispatcher.instance.views.first.devicePixelRatio >= 600)
-          ? false.obs
-          : true.obs;
+  RxBool enableMaxImageKilobyte = true.obs;
   RxInt maxImageKilobyte = (1024 * 5).obs;
 
   bool get isInListReadDirection =>

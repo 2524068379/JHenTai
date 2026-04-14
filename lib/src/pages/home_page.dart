@@ -7,33 +7,17 @@ import 'package:jhentai/src/model/gallery_image_page_url.dart';
 import 'package:jhentai/src/model/gallery_url.dart';
 import 'package:jhentai/src/pages/details/details_page_logic.dart';
 import 'package:jhentai/src/pages/gallery_image/gallery_image_page_logic.dart';
-import 'package:jhentai/src/pages/layout/desktop/desktop_layout_page.dart';
 import 'package:jhentai/src/pages/layout/mobile_v2/mobile_layout_page_v2.dart';
-import 'package:jhentai/src/pages/layout/tablet_v2/tablet_layout_page_v2.dart';
 import 'package:jhentai/src/setting/style_setting.dart';
 import 'package:jhentai/src/setting/user_setting.dart';
 import 'package:jhentai/src/service/log.dart';
 import 'package:jhentai/src/utils/toast_util.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
-import 'package:window_manager/window_manager.dart';
-
-import '../mixin/window_widget_mixin.dart';
 import '../mixin/login_required_logic_mixin.dart';
-import '../model/jh_layout.dart';
 import '../routes/routes.dart';
 import '../setting/advanced_setting.dart';
 import '../utils/route_util.dart';
-import '../utils/screen_size_util.dart';
 import '../utils/snack_util.dart';
-
-const int left = 1;
-const int right = 2;
-const int fullScreen = 3;
-const int leftV2 = 4;
-const int rightV2 = 5;
-
-Routing leftRouting = Routing();
-Routing rightRouting = Routing();
 
 /// Core widget to decide which layout to be applied
 class HomePage extends StatefulWidget {
@@ -43,7 +27,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with LoginRequiredMixin, WindowListener, WindowWidgetMixin {
+class _HomePageState extends State<HomePage> with LoginRequiredMixin {
   StreamSubscription? _intentDataStreamSubscription;
   String? _lastDetectedText;
 
@@ -68,32 +52,11 @@ class _HomePageState extends State<HomePage> with LoginRequiredMixin, WindowList
 
   @override
   Widget build(BuildContext context) {
-    return buildWindow(
-      child: LayoutBuilder(
-        builder: (_, __) => Obx(
-          () {
-            if (styleSetting.layout.value == LayoutMode.mobileV2 || styleSetting.layout.value == LayoutMode.mobile) {
-              styleSetting.actualLayout = LayoutMode.mobileV2;
-              return MobileLayoutPageV2();
-            }
-
-            /// Device width is under 600, degrade to mobileV2 layout.
-            if (fullScreenWidth < 600) {
-              styleSetting.actualLayout = LayoutMode.mobileV2;
-              untilRoute2BlankPage();
-              return MobileLayoutPageV2();
-            }
-
-            if (styleSetting.layout.value == LayoutMode.tabletV2 || styleSetting.layout.value == LayoutMode.tablet) {
-              styleSetting.actualLayout = LayoutMode.tabletV2;
-              return TabletLayoutPageV2();
-            }
-
-            styleSetting.actualLayout = LayoutMode.desktop;
-            return DesktopLayoutPage();
-          },
-        ),
-      ),
+    return Obx(
+      () {
+        styleSetting.actualLayout = LayoutMode.mobileV2;
+        return MobileLayoutPageV2();
+      },
     );
   }
 

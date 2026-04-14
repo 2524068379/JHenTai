@@ -54,9 +54,8 @@ class _SettingDownloadPageState extends State<SettingDownloadPage> {
             padding: const EdgeInsets.only(top: 16),
             children: [
               _buildDownloadPath(),
-              if (!GetPlatform.isIOS) _buildResetDownloadPath(),
+              _buildResetDownloadPath(),
               _buildExtraGalleryScanPath(),
-              if (GetPlatform.isDesktop) _buildSingleImageSavePath(),
               _buildDownloadOriginalImage(),
               _buildDefaultGalleryGroup(context),
               _buildDefaultArchiveGroup(context),
@@ -82,11 +81,7 @@ class _SettingDownloadPageState extends State<SettingDownloadPage> {
       title: Text('downloadPath'.tr),
       subtitle: Text(downloadSetting.downloadPath.value.breakWord),
       trailing: changeDownloadPathState == LoadingState.loading ? const CupertinoActivityIndicator() : null,
-      onTap: () {
-        if (!GetPlatform.isIOS) {
-          toast('changeDownloadPathHint'.tr, isShort: false);
-        }
-      },
+      onTap: () => toast('changeDownloadPathHint'.tr, isShort: false),
       onLongPress: _handleChangeDownloadPath,
     );
   }
@@ -105,15 +100,6 @@ class _SettingDownloadPageState extends State<SettingDownloadPage> {
       subtitle: Text('extraGalleryScanPathHint'.tr),
       trailing: const Icon(Icons.keyboard_arrow_right),
       onTap: () => toRoute(Routes.extraGalleryScanPath),
-    );
-  }
-
-  Widget _buildSingleImageSavePath() {
-    return ListTile(
-      title: Text('singleImageSavePath'.tr),
-      subtitle: Text(downloadSetting.singleImageSavePath.value.breakWord),
-      trailing: GetPlatform.isMacOS ? null : const Icon(Icons.keyboard_arrow_right),
-      onTap: GetPlatform.isMacOS ? null : _handleChangeSingleImageSavePath,
     );
   }
 
@@ -328,10 +314,6 @@ class _SettingDownloadPageState extends State<SettingDownloadPage> {
       return;
     }
 
-    if (GetPlatform.isIOS) {
-      return;
-    }
-
     await requestStoragePermission();
 
     String oldDownloadPath = downloadSetting.downloadPath.value;
@@ -413,30 +395,6 @@ class _SettingDownloadPageState extends State<SettingDownloadPage> {
       }
     }
     await Future.wait(futures);
-  }
-
-  Future<void> _handleChangeSingleImageSavePath() async {
-    String oldPath = downloadSetting.singleImageSavePath.value;
-    String? newPath;
-
-    /// choose new path
-    try {
-      newPath = await FilePicker.platform.getDirectoryPath();
-    } on Exception catch (e) {
-      log.error('Pick single image save path failed', e);
-    }
-
-    if (newPath == null || newPath == oldPath) {
-      return;
-    }
-
-    /// check permission
-    if (!checkPermissionForPath(newPath)) {
-      toast('invalidPath'.tr, isShort: false);
-      return;
-    }
-
-    downloadSetting.saveSingleImageSavePath(newPath);
   }
 
   Future<void> _restore() async {

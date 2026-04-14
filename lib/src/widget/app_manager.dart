@@ -129,7 +129,7 @@ class _AppManagerState extends State<AppManager> with WidgetsBindingObserver {
       child: inBlur
           ? Blur(
               blur: 100,
-              blurColor: GetPlatform.isAndroid ? Colors.white : Colors.grey.shade600,
+              blurColor: Colors.white,
               colorOpacity: 1,
               child: widget.child,
             )
@@ -196,7 +196,7 @@ class _AppManagerState extends State<AppManager> with WidgetsBindingObserver {
   /// for Android, blur is invalid when switch app to background(app is still clearly visible in switcher),
   /// so i choose to set FLAG_SECURE to do the same effect.
   void _addSecureFlagForAndroid(BuildContext context) {
-    if (GetPlatform.isAndroid && (securitySetting.enableAuthOnResume.isTrue || securitySetting.enableBlur.isTrue)) {
+    if (securitySetting.enableAuthOnResume.isTrue || securitySetting.enableBlur.isTrue) {
       FlutterWindowManagerPlus.addFlags(FlutterWindowManagerPlus.FLAG_SECURE);
     }
   }

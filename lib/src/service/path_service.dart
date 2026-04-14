@@ -11,11 +11,7 @@ class PathService with JHLifeCircleBeanErrorCatch implements JHLifeCircleBean {
   /// visible for all
   late Directory tempDir;
 
-  /// visible on ios&windows&macos
   Directory? appDocDir;
-
-  /// visible on windows
-  Directory? appSupportDir;
 
   /// visible on android
   Directory? externalStorageDir;
@@ -30,7 +26,6 @@ class PathService with JHLifeCircleBeanErrorCatch implements JHLifeCircleBean {
     await Future.wait([
       getTemporaryDirectory().then((value) => tempDir = value),
       getApplicationDocumentsDirectory().then((value) => appDocDir = value).catchError((error) => null),
-      getApplicationSupportDirectory().then((value) => appSupportDir = value).catchError((error) => null),
       getExternalStorageDirectory().then((value) => externalStorageDir = value).catchError((error) => null),
       getDownloadsDirectory().then((value) => systemDownloadDir = value).catchError((error) => null),
     ]);
@@ -43,12 +38,6 @@ class PathService with JHLifeCircleBeanErrorCatch implements JHLifeCircleBean {
     if (Platform.isAndroid && externalStorageDir != null) {
       return externalStorageDir!;
     }
-    if (GetPlatform.isWindows && appSupportDir != null) {
-      return appSupportDir!;
-    }
-    if (GetPlatform.isLinux && appSupportDir != null) {
-      return appSupportDir!;
-    }
-    return appDocDir ?? appSupportDir ?? systemDownloadDir!;
+    return appDocDir ?? systemDownloadDir!;
   }
 }

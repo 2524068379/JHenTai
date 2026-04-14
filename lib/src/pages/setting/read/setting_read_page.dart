@@ -1,4 +1,3 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -26,14 +25,14 @@ class SettingReadPage extends StatelessWidget {
           child: ListView(
             padding: const EdgeInsets.only(top: 16),
             children: [
-              if (GetPlatform.isMobile || GetPlatform.isWindows) _buildEnableImmersiveMode().center(),
+              _buildEnableImmersiveMode().center(),
               _buildKeepScreenAwake().center(),
-              if (GetPlatform.isMobile) _buildEnableCustomReadBrightness().center(),
-              if (GetPlatform.isMobile) _buildCustomReadBrightness().center(),
+              _buildEnableCustomReadBrightness().center(),
+              _buildCustomReadBrightness().center(),
               _buildShowThumbnails().center(),
               _buildShowScrollBar().center(),
               _buildShowStatusInfo().center(),
-              if (GetPlatform.isAndroid) _buildEnablePageTurnByVolumeKeys().center(),
+              _buildEnablePageTurnByVolumeKeys().center(),
               _buildEnablePageTurnAnime().center(),
               _buildEnableDoubleTapToScaleUp().center(),
               _buildEnableTapDragToScaleUp().center(),
@@ -43,11 +42,9 @@ class SettingReadPage extends StatelessWidget {
               _buildEnableImageMaxKilobytes().center(),
               if (readSetting.enableMaxImageKilobyte.isTrue) _buildImageMaxKilobytes(context).fadeIn(const Key('imageMaxKilobytes')).center(),
               _buildGestureRegionWidthRatio(context).center(),
-              if (GetPlatform.isDesktop) _buildUseThirdPartyViewer().center(),
-              if (GetPlatform.isDesktop) _buildThirdPartyViewerPath().center(),
-              if (GetPlatform.isMobile) _buildDeviceDirection().center(),
+              _buildDeviceDirection().center(),
               _buildReadDirection().center(),
-              if (GetPlatform.isMobile && readSetting.readDirection.value == ReadDirection.top2bottomList) _buildNotchOptimization().center(),
+              if (readSetting.readDirection.value == ReadDirection.top2bottomList) _buildNotchOptimization().center(),
               if (readSetting.readDirection.value == ReadDirection.top2bottomList) _buildImageRegionWidthRatio(context).center(),
               if (readSetting.isInListReadDirection) _buildPreloadDistanceInOnlineMode(context).fadeIn(const Key('preloadDistanceInOnlineMode')).center(),
               if (readSetting.isInListReadDirection) _buildPreloadDistanceInLocalMode(context).fadeIn(const Key('preloadDistanceInLocalMode')).center(),
@@ -67,7 +64,7 @@ class SettingReadPage extends StatelessWidget {
   Widget _buildEnableImmersiveMode() {
     return SwitchListTile(
       title: Text('enableImmersiveMode'.tr),
-      subtitle: GetPlatform.isMobile ? Text('enableImmersiveHint'.tr) : Text('enableImmersiveHint4Windows'.tr),
+      subtitle: Text('enableImmersiveHint'.tr),
       value: readSetting.enableImmersiveMode.value,
       onChanged: readSetting.saveEnableImmersiveMode,
     );
@@ -392,37 +389,6 @@ class SettingReadPage extends StatelessWidget {
 
     readSetting.saveGestureRegionWidthRatio(value);
     toast('saveSuccess'.tr);
-  }
-
-  Widget _buildUseThirdPartyViewer() {
-    return SwitchListTile(
-      title: Text('useThirdPartyViewer'.tr),
-      value: readSetting.useThirdPartyViewer.value,
-      onChanged: readSetting.saveUseThirdPartyViewer,
-    );
-  }
-
-  Widget _buildThirdPartyViewerPath() {
-    return ListTile(
-      title: Text('thirdPartyViewerPath'.tr),
-      subtitle: Text(readSetting.thirdPartyViewerPath.value ?? ''),
-      trailing: const Icon(Icons.keyboard_arrow_right),
-      onTap: () async {
-        FilePickerResult? result;
-        try {
-          result = await FilePicker.platform.pickFiles();
-        } on Exception catch (e) {
-          log.error('Pick 3-rd party viewer failed', e);
-          log.uploadError(e);
-        }
-
-        if (result == null || result.files.single.path == null) {
-          return;
-        }
-
-        readSetting.saveThirdPartyViewerPath(result.files.single.path!);
-      },
-    );
   }
 
   Widget _buildPreloadDistanceInOnlineMode(BuildContext context) {
