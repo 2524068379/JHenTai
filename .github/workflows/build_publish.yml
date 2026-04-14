@@ -15,7 +15,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      FLUTTER_VERSION: 3.29.3
+      FLUTTER_VERSION: 3.41.6
     outputs:
       version: ${{ steps.get_version.outputs.version }}
     steps:
