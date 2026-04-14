@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jhentai/src/database/database.dart';
-import 'package:jhentai/src/extension/widget_extension.dart';
 import 'package:jhentai/src/pages/download_search/download_search_state.dart';
 import 'package:jhentai/src/service/archive_download_service.dart';
 import 'package:jhentai/src/widget/eh_image.dart';
@@ -13,7 +12,6 @@ import '../../model/gallery_image.dart';
 import '../../model/gallery_url.dart';
 import '../../routes/routes.dart';
 import '../../service/gallery_download_service.dart';
-import '../../service/super_resolution_service.dart';
 import '../../utils/byte_util.dart';
 import '../../utils/date_util.dart';
 import '../../utils/route_util.dart';
@@ -57,12 +55,16 @@ class DownloadSearchPage extends StatelessWidget {
             future: state.searchTypeCompleter.future,
             builder: (_, __) => !state.searchTypeCompleter.isCompleted
                 ? const SizedBox()
-                : TextButton(child: Text(state.searchType.desc.tr), onPressed: logic.toggleSearchType),
+                : TextButton(
+                    child: Text(state.searchType.desc.tr),
+                    onPressed: logic.toggleSearchType),
           ),
           prefixIconConstraints: const BoxConstraints(minWidth: 52),
           suffixIcon: MouseRegion(
             cursor: SystemMouseCursors.click,
-            child: GestureDetector(child: const Icon(Icons.cancel), onTap: logic.handleTapClearButton),
+            child: GestureDetector(
+                child: const Icon(Icons.cancel),
+                onTap: logic.handleTapClearButton),
           ),
         ),
         onChanged: logic.handleSearchFieldChanged,
@@ -80,13 +82,15 @@ class DownloadSearchPage extends StatelessWidget {
           scrollBehavior: UIConfig.scrollBehaviourWithScrollBarWithMouse,
           slivers: [
             SliverList.separated(
-              itemBuilder: (context, index) => _buildGallery(context, state.gallerys[index]),
+              itemBuilder: (context, index) =>
+                  _buildGallery(context, state.gallerys[index]),
               separatorBuilder: (context, index) => const SizedBox(height: 10),
               itemCount: state.gallerys.length,
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 10)),
             SliverList.separated(
-              itemBuilder: (context, index) => _buildArchive(context, state.archives[index]),
+              itemBuilder: (context, index) =>
+                  _buildArchive(context, state.archives[index]),
               separatorBuilder: (context, index) => const SizedBox(height: 10),
               itemCount: state.archives.length,
             ),
@@ -103,9 +107,10 @@ class DownloadSearchPage extends StatelessWidget {
       child: GetBuilder<GalleryDownloadService>(
         id: '${galleryDownloadService.galleryDownloadProgressId}::${gallery.gid}',
         builder: (_) {
-          GalleryImage? cover = galleryDownloadService.galleryDownloadInfos[gallery.gid]?.images[0];
-          GalleryDownloadProgress? downloadProgress = galleryDownloadService.galleryDownloadInfos[gallery.gid]?.downloadProgress;
-          String? groupName = galleryDownloadService.galleryDownloadInfos[gallery.gid]?.group;
+          GalleryDownloadProgress? downloadProgress = galleryDownloadService
+              .galleryDownloadInfos[gallery.gid]?.downloadProgress;
+          String? groupName =
+              galleryDownloadService.galleryDownloadInfos[gallery.gid]?.group;
 
           return Row(
             children: [
@@ -116,7 +121,8 @@ class DownloadSearchPage extends StatelessWidget {
                   behavior: HitTestBehavior.opaque,
                   onTap: () => logic.goToGalleryReadPage(gallery),
                   onLongPress: () => logic.onLongPressGallery(context, gallery),
-                  onSecondaryTap: () => logic.onLongPressGallery(context, gallery),
+                  onSecondaryTap: () =>
+                      logic.onLongPressGallery(context, gallery),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -137,8 +143,6 @@ class DownloadSearchPage extends StatelessWidget {
                           const Expanded(child: SizedBox()),
                           _buildGalleryIsOriginal(context, gallery),
                           const SizedBox(width: 6),
-                          _buildGallerySuperResolutionLabel(context, gallery),
-                          const SizedBox(width: 6),
                           _buildGalleryPublishTime(gallery, context),
                         ],
                       ),
@@ -148,11 +152,13 @@ class DownloadSearchPage extends StatelessWidget {
                           const SizedBox(width: 2),
                           _buildGalleryGroup(groupName, context),
                           const Expanded(child: SizedBox()),
-                          _buildGalleryDownloadProgressText(downloadProgress, context),
+                          _buildGalleryDownloadProgressText(
+                              downloadProgress, context),
                         ],
                       ),
                       const SizedBox(height: 4),
-                      _buildGalleryDownloadProgressIndicator(downloadProgress, context),
+                      _buildGalleryDownloadProgressIndicator(
+                          downloadProgress, context),
                     ],
                   ),
                 ),
@@ -179,12 +185,14 @@ class DownloadSearchPage extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: () => toRoute(
         Routes.details,
-        arguments: DetailsPageArgument(galleryUrl: GalleryUrl.parse(gallery.galleryUrl)),
+        arguments: DetailsPageArgument(
+            galleryUrl: GalleryUrl.parse(gallery.galleryUrl)),
       ),
       child: GetBuilder<GalleryDownloadService>(
         id: '${galleryDownloadService.downloadImageUrlId}::${gallery.gid}::0',
         builder: (_) {
-          GalleryImage? image = galleryDownloadService.galleryDownloadInfos[gallery.gid]?.images[0];
+          GalleryImage? image = galleryDownloadService
+              .galleryDownloadInfos[gallery.gid]?.images[0];
 
           /// cover is the first image, if we haven't downloaded first image, then return a [UIConfig.loadingAnimation]
           if (image?.downloadStatus != DownloadStatus.downloaded) {
@@ -200,7 +208,8 @@ class DownloadSearchPage extends StatelessWidget {
             containerWidth: UIConfig.downloadSearchPageCoverWidth,
             containerHeight: UIConfig.downloadSearchPageCoverHeight,
             containerColor: UIConfig.galleryCardBackGroundColor(context),
-            borderRadius: BorderRadius.circular(UIConfig.downloadPageCardBorderRadius),
+            borderRadius:
+                BorderRadius.circular(UIConfig.downloadPageCardBorderRadius),
             fit: BoxFit.fitWidth,
             maxBytes: 2 * 1024 * 1024,
           );
@@ -214,7 +223,8 @@ class DownloadSearchPage extends StatelessWidget {
       gallery.title,
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
-      style: const TextStyle(fontSize: UIConfig.galleryCardTitleSize, height: 1.2),
+      style:
+          const TextStyle(fontSize: UIConfig.galleryCardTitleSize, height: 1.2),
     );
   }
 
@@ -225,7 +235,9 @@ class DownloadSearchPage extends StatelessWidget {
 
     return Text(
       gallery.uploader!,
-      style: TextStyle(fontSize: UIConfig.galleryCardTextSize, color: UIConfig.galleryCardTextColor(context)),
+      style: TextStyle(
+          fontSize: UIConfig.galleryCardTextSize,
+          color: UIConfig.galleryCardTextColor(context)),
     );
   }
 
@@ -235,7 +247,8 @@ class DownloadSearchPage extends StatelessWidget {
         height: 44,
         child: WaterfallFlow.builder(
           scrollDirection: Axis.horizontal,
-          gridDelegate: const SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
+          gridDelegate:
+              const SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             mainAxisSpacing: 4,
             crossAxisSpacing: 4,
@@ -252,15 +265,19 @@ class DownloadSearchPage extends StatelessWidget {
               tags[index].tagName ?? tags[index].key,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 11, height: 1, color: UIConfig.ehTagTextColor(context)),
+              style: TextStyle(
+                  fontSize: 11,
+                  height: 1,
+                  color: UIConfig.ehTagTextColor(context)),
             ),
           ),
-        ).enableMouseDrag(withScrollBar: false),
+        ),
       ),
     );
   }
 
-  Widget _buildGalleryIsOriginal(BuildContext context, GallerySearchVO gallery) {
+  Widget _buildGalleryIsOriginal(
+      BuildContext context, GallerySearchVO gallery) {
     bool isOriginal = gallery.downloadOriginalImage;
     if (!isOriginal) {
       return const SizedBox();
@@ -274,58 +291,32 @@ class DownloadSearchPage extends StatelessWidget {
       ),
       child: Text(
         'original'.tr,
-        style: TextStyle(color: UIConfig.resumePauseButtonColor(context), fontWeight: FontWeight.bold, fontSize: 9),
+        style: TextStyle(
+            color: UIConfig.resumePauseButtonColor(context),
+            fontWeight: FontWeight.bold,
+            fontSize: 9),
       ),
     );
   }
 
-  Widget _buildGallerySuperResolutionLabel(BuildContext context, GallerySearchVO gallery) {
-    return GetBuilder<SuperResolutionService>(
-      id: '${SuperResolutionService.superResolutionId}::${gallery.gid}',
-      builder: (_) {
-        SuperResolutionInfo? superResolutionInfo = superResolutionService.get(gallery.gid, SuperResolutionType.gallery);
-
-        if (superResolutionInfo == null) {
-          return const SizedBox();
-        }
-
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 4),
-          decoration: BoxDecoration(
-            borderRadius: superResolutionInfo.status == SuperResolutionStatus.success ? null : BorderRadius.circular(4),
-            border: Border.all(color: UIConfig.resumePauseButtonColor(context)),
-            shape: superResolutionInfo.status == SuperResolutionStatus.success ? BoxShape.circle : BoxShape.rectangle,
-          ),
-          child: Text(
-            superResolutionInfo.status == SuperResolutionStatus.paused
-                ? 'AI'
-                : superResolutionInfo.status == SuperResolutionStatus.success
-                    ? 'AI'
-                    : 'AI(${superResolutionInfo.imageStatuses.fold<int>(0, (previousValue, element) => previousValue + (element == SuperResolutionStatus.success ? 1 : 0))}/${superResolutionInfo.imageStatuses.length})',
-            style: TextStyle(
-              fontSize: 9,
-              color: UIConfig.resumePauseButtonColor(context),
-              decoration: superResolutionInfo.status == SuperResolutionStatus.paused ? TextDecoration.lineThrough : null,
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildGalleryDownloadProgressText(GalleryDownloadProgress? downloadProgress, BuildContext context) {
+  Widget _buildGalleryDownloadProgressText(
+      GalleryDownloadProgress? downloadProgress, BuildContext context) {
     if (downloadProgress == null) {
       return const SizedBox();
     }
 
     return Text(
       '${downloadProgress.curCount}/${downloadProgress.totalCount}',
-      style: TextStyle(fontSize: UIConfig.downloadPageCardTextSize, color: UIConfig.downloadPageCardTextColor(context)),
+      style: TextStyle(
+          fontSize: UIConfig.downloadPageCardTextSize,
+          color: UIConfig.downloadPageCardTextColor(context)),
     );
   }
 
-  Widget _buildGalleryDownloadProgressIndicator(GalleryDownloadProgress? downloadProgress, BuildContext context) {
-    if (downloadProgress == null || downloadProgress.downloadStatus == DownloadStatus.downloaded) {
+  Widget _buildGalleryDownloadProgressIndicator(
+      GalleryDownloadProgress? downloadProgress, BuildContext context) {
+    if (downloadProgress == null ||
+        downloadProgress.downloadStatus == DownloadStatus.downloaded) {
       return const SizedBox();
     }
 
@@ -341,7 +332,9 @@ class DownloadSearchPage extends StatelessWidget {
   Widget _buildGalleryGroup(String? groupName, BuildContext context) {
     return Text(
       '${'gallery'.tr} > $groupName',
-      style: TextStyle(fontSize: UIConfig.downloadPageCardTextSize, color: UIConfig.downloadPageCardTextColor(context)),
+      style: TextStyle(
+          fontSize: UIConfig.downloadPageCardTextSize,
+          color: UIConfig.downloadPageCardTextColor(context)),
     );
   }
 
@@ -351,7 +344,8 @@ class DownloadSearchPage extends StatelessWidget {
       child: GetBuilder<ArchiveDownloadService>(
         id: '${ArchiveDownloadService.archiveStatusId}::${archive.gid}',
         builder: (_) {
-          ArchiveDownloadInfo? archiveDownloadInfo = archiveDownloadService.archiveDownloadInfos[archive.gid];
+          ArchiveDownloadInfo? archiveDownloadInfo =
+              archiveDownloadService.archiveDownloadInfos[archive.gid];
           String? groupName = archiveDownloadInfo?.group;
 
           return Row(
@@ -363,7 +357,8 @@ class DownloadSearchPage extends StatelessWidget {
                   behavior: HitTestBehavior.opaque,
                   onTap: () => logic.goToArchiveReadPage(archive),
                   onLongPress: () => logic.onLongPressArchive(context, archive),
-                  onSecondaryTap: () => logic.onLongPressArchive(context, archive),
+                  onSecondaryTap: () =>
+                      logic.onLongPressArchive(context, archive),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -377,8 +372,6 @@ class DownloadSearchPage extends StatelessWidget {
                           const Expanded(child: SizedBox()),
                           _buildArchiveIsOriginal(context, archive),
                           const SizedBox(width: 6),
-                          _buildArchiveSuperResolutionLabel(context, archive),
-                          const SizedBox(width: 6),
                           _buildArchivePublishTime(context, archive),
                         ],
                       ),
@@ -388,11 +381,13 @@ class DownloadSearchPage extends StatelessWidget {
                           const SizedBox(width: 2),
                           _buildArchiveGroup(groupName, context),
                           const Expanded(child: SizedBox()),
-                          _buildArchiveDownloadProgressText(archive, archiveDownloadInfo, context),
+                          _buildArchiveDownloadProgressText(
+                              archive, archiveDownloadInfo, context),
                         ],
                       ),
                       const SizedBox(height: 4),
-                      _buildArchiveDownloadProgressIndicator(archive, archiveDownloadInfo, context),
+                      _buildArchiveDownloadProgressIndicator(
+                          archive, archiveDownloadInfo, context),
                     ],
                   ),
                 ),
@@ -409,14 +404,16 @@ class DownloadSearchPage extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: () => toRoute(
         Routes.details,
-        arguments: DetailsPageArgument(galleryUrl: GalleryUrl.parse(archive.galleryUrl)),
+        arguments: DetailsPageArgument(
+            galleryUrl: GalleryUrl.parse(archive.galleryUrl)),
       ),
       child: EHImage(
         galleryImage: GalleryImage(url: archive.coverUrl),
         containerWidth: UIConfig.downloadSearchPageCoverWidth,
         containerHeight: UIConfig.downloadSearchPageCoverHeight,
         containerColor: UIConfig.galleryCardBackGroundColor(context),
-        borderRadius: BorderRadius.circular(UIConfig.downloadPageCardBorderRadius),
+        borderRadius:
+            BorderRadius.circular(UIConfig.downloadPageCardBorderRadius),
         fit: BoxFit.fitWidth,
         maxBytes: 2 * 1024 * 1024,
       ),
@@ -428,7 +425,8 @@ class DownloadSearchPage extends StatelessWidget {
       archive.title,
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
-      style: const TextStyle(fontSize: UIConfig.galleryCardTitleSize, height: 1.2),
+      style:
+          const TextStyle(fontSize: UIConfig.galleryCardTitleSize, height: 1.2),
     );
   }
 
@@ -439,11 +437,14 @@ class DownloadSearchPage extends StatelessWidget {
 
     return Text(
       archive.uploader!,
-      style: TextStyle(fontSize: UIConfig.galleryCardTextSize, color: UIConfig.galleryCardTextColor(context)),
+      style: TextStyle(
+          fontSize: UIConfig.galleryCardTextSize,
+          color: UIConfig.galleryCardTextColor(context)),
     );
   }
 
-  Widget _buildArchiveIsOriginal(BuildContext context, ArchiveSearchVO archive) {
+  Widget _buildArchiveIsOriginal(
+      BuildContext context, ArchiveSearchVO archive) {
     bool isOriginal = archive.isOriginal;
     if (!isOriginal) {
       return const SizedBox();
@@ -457,61 +458,38 @@ class DownloadSearchPage extends StatelessWidget {
       ),
       child: Text(
         'original'.tr,
-        style: TextStyle(color: UIConfig.resumePauseButtonColor(context), fontWeight: FontWeight.bold, fontSize: 9),
+        style: TextStyle(
+            color: UIConfig.resumePauseButtonColor(context),
+            fontWeight: FontWeight.bold,
+            fontSize: 9),
       ),
     );
   }
 
-  Widget _buildArchiveSuperResolutionLabel(BuildContext context, ArchiveSearchVO archive) {
-    return GetBuilder<SuperResolutionService>(
-      id: '${SuperResolutionService.superResolutionId}::${archive.gid}',
-      builder: (_) {
-        SuperResolutionInfo? superResolutionInfo = superResolutionService.get(archive.gid, SuperResolutionType.archive);
-
-        if (superResolutionInfo == null) {
-          return const SizedBox();
-        }
-
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 4),
-          decoration: BoxDecoration(
-            borderRadius: superResolutionInfo.status == SuperResolutionStatus.success ? null : BorderRadius.circular(4),
-            border: Border.all(color: UIConfig.resumePauseButtonColor(context)),
-            shape: superResolutionInfo.status == SuperResolutionStatus.success ? BoxShape.circle : BoxShape.rectangle,
-          ),
-          child: Text(
-            superResolutionInfo.status == SuperResolutionStatus.paused
-                ? 'AI'
-                : superResolutionInfo.status == SuperResolutionStatus.success
-                    ? 'AI'
-                    : 'AI(${superResolutionInfo.imageStatuses.fold<int>(0, (previousValue, element) => previousValue + (element == SuperResolutionStatus.success ? 1 : 0))}/${superResolutionInfo.imageStatuses.length})',
-            style: TextStyle(
-              fontSize: 9,
-              color: UIConfig.resumePauseButtonColor(context),
-              decoration: superResolutionInfo.status == SuperResolutionStatus.paused ? TextDecoration.lineThrough : null,
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildArchivePublishTime(BuildContext context, ArchiveSearchVO archive) {
+  Widget _buildArchivePublishTime(
+      BuildContext context, ArchiveSearchVO archive) {
     return Text(
       DateUtil.transformUtc2LocalTimeString(archive.publishTime),
-      style: TextStyle(fontSize: UIConfig.downloadPageCardTextSize, color: UIConfig.downloadPageCardTextColor(context)),
+      style: TextStyle(
+          fontSize: UIConfig.downloadPageCardTextSize,
+          color: UIConfig.downloadPageCardTextColor(context)),
     );
   }
 
   Widget _buildArchiveGroup(String? groupName, BuildContext context) {
     return Text(
       '${'archive'.tr} > $groupName',
-      style: TextStyle(fontSize: UIConfig.downloadPageCardTextSize, color: UIConfig.downloadPageCardTextColor(context)),
+      style: TextStyle(
+          fontSize: UIConfig.downloadPageCardTextSize,
+          color: UIConfig.downloadPageCardTextColor(context)),
     );
   }
 
-  Widget _buildArchiveDownloadProgressText(ArchiveSearchVO archive, ArchiveDownloadInfo? archiveDownloadInfo, BuildContext context) {
-    if (archiveDownloadInfo == null || archiveDownloadInfo.archiveStatus.code > ArchiveStatus.downloading.code) {
+  Widget _buildArchiveDownloadProgressText(ArchiveSearchVO archive,
+      ArchiveDownloadInfo? archiveDownloadInfo, BuildContext context) {
+    if (archiveDownloadInfo == null ||
+        archiveDownloadInfo.archiveStatus.code >
+            ArchiveStatus.downloading.code) {
       return const SizedBox();
     }
 
@@ -519,13 +497,18 @@ class DownloadSearchPage extends StatelessWidget {
       id: '${ArchiveDownloadService.archiveSpeedComputerId}::${archive.gid}::${archive.isOriginal}',
       builder: (_) => Text(
         '${byte2String(archiveDownloadInfo.speedComputer.downloadedBytes.toDouble())}/${byte2String(archiveDownloadInfo.size.toDouble())}',
-        style: TextStyle(fontSize: UIConfig.downloadPageCardTextSize, color: UIConfig.downloadPageCardTextColor(context)),
+        style: TextStyle(
+            fontSize: UIConfig.downloadPageCardTextSize,
+            color: UIConfig.downloadPageCardTextColor(context)),
       ),
     );
   }
 
-  Widget _buildArchiveDownloadProgressIndicator(ArchiveSearchVO archive, ArchiveDownloadInfo? archiveDownloadInfo, BuildContext context) {
-    if (archiveDownloadInfo == null || archiveDownloadInfo.archiveStatus.code > ArchiveStatus.downloading.code) {
+  Widget _buildArchiveDownloadProgressIndicator(ArchiveSearchVO archive,
+      ArchiveDownloadInfo? archiveDownloadInfo, BuildContext context) {
+    if (archiveDownloadInfo == null ||
+        archiveDownloadInfo.archiveStatus.code >
+            ArchiveStatus.downloading.code) {
       return const SizedBox();
     }
 
@@ -534,8 +517,10 @@ class DownloadSearchPage extends StatelessWidget {
       child: GetBuilder<ArchiveDownloadService>(
         id: '${ArchiveDownloadService.archiveSpeedComputerId}::${archive.gid}::${archive.isOriginal}',
         builder: (_) => LinearProgressIndicator(
-          value: archiveDownloadInfo.speedComputer.downloadedBytes / archiveDownloadInfo.size,
-          color: archiveDownloadInfo.archiveStatus.code <= ArchiveStatus.paused.code
+          value: archiveDownloadInfo.speedComputer.downloadedBytes /
+              archiveDownloadInfo.size,
+          color: archiveDownloadInfo.archiveStatus.code <=
+                  ArchiveStatus.paused.code
               ? UIConfig.downloadPageProgressPausedIndicatorColor(context)
               : UIConfig.downloadPageProgressIndicatorColor(context),
         ),

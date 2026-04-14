@@ -6,7 +6,6 @@ import 'package:flutter_socks_proxy/socks_proxy.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_rx/src/rx_workers/rx_workers.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
-import 'package:get/get_utils/src/platform/platform.dart';
 import 'package:intl/intl.dart';
 import 'package:j_downloader/j_downloader.dart';
 import 'package:jhentai/src/consts/eh_consts.dart';
@@ -154,8 +153,7 @@ class EHRequest with JHLifeCircleBeanErrorCatch implements JHLifeCircleBean {
 
   /// https://github.com/dart-lang/io/issues/83
   void _initCertificateForAndroidWithOldVersion() {
-    if (GetPlatform.isAndroid) {
-      const isrgRootX1 = '''-----BEGIN CERTIFICATE-----
+    const isrgRootX1 = '''-----BEGIN CERTIFICATE-----
 MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAw
 TzELMAkGA1UEBhMCVVMxKTAnBgNVBAoTIEludGVybmV0IFNlY3VyaXR5IFJlc2Vh
 cmNoIEdyb3VwMRUwEwYDVQQDEwxJU1JHIFJvb3QgWDEwHhcNMTUwNjA0MTEwNDM4
@@ -187,8 +185,7 @@ mRGunUHBcnWEvgJBQl9nJEiU0Zsnvgc/ubhPgXRR4Xq37Z0j4r7g1SgEEzwxA57d
 emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
 -----END CERTIFICATE-----
 ''';
-      SecurityContext.defaultContext.setTrustedCertificatesBytes(Uint8List.fromList(isrgRootX1.codeUnits));
-    }
+    SecurityContext.defaultContext.setTrustedCertificatesBytes(Uint8List.fromList(isrgRootX1.codeUnits));
   }
 
   void _initTimeOutTranslator() {

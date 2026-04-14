@@ -189,7 +189,7 @@ class EHGalleryListCard extends StatelessWidget {
         ),
         itemCount: mergedList.length,
         itemBuilder: (_, int index) => EHTag(tag: mergedList[index]),
-      ).enableMouseDrag(withScrollBar: false),
+      ),
     );
   }
 

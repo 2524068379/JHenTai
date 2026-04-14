@@ -327,7 +327,7 @@ class DetailsPage extends StatelessWidget with Scroll2TopPageMixin {
 
             return toolbar;
           },
-        ).enableMouseDrag(withScrollBar: false);
+        );
       },
     );
   }
@@ -865,7 +865,7 @@ class DetailsPage extends StatelessWidget with Scroll2TopPageMixin {
               _buildTorrentButton(context),
               // _buildStatisticButton(context),
             ],
-          ).enableMouseDrag(withScrollBar: false),
+          ),
         ),
       ),
     );
@@ -1338,7 +1338,7 @@ class DetailsPage extends StatelessWidget with Scroll2TopPageMixin {
                         onVoted: (bool isVotingUp, String score) => logic.onCommentVoted(state.galleryDetails!.comments[index], isVotingUp, score),
                         onBlockUser: () => logic.blockUser(state.galleryDetails!.comments[index]),
                       ),
-                    ).enableMouseDrag(withScrollBar: false),
+                    ),
                   ),
                 ),
             ],

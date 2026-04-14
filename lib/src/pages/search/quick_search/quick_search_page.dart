@@ -45,7 +45,7 @@ class QuickSearchPage extends StatelessWidget {
                 const Divider(thickness: 0.7, height: 2),
               ],
             ),
-          ).enableMouseDrag();
+          );
         },
       ),
     );

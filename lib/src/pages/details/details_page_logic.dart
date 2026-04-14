@@ -22,7 +22,6 @@ import 'package:jhentai/src/model/read_page_info.dart';
 import 'package:jhentai/src/network/eh_request.dart';
 import 'package:jhentai/src/pages/download/download_base_page.dart';
 import 'package:jhentai/src/service/read_progress_service.dart';
-import 'package:jhentai/src/service/super_resolution_service.dart';
 import 'package:jhentai/src/setting/download_setting.dart';
 import 'package:jhentai/src/setting/my_tags_setting.dart';
 import 'package:jhentai/src/utils/convert_util.dart';
@@ -715,7 +714,6 @@ class DetailsPageLogic extends GetxController with LoginRequiredMixin, Scroll2To
           isOriginal: archive.isOriginal,
           readProgressRecordStorageKey: archive.gid.toString(),
           images: images,
-          useSuperResolution: superResolutionService.get(archive.gid, SuperResolutionType.archive) != null,
         ),
       );
     }
@@ -1002,7 +1000,6 @@ class DetailsPageLogic extends GetxController with LoginRequiredMixin, Scroll2To
           initialIndex: forceIndex ?? await getReadIndexRecord(),
           readProgressRecordStorageKey: state.galleryUrl.gid.toString(),
           pageCount: state.galleryDetails?.pageCount ?? state.gallery?.pageCount ?? state.galleryMetadata!.pageCount,
-          useSuperResolution: false,
         ),
       )?.whenComplete(() => Future.delayed(const Duration(milliseconds: 800))).whenComplete(() => updateSafely([readButtonId]));
       return;
@@ -1027,7 +1024,6 @@ class DetailsPageLogic extends GetxController with LoginRequiredMixin, Scroll2To
         initialIndex: forceIndex ?? await getReadIndexRecord(),
         readProgressRecordStorageKey: state.galleryUrl.gid.toString(),
         pageCount: gallery.pageCount,
-        useSuperResolution: superResolutionService.get(state.galleryUrl.gid, SuperResolutionType.gallery) != null,
       ),
     )?.whenComplete(() => Future.delayed(const Duration(milliseconds: 800))).whenComplete(() => updateSafely([readButtonId]));
   }

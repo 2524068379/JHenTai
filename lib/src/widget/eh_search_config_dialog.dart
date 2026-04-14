@@ -93,7 +93,7 @@ class _EHSearchConfigDialogState extends State<EHSearchConfigDialog> {
           ],
         ),
       ),
-    ).enableMouseDrag(withScrollBar: false);
+    );
   }
 
   Widget buildHeader() {

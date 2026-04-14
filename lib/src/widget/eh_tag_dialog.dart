@@ -87,7 +87,7 @@ class _EHTagDialogState extends State<EHTagDialog> with LoginRequiredMixin {
           ],
         ).marginOnly(top: 12),
       ],
-    ).enableMouseDrag();
+    );
   }
 
   Widget _buildInfo() {

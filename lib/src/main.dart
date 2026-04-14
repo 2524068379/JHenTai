@@ -30,14 +30,12 @@ import 'package:jhentai/src/setting/archive_bot_setting.dart';
 import 'package:jhentai/src/setting/download_setting.dart';
 import 'package:jhentai/src/setting/eh_setting.dart';
 import 'package:jhentai/src/setting/favorite_setting.dart';
-import 'package:jhentai/src/setting/mouse_setting.dart';
 import 'package:jhentai/src/setting/my_tags_setting.dart';
 import 'package:jhentai/src/setting/network_setting.dart';
 import 'package:jhentai/src/setting/performance_setting.dart';
 import 'package:jhentai/src/setting/preference_setting.dart';
 import 'package:jhentai/src/setting/read_setting.dart';
 import 'package:jhentai/src/setting/site_setting.dart';
-import 'package:jhentai/src/setting/super_resolution_setting.dart';
 import 'package:jhentai/src/setting/user_setting.dart';
 import 'package:jhentai/src/widget/app_manager.dart';
 import 'exception/upload_exception.dart';
@@ -80,7 +78,6 @@ List<JHLifeCircleBean> lifeCircleBeans = [
   archiveBotSetting,
   ehSetting,
   favoriteSetting,
-  mouseSetting,
   myTagsSetting,
   networkSetting,
   performanceSetting,
@@ -89,7 +86,6 @@ List<JHLifeCircleBean> lifeCircleBeans = [
   securitySetting,
   siteSetting,
   styleSetting,
-  superResolutionSetting,
   userSetting,
   builtInBlockedUserService,
 ];

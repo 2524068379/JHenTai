@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
 import '../utils/toast_util.dart';
 
@@ -20,9 +19,8 @@ class _WillPopInterceptorState extends State<WillPopInterceptor> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      child: widget.child,
-      canPop: Platform.isAndroid ? false : true,
-      onPopInvokedWithResult: (bool didPop, FormData? result) async {
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, Object? result) async {
         if (didPop) {
           return;
         }
@@ -32,6 +30,7 @@ class _WillPopInterceptorState extends State<WillPopInterceptor> {
           SystemNavigator.pop(animated: true);
         }
       },
+      child: widget.child,
     );
   }
 

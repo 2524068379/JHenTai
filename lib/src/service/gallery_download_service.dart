@@ -29,7 +29,6 @@ import 'package:jhentai/src/model/jh_response/fetch_image_hashes_vo.dart';
 import 'package:jhentai/src/model/jh_response/jh_response.dart';
 import 'package:jhentai/src/network/jh_request.dart';
 import 'package:jhentai/src/service/local_config_service.dart';
-import 'package:jhentai/src/service/super_resolution_service.dart';
 import 'package:jhentai/src/setting/download_setting.dart';
 import 'package:jhentai/src/setting/site_setting.dart';
 import 'package:jhentai/src/setting/user_setting.dart';
@@ -260,8 +259,6 @@ class GalleryDownloadService extends GetxController with GridBasePageServiceMixi
     await pauseDownloadGallery(gallery);
 
     log.info('Delete download gallery: ${gallery.title}, deleteImages:$deleteImages');
-
-    await superResolutionService.deleteSuperResolve(gallery.gid, SuperResolutionType.gallery);
 
     await _clearGalleryDownloadInfoInDatabase(gallery.gid);
     if (deleteImages) {
@@ -1319,7 +1316,6 @@ class GalleryDownloadService extends GetxController with GridBasePageServiceMixi
     galleryDownloadInfos[newGallery.gid]!.images[newImageSerialNo] = newImage;
 
     await _copyImageInfo(oldImage, newGallery, newImageSerialNo);
-    await superResolutionService.copyImageInfo(oldGallery, newGallery, oldImageSerialNo, newImageSerialNo);
   }
 
   /// If two images' [imageHash] is equal, they are the same image.
@@ -1338,7 +1334,6 @@ class GalleryDownloadService extends GetxController with GridBasePageServiceMixi
     GalleryImage oldImage = galleryDownloadInfos[oldGallery.gid]!.images[oldImageSerialNo]!;
 
     await _copyImageInfo(oldImage, newGallery, newImageSerialNo);
-    await superResolutionService.copyImageInfo(oldGallery, newGallery, oldImageSerialNo, newImageSerialNo);
   }
 
   Future<void> _tryCopyImageInfosFromImageHashes(GalleryDownloadedData newGallery, List<String> imageHashes) async {
@@ -1382,7 +1377,6 @@ class GalleryDownloadService extends GetxController with GridBasePageServiceMixi
 
       await _updateProgressAfterImageDownloaded(newGallery, serialNo);
 
-      await superResolutionService.copyImageInfo(oldGallery, newGallery, oldImageSerialNo, serialNo);
     }
 
     _saveGalleryMetadataInDisk(newGallery);

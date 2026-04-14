@@ -55,7 +55,7 @@ class _EHGalleryTorrentsDialogState extends State<EHGalleryTorrentsDialog> {
           ),
         ),
       ],
-    ).enableMouseDrag(withScrollBar: false);
+    );
   }
 
   Future<void> _getTorrent() async {

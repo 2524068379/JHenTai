@@ -21,9 +21,6 @@ class VolumeService extends GetxService with JHLifeCircleBeanErrorCatch implemen
 
   @override
   Future<void> doAfterBeanReady() async {
-    if (!GetPlatform.isAndroid) {
-      return;
-    }
     methodChannel = const MethodChannel('top.jtmonster.jhentai.volume.event.intercept');
   }
 
@@ -35,10 +32,6 @@ class VolumeService extends GetxService with JHLifeCircleBeanErrorCatch implemen
   }
 
   Future<void> setInterceptVolumeEvent(bool value) async {
-    if (!GetPlatform.isAndroid) {
-      return;
-    }
-
     try {
       await methodChannel.invokeMethod('set', value);
     } on PlatformException catch (e) {
@@ -48,10 +41,6 @@ class VolumeService extends GetxService with JHLifeCircleBeanErrorCatch implemen
   }
 
   void listen(Function(VolumeEventType)? onData) {
-    if (!GetPlatform.isAndroid) {
-      return;
-    }
-
     methodChannel.setMethodCallHandler((MethodCall call) {
       if (call.method == 'event') {
         final int eventType = call.arguments as int;
@@ -66,10 +55,6 @@ class VolumeService extends GetxService with JHLifeCircleBeanErrorCatch implemen
   }
 
   void cancelListen() {
-    if (!GetPlatform.isAndroid) {
-      return;
-    }
-
     methodChannel.setMethodCallHandler(null);
   }
 }

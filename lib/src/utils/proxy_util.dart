@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:get/get_utils/src/platform/platform.dart';
 import 'package:http_proxy/http_proxy.dart';
 import 'package:jhentai/src/service/log.dart';
 import 'package:jhentai/src/utils/string_uril.dart';
@@ -9,11 +8,9 @@ import '../setting/network_setting.dart';
 Future<String> getSystemProxyAddress() async {
   String systemProxyAddress = '';
 
-  if (GetPlatform.isAndroid) {
-    HttpProxy httpProxy = await HttpProxy.createHttpProxy();
-    if (!isEmptyOrNull(httpProxy.host) && !isEmptyOrNull(httpProxy.port)) {
-      systemProxyAddress = '${httpProxy.host}:${httpProxy.port}';
-    }
+  HttpProxy httpProxy = await HttpProxy.createHttpProxy();
+  if (!isEmptyOrNull(httpProxy.host) && !isEmptyOrNull(httpProxy.port)) {
+    systemProxyAddress = '${httpProxy.host}:${httpProxy.port}';
   }
 
   log.info('systemProxyAddress: $systemProxyAddress');

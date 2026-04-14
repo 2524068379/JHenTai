@@ -153,7 +153,7 @@ class EHAddTagDialog extends StatelessWidget {
                 ),
           trailing: const Icon(Icons.add),
         ),
-      ).enableMouseDrag(withScrollBar: true),
+      ),
     );
   }
 

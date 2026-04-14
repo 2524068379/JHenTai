@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jhentai/src/config/ui_config.dart';
 import 'package:jhentai/src/extension/string_extension.dart';
-import 'package:jhentai/src/extension/widget_extension.dart';
 import 'package:jhentai/src/model/gallery_detail.dart';
 import 'package:jhentai/src/setting/preference_setting.dart';
 import 'package:jhentai/src/utils/date_util.dart';
@@ -14,7 +13,8 @@ import '../utils/toast_util.dart';
 class EHGalleryDetailDialog extends StatelessWidget {
   final GalleryDetail galleryDetail;
 
-  const EHGalleryDetailDialog({Key? key, required this.galleryDetail}) : super(key: key);
+  const EHGalleryDetailDialog({Key? key, required this.galleryDetail})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,15 +30,25 @@ class EHGalleryDetailDialog extends StatelessWidget {
         _Item(name: ('uploader'.tr), value: (galleryDetail.uploader)),
         _Item(
           name: ('publishTime'.tr),
-          value: (preferenceSetting.showUtcTime.isTrue ? galleryDetail.publishTime : DateUtil.transformUtc2LocalTimeString(galleryDetail.publishTime)),
+          value: (preferenceSetting.showUtcTime.isTrue
+              ? galleryDetail.publishTime
+              : DateUtil.transformUtc2LocalTimeString(
+                  galleryDetail.publishTime)),
         ),
         _Item(name: ('language'.tr), value: (galleryDetail.language)),
-        _Item(name: ('pageCount'.tr), value: (galleryDetail.pageCount.toString())),
-        _Item(name: ('favoriteCount'.tr), value: (galleryDetail.favoriteCount.toString())),
-        _Item(name: ('ratingCount'.tr), value: (galleryDetail.ratingCount.toString())),
-        _Item(name: ('rating'.tr), value: (galleryDetail.realRating.toString())),
+        _Item(
+            name: ('pageCount'.tr),
+            value: (galleryDetail.pageCount.toString())),
+        _Item(
+            name: ('favoriteCount'.tr),
+            value: (galleryDetail.favoriteCount.toString())),
+        _Item(
+            name: ('ratingCount'.tr),
+            value: (galleryDetail.ratingCount.toString())),
+        _Item(
+            name: ('rating'.tr), value: (galleryDetail.realRating.toString())),
       ],
-    ).enableMouseDrag(withScrollBar: false);
+    );
   }
 }
 
@@ -54,7 +64,8 @@ class _Item extends StatelessWidget {
       borderRadius: UIConfig.galleryDetailDialogItemBorderRadius,
       onTap: () {
         if (!isEmptyOrNull(value)) {
-          FlutterClipboard.copy(value!).then((value) => toast('hasCopiedToClipboard'.tr));
+          FlutterClipboard.copy(value!)
+              .then((value) => toast('hasCopiedToClipboard'.tr));
         }
       },
       child: Ink(
@@ -63,7 +74,8 @@ class _Item extends StatelessWidget {
           children: [
             Expanded(
               flex: 1,
-              child: Text(name, style: UIConfig.galleryDetailDialogItemNameTextStyle),
+              child: Text(name,
+                  style: UIConfig.galleryDetailDialogItemNameTextStyle),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -72,8 +84,11 @@ class _Item extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
-                    constraints: const BoxConstraints(maxWidth: UIConfig.galleryDetailDialogItemValueMaxWidth),
-                    child: Text(value?.breakWord ?? '', style: UIConfig.galleryDetailDialogItemValueTextStyle),
+                    constraints: const BoxConstraints(
+                        maxWidth:
+                            UIConfig.galleryDetailDialogItemValueMaxWidth),
+                    child: Text(value?.breakWord ?? '',
+                        style: UIConfig.galleryDetailDialogItemValueTextStyle),
                   )
                 ],
               ),

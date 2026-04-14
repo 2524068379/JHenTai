@@ -46,6 +46,6 @@ class _AutoModeIntervalDialogState extends State<AutoModeIntervalDialog> {
           },
         ),
       ],
-    ).enableMouseDrag(withScrollBar: false);
+    );
   }
 }

@@ -61,20 +61,18 @@ class SecuritySetting with JHLifeCircleBeanWithConfigStorage implements JHLifeCi
 
   @override
   void doAfterBeanReady() {
-    if (GetPlatform.isAndroid) {
-      ever(enableBlur, (_) {
-        if (enableBlur.isTrue) {
-          FlutterWindowManagerPlus.addFlags(FlutterWindowManagerPlus.FLAG_SECURE);
-        } else {
-          FlutterWindowManagerPlus.clearFlags(FlutterWindowManagerPlus.FLAG_SECURE);
-          saveEnableAuthOnResume(false);
-        }
-        SystemChrome.setSystemUIOverlayStyle(
-          const SystemUiOverlayStyle(systemStatusBarContrastEnforced: true),
-        );
-      });
-    }
-    
+    ever(enableBlur, (_) {
+      if (enableBlur.isTrue) {
+        FlutterWindowManagerPlus.addFlags(FlutterWindowManagerPlus.FLAG_SECURE);
+      } else {
+        FlutterWindowManagerPlus.clearFlags(FlutterWindowManagerPlus.FLAG_SECURE);
+        saveEnableAuthOnResume(false);
+      }
+      SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(systemStatusBarContrastEnforced: true),
+      );
+    });
+
     ever(enableAuthOnResume, (_) {
       if (enableAuthOnResume.isTrue) {
         saveEnableBlur(true);

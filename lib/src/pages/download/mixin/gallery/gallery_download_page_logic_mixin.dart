@@ -4,8 +4,6 @@ import 'package:jhentai/src/config/ui_config.dart';
 import 'package:jhentai/src/extension/get_logic_extension.dart';
 import 'package:jhentai/src/mixin/scroll_to_top_logic_mixin.dart';
 import 'package:jhentai/src/mixin/update_global_gallery_status_logic_mixin.dart';
-import 'package:jhentai/src/service/super_resolution_service.dart';
-import 'package:jhentai/src/setting/super_resolution_setting.dart';
 
 import '../../../../database/database.dart';
 import '../../../../model/read_page_info.dart';
@@ -15,8 +13,6 @@ import '../../../../service/read_progress_service.dart';
 import '../../../../setting/read_setting.dart';
 import '../../../../utils/process_util.dart';
 import '../../../../utils/route_util.dart';
-import '../../../../utils/toast_util.dart';
-import '../../../../widget/eh_alert_dialog.dart';
 import '../../../../widget/eh_download_dialog.dart';
 import '../basic/multi_select/multi_select_download_page_logic_mixin.dart';
 
@@ -151,7 +147,6 @@ mixin GalleryDownloadPageLogicMixin on GetxController
           initialIndex: readIndexRecord,
           readProgressRecordStorageKey: gallery.gid.toString(),
           pageCount: gallery.pageCount,
-          useSuperResolution: superResolutionService.get(gallery.gid, SuperResolutionType.gallery) != null,
         ),
       );
     }
@@ -162,42 +157,6 @@ mixin GalleryDownloadPageLogicMixin on GetxController
       context: context,
       builder: (BuildContext context) => CupertinoActionSheet(
         actions: <CupertinoActionSheetAction>[
-          if (superResolutionSetting.modelDirectoryPath.value != null &&
-              downloadService.galleryDownloadInfos[gallery.gid]?.downloadProgress.downloadStatus == DownloadStatus.downloaded &&
-              (superResolutionService.get(gallery.gid, SuperResolutionType.gallery) == null ||
-                  superResolutionService.get(gallery.gid, SuperResolutionType.gallery)?.status == SuperResolutionStatus.paused))
-            CupertinoActionSheetAction(
-              child: Text('superResolution'.tr),
-              onPressed: () async {
-                backRoute();
-
-                if (superResolutionService.get(gallery.gid, SuperResolutionType.gallery) == null && gallery.downloadOriginalImage) {
-                  bool? result = await Get.dialog(EHDialog(title: 'attention'.tr + '!', content: 'superResolveOriginalImageHint'.tr));
-                  if (result == false) {
-                    return;
-                  }
-                }
-
-                superResolutionService.superResolve(gallery.gid, SuperResolutionType.gallery);
-              },
-            ),
-          if (superResolutionService.get(gallery.gid, SuperResolutionType.gallery)?.status == SuperResolutionStatus.running)
-            CupertinoActionSheetAction(
-              child: Text('stopSuperResolution'.tr),
-              onPressed: () async {
-                backRoute();
-                superResolutionService.pauseSuperResolve(gallery.gid, SuperResolutionType.gallery).then((_) => toast("success".tr));
-              },
-            ),
-          if (superResolutionService.get(gallery.gid, SuperResolutionType.gallery)?.status == SuperResolutionStatus.paused ||
-              superResolutionService.get(gallery.gid, SuperResolutionType.gallery)?.status == SuperResolutionStatus.success)
-            CupertinoActionSheetAction(
-              child: Text('deleteSuperResolvedImage'.tr),
-              onPressed: () async {
-                backRoute();
-                superResolutionService.deleteSuperResolve(gallery.gid, SuperResolutionType.gallery).then((_) => toast("success".tr));
-              },
-            ),
           CupertinoActionSheetAction(
             child: Text('changeGroup'.tr),
             onPressed: () {

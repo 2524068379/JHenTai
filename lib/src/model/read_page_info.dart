@@ -29,9 +29,6 @@ class ReadPageInfo {
   /// used for archive&local
   List<GalleryImage>? images;
 
-  /// used for initialize
-  bool useSuperResolution;
-
   ReadPageInfo({
     required this.mode,
     this.gid,
@@ -43,6 +40,5 @@ class ReadPageInfo {
     this.isOriginal = false,
     required this.readProgressRecordStorageKey,
     this.images,
-    required this.useSuperResolution,
   }) : currentImageIndex = initialIndex;
 }

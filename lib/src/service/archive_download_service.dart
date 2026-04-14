@@ -20,7 +20,6 @@ import 'package:jhentai/src/model/archive_bot_response/archive_resolve_vo.dart';
 import 'package:jhentai/src/model/archive_unlock_result.dart';
 import 'package:jhentai/src/network/archive_bot_request.dart';
 import 'package:jhentai/src/network/eh_request.dart';
-import 'package:jhentai/src/service/super_resolution_service.dart';
 import 'package:jhentai/src/setting/archive_bot_setting.dart';
 import 'package:jhentai/src/setting/download_setting.dart';
 import 'package:jhentai/src/setting/network_setting.dart';
@@ -151,8 +150,6 @@ class ArchiveDownloadService extends GetxController with GridBasePageServiceMixi
       log.info('Delete archive: ${archive.title}, original: ${archive.isOriginal}');
 
       await pauseDownloadArchive(gid);
-
-      await superResolutionService.deleteSuperResolve(gid, SuperResolutionType.archive);
 
       await _deleteArchiveInfoInDatabase(gid);
 

@@ -94,7 +94,7 @@ class _EHGroupNameSelectorState extends State<EHGroupNameSelector> {
             padding: EdgeInsets.zero,
             itemCount: widget.candidates.length,
             itemBuilder: (context, index) => _chipBuilder(context, index).marginOnly(right: 4),
-          ).enableMouseDrag(withScrollBar: false),
+          ),
         ),
       ),
     );

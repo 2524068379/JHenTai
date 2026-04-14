@@ -257,7 +257,7 @@ class WaterFallFlowCardTagWaterFlow extends StatelessWidget {
           ),
           itemCount: mergedList.length,
           itemBuilder: (_, int index) => WaterFallFlowTag(galleryTag: mergedList[index]),
-        ).enableMouseDrag(withScrollBar: false),
+        ),
       );
     });
   }

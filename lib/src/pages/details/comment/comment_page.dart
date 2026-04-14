@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:jhentai/src/extension/get_logic_extension.dart';
-import 'package:jhentai/src/extension/widget_extension.dart';
 import 'package:jhentai/src/model/gallery_comment.dart';
 import 'package:jhentai/src/network/eh_request.dart';
 import 'package:jhentai/src/pages/details/details_page_logic.dart';
@@ -40,11 +39,13 @@ class _CommentPageState extends State<CommentPage> with LoginRequiredMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('allComments'.tr)),
-      floatingActionButton: FloatingActionButton(onPressed: _handleTapAddCommentButton, child: const Icon(Icons.add)),
+      floatingActionButton: FloatingActionButton(
+          onPressed: _handleTapAddCommentButton, child: const Icon(Icons.add)),
       body: EHWheelSpeedController(
         controller: _scrollController,
         child: ListView(
-          padding: const EdgeInsets.only(top: 6, left: 8, right: 8, bottom: 200),
+          padding:
+              const EdgeInsets.only(top: 6, left: 8, right: 8, bottom: 200),
           controller: _scrollController,
           children: comments
               .map(
@@ -52,13 +53,14 @@ class _CommentPageState extends State<CommentPage> with LoginRequiredMixin {
                   comment: comment,
                   inDetailPage: false,
                   disableButtons: disableButtons,
-                  onVoted: (bool isVotingUp, String score) => onVoted(comment, isVotingUp, score),
+                  onVoted: (bool isVotingUp, String score) =>
+                      onVoted(comment, isVotingUp, score),
                   handleTapUpdateCommentButton: _handleTapUpdateCommentButton,
                   onBlockUser: () => _onBlockUser(comment),
                 ).marginOnly(bottom: 4),
               )
               .toList(),
-        ).enableMouseDrag(),
+        ),
       ),
     );
   }
@@ -81,7 +83,9 @@ class _CommentPageState extends State<CommentPage> with LoginRequiredMixin {
     }
 
     List<GalleryComment> newComments = await ehRequest.requestDetailPage(
-      galleryUrl: DetailsPageLogic.current!.state.galleryDetails?.galleryUrl.url ?? DetailsPageLogic.current!.state.gallery!.galleryUrl.url,
+      galleryUrl:
+          DetailsPageLogic.current!.state.galleryDetails?.galleryUrl.url ??
+              DetailsPageLogic.current!.state.gallery!.galleryUrl.url,
       parser: EHSpiderParser.detailPage2Comments,
       useCacheIfAvailable: false,
     );
@@ -97,7 +101,8 @@ class _CommentPageState extends State<CommentPage> with LoginRequiredMixin {
     DetailsPageLogic.current?.update();
   }
 
-  Future<void> onVoted(GalleryComment comment, bool isVotingUp, String score) async {
+  Future<void> onVoted(
+      GalleryComment comment, bool isVotingUp, String score) async {
     comment.score = score;
     if (isVotingUp) {
       comment.votedUp = !comment.votedUp;
@@ -134,7 +139,9 @@ class _CommentPageState extends State<CommentPage> with LoginRequiredMixin {
     }
 
     List<GalleryComment> newComments = await ehRequest.requestDetailPage(
-      galleryUrl: DetailsPageLogic.current!.state.galleryDetails?.galleryUrl.url ?? DetailsPageLogic.current!.state.gallery!.galleryUrl.url,
+      galleryUrl:
+          DetailsPageLogic.current!.state.galleryDetails?.galleryUrl.url ??
+              DetailsPageLogic.current!.state.gallery!.galleryUrl.url,
       parser: EHSpiderParser.detailPage2Comments,
       useCacheIfAvailable: false,
     );

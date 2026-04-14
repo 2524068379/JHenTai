@@ -10,7 +10,6 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../../../config/ui_config.dart';
 import '../../../../service/gallery_download_service.dart';
-import '../../../../service/super_resolution_service.dart';
 import '../../../../service/log.dart';
 import '../../../../widget/eh_image.dart';
 import '../../../../widget/icon_text_button.dart';
@@ -236,43 +235,8 @@ abstract class BaseLayout extends StatelessWidget {
           return _buildWaitParsingUrlIndicator(context, index);
         }
 
-        /// step 3: check if we are using super resolution
-        if (logic.readPageState.useSuperResolution) {
-          return _buildLocalSuperResolutionImage(context, index);
-        }
-
-        /// step 4: wait for downloading or display it
+        /// step 3: wait for downloading or display it
         return _buildLocalImage(context, index);
-      },
-    );
-  }
-
-  Widget _buildLocalSuperResolutionImage(BuildContext context, int index) {
-    return GetBuilder<SuperResolutionService>(
-      id: '${SuperResolutionService.superResolutionImageId}::${readPageState.readPageInfo.gid!}::$index',
-      builder: (_) {
-        int gid = readPageState.readPageInfo.gid!;
-        SuperResolutionType type = readPageState.readPageInfo.mode == ReadMode.downloaded ? SuperResolutionType.gallery : SuperResolutionType.archive;
-        if (superResolutionService.get(gid, type)?.imageStatuses[index] != SuperResolutionStatus.success) {
-          return _buildLocalImage(context, index);
-        }
-
-        return GestureDetector(
-          onLongPress: () => logic.showBottomMenuInLocalMode(index, context),
-          onSecondaryTap: () => logic.showBottomMenuInLocalMode(index, context),
-          child: EHImage(
-            galleryImage: readPageState.images[index]!.copyWith(
-              path: superResolutionService.computeImageOutputRelativePath(readPageState.images[index]!.path!),
-            ),
-            containerWidth: logic.readPageState.imageContainerSizes[index]?.width ?? logic.getPlaceHolderSize(index).width,
-            containerHeight: logic.readPageState.imageContainerSizes[index]?.height ?? logic.getPlaceHolderSize(index).height,
-            clearMemoryCacheWhenDispose: true,
-            loadingWidgetBuilder: () => _loadingWidgetBuilder(context, index),
-            failedWidgetBuilder: (state) => _failedWidgetBuilderForLocalMode(index, state),
-            completedWidgetBuilder: (state) => completedWidgetBuilderForLocalModeCallBack(index, state),
-            maxBytes: readSetting.enableMaxImageKilobyte.isTrue ? readSetting.maxImageKilobyte.toInt() * 1024 : null,
-          ),
-        );
       },
     );
   }

@@ -10,7 +10,6 @@ enum ConfigEnum {
   advancedSetting('advancedSetting'),
   downloadSetting('downloadSetting'),
   EHSetting('EHSetting'),
-  mouseSetting('mouseSetting'),
   networkSetting('networkSetting'),
   performanceSetting('performanceSetting'),
   preferenceSetting('preferenceSetting'),
@@ -18,15 +17,9 @@ enum ConfigEnum {
   securitySetting('securitySetting'),
   siteSetting('siteSetting'),
   styleSetting('styleSetting'),
-  superResolutionSetting('SuperResolutionSetting'),
   userSetting('userSetting'),
   archiveBotSetting('archiveBotSetting'),
   downloadSearchPageType('downloadSearchPageType'),
-  windowFullScreen('windowFullScreen'),
-  windowMaximize('windowMaximize'),
-  windowWidth('windowWidth'),
-  windowHeight('windowHeight'),
-  leftColumnWidthRatio('leftColumnWidthRatio'),
 
   /// config
   ehCookie('eh_cookies'),

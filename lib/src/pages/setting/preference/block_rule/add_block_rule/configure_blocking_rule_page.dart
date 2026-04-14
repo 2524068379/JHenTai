@@ -52,7 +52,7 @@ class ConfigureBlockingRulePage extends StatelessWidget {
             const Divider(height: 48),
             _buildHelp(context).marginOnly(),
           ],
-        ).enableMouseDrag(withScrollBar: true),
+        ),
       ),
     );
   }

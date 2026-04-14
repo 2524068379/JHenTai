@@ -62,10 +62,6 @@ class _HomePageState extends State<HomePage> with LoginRequiredMixin {
 
   /// Listen to share or open urls/text coming from outside the app while the app is in the memory or is closed
   void _initSharingIntent() {
-    if (!GetPlatform.isAndroid) {
-      return;
-    }
-
     ReceiveSharingIntent.instance.getInitialMedia().then(
       (List<SharedMediaFile> files) {
         if (files.isEmpty) {
