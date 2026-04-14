@@ -97,7 +97,7 @@ dependencies:
   flutter_displaymode: ^0.7.0
   pinput: ^6.0.2
   wakelock_plus: ^1.5.2
-  flex_color_picker: ^3.8.0
+  flex_color_picker: ^3.7.0
   zoom_widget: 2.0.1
   android_intent_plus: ^6.0.0
   integral_isolates: ^0.5.1
