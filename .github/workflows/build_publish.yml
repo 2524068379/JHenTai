@@ -65,7 +65,7 @@ jobs:
     steps:
       # Checkout branch
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
       # Add Android keystore
       - name: Setup Android keystore
         if: matrix.target == 'Android'
@@ -89,7 +89,7 @@ jobs:
       # Cache Pod
       - name: Cache Pod
         if: matrix.cache_pod_key != null
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           key: ${{ matrix.cache_pod_key }}
           path: ${{ matrix.cache_pod_path }}
@@ -232,7 +232,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
       - name: Make tmp dir
         run: mkdir /tmp/artifacts
       - name: Download all Artifacts
