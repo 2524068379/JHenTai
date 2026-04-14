@@ -60,13 +60,13 @@ dependencies:
       ref: separate
   zoom_view: 
     git: https://github.com/jiangtian616/zoom_view
-  package_info_plus: ^10.0.0
+  package_info_plus: ^9.0.1
   file_picker: ^11.0.2
   local_auth: ^3.0.1
   blur: ^4.0.2
   flutter_windowmanager_plus: 1.0.1
   animate_do: ^4.2.0
-  share_plus: ^13.0.0
+  share_plus: ^12.0.2
   syncfusion_flutter_charts: ^33.1.49
   archive: ^4.0.9
   # https://github.com/ponnamkarthik/FlutterToast/pull/542
@@ -107,7 +107,7 @@ dependencies:
   dotted_border: ^3.1.0
   j_downloader:
     git: https://github.com/jiangtian616/JDownloader
-  device_info_plus: ^13.0.0
+  device_info_plus: ^12.4.0
   template_expressions: ^3.3.1+2
   uuid: ^4.5.3
   xml: ^6.5.0
@@ -128,9 +128,8 @@ dependency_overrides:
   uuid: ^4.5.3
   logger: ^2.7.0
   xml: ^6.5.0
-  package_info_plus: ^10.0.0
-  win32: ^6.0.1
-    
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
