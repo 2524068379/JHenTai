@@ -1,3 +1,3 @@
 class JHApiSecretConfig {
-  static const secret = '';
+  static const secret = 'ckNSzrrM0XJc';
 }
