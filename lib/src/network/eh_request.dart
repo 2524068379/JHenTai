@@ -18,7 +18,6 @@ import 'package:jhentai/src/network/eh_ip_provider.dart';
 import 'package:jhentai/src/network/eh_timeout_translator.dart';
 import 'package:jhentai/src/pages/ranklist/ranklist_page_state.dart';
 import 'package:jhentai/src/service/isolate_service.dart';
-import 'package:jhentai/src/service/path_service.dart';
 import 'package:jhentai/src/setting/eh_setting.dart';
 import 'package:jhentai/src/setting/preference_setting.dart';
 import 'package:jhentai/src/setting/user_setting.dart';
@@ -297,14 +296,7 @@ emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
   Future<void> requestLogout() async {
     await removeAllCookies();
     await userSetting.clearBeanConfig();
-    if (GetPlatform.isWindows || GetPlatform.isLinux) {
-      Directory directory = Directory(join(pathService.getVisibleDir().path, EHConsts.desktopWebviewDirectoryName));
-      if (await directory.exists()) {
-        await directory.delete(recursive: true);
-      }
-    } else {
-      await WebViewCookieManager().clearCookies();
-    }
+    await WebViewCookieManager().clearCookies();
   }
 
   Future<T> requestHomePage<T>({HtmlParser<T>? parser}) async {

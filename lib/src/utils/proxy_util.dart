@@ -1,20 +1,15 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get_utils/src/platform/platform.dart';
 import 'package:http_proxy/http_proxy.dart';
 import 'package:jhentai/src/service/log.dart';
 import 'package:jhentai/src/utils/string_uril.dart';
-import 'package:system_network_proxy/system_network_proxy.dart';
 
 import '../setting/network_setting.dart';
 
 Future<String> getSystemProxyAddress() async {
   String systemProxyAddress = '';
 
-  if (GetPlatform.isDesktop) {
-    SystemNetworkProxy.init();
-    systemProxyAddress = await SystemNetworkProxy.getProxyServer();
-  }
-  if (GetPlatform.isMobile) {
+  if (GetPlatform.isAndroid) {
     HttpProxy httpProxy = await HttpProxy.createHttpProxy();
     if (!isEmptyOrNull(httpProxy.host) && !isEmptyOrNull(httpProxy.port)) {
       systemProxyAddress = '${httpProxy.host}:${httpProxy.port}';

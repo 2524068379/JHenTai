@@ -136,20 +136,16 @@ class ReadPageLogic extends GetxController {
       }
     });
 
-    if (!GetPlatform.isDesktop) {
-      state.battery.batteryLevel.then((value) => state.batteryLevel = value);
-    }
+    state.battery.batteryLevel.then((value) => state.batteryLevel = value);
 
     /// refresh current time and battery level info
     refreshCurrentTimeAndBatteryLevelTimer = Timer.periodic(
       const Duration(seconds: 1),
       (_) {
-        if (!GetPlatform.isDesktop) {
-          state.battery.batteryLevel.then((value) {
-            state.batteryLevel = value;
-            update([batteryId]);
-          });
-        }
+        state.battery.batteryLevel.then((value) {
+          state.batteryLevel = value;
+          update([batteryId]);
+        });
         update([currentTimeId]);
       },
     );
@@ -160,11 +156,11 @@ class ReadPageLogic extends GetxController {
       WakelockPlus.enable();
     }
 
-    if (GetPlatform.isMobile && readSetting.enableCustomReadBrightness.isTrue) {
+    if (readSetting.enableCustomReadBrightness.isTrue) {
       applyCurrentBrightness();
     }
     enableCustomBrightnessListener = ever(readSetting.enableCustomReadBrightness, (_) {
-      if (GetPlatform.isMobile && readSetting.enableCustomReadBrightness.isTrue) {
+      if (readSetting.enableCustomReadBrightness.isTrue) {
         applyCurrentBrightness();
       } else {
         resetBrightness();
@@ -366,11 +362,6 @@ class ReadPageLogic extends GetxController {
 
   /// If [immersiveMode], switch to [SystemUiMode.immersiveSticky], otherwise reset to [SystemUiMode.edgeToEdge]
   void applyCurrentImmersiveMode() {
-    if (GetPlatform.isWindows) {
-      clearImageContainerSized();
-      updateSafely([pageId]);
-    }
-
     if (readSetting.enableImmersiveMode.isTrue) {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     } else {
@@ -379,28 +370,20 @@ class ReadPageLogic extends GetxController {
   }
 
   void restoreImmersiveMode() {
-    if (GetPlatform.isMobile) {
-      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-    }
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
 
   void applyCurrentBrightness() {
-    if (GetPlatform.isMobile && readSetting.enableCustomReadBrightness.isTrue) {
+    if (readSetting.enableCustomReadBrightness.isTrue) {
       ScreenBrightness().setScreenBrightness(readSetting.customBrightness.value.toDouble() / 100);
     }
   }
 
   void resetBrightness() {
-    if (GetPlatform.isMobile) {
-      ScreenBrightness().resetScreenBrightness();
-    }
+    ScreenBrightness().resetScreenBrightness();
   }
 
   void updateDeviceOrientation() {
-    if (!GetPlatform.isMobile) {
-      return;
-    }
-
     if (readSetting.deviceDirection.value == DeviceDirection.followSystem) {
       restoreDeviceOrientation();
     }
@@ -413,10 +396,6 @@ class ReadPageLogic extends GetxController {
   }
 
   void restoreDeviceOrientation() {
-    if (!GetPlatform.isMobile) {
-      return;
-    }
-
     SystemChrome.setPreferredOrientations([]);
   }
 
@@ -565,25 +544,6 @@ class ReadPageLogic extends GetxController {
         duration: const Duration(milliseconds: 200),
       );
     }
-  }
-
-  void handleTapSuperResolutionButton() {
-    state.useSuperResolution = !state.useSuperResolution;
-    log.info('toggle super resolution mode: ${state.useSuperResolution}');
-    updateSafely([topMenuId]);
-    layoutLogic.updateSafely([BaseLayoutLogic.pageId]);
-  }
-
-  String getSuperResolutionProgress() {
-    int gid = state.readPageInfo.gid!;
-    SuperResolutionType type = state.readPageInfo.mode == ReadMode.downloaded ? SuperResolutionType.gallery : SuperResolutionType.archive;
-    SuperResolutionInfo? superResolutionInfo = superResolutionService.get(gid, type);
-
-    if (superResolutionInfo == null) {
-      return '';
-    }
-
-    return '(${superResolutionInfo.imageStatuses.where((status) => status == SuperResolutionStatus.success).length}/${superResolutionInfo.imageStatuses.length})';
   }
 
   void toggleDisplayFirstPageAlone() {

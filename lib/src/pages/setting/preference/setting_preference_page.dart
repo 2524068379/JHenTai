@@ -7,11 +7,9 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../consts/locale_consts.dart';
 import '../../../l18n/locale_text.dart';
-import '../../../model/jh_layout.dart';
 import '../../../routes/routes.dart';
 import '../../../service/tag_translation_service.dart';
 import '../../../setting/preference_setting.dart';
-import '../../../setting/style_setting.dart';
 import '../../../utils/locale_util.dart';
 import '../../../utils/route_util.dart';
 import '../../../widget/loading_state_indicator.dart';
@@ -32,21 +30,20 @@ class SettingPreferencePage extends StatelessWidget {
               _buildTagTranslate(),
               _buildTagOrderOptimization(),
               _buildDefaultTab(),
-              if (styleSetting.isInV2Layout) _buildSimpleDashboardMode(),
-              if (styleSetting.isInV2Layout) _buildShowBottomNavigation(),
-              if (styleSetting.isInV2Layout || styleSetting.actualLayout == LayoutMode.desktop) _buildHideScroll2TopButton(),
+              _buildSimpleDashboardMode(),
+              _buildShowBottomNavigation(),
+              _buildHideScroll2TopButton(),
               _buildPreloadGalleryCover(),
               _buildEnableSwipeBackGesture(),
-              if (styleSetting.isInV2Layout) _buildEnableLeftMenuDrawerGesture(),
-              if (styleSetting.isInV2Layout) _buildQuickSearch(),
-              if (styleSetting.isInV2Layout) _buildDrawerGestureEdgeWidth(context),
+              _buildEnableLeftMenuDrawerGesture(),
+              _buildQuickSearch(),
+              _buildDrawerGestureEdgeWidth(context),
               _buildShowAllGalleryTitles(),
               _buildShowGalleryTagVoteStatus(),
               _buildShowComments(),
               if (preferenceSetting.showComments.isTrue) _buildShowAllComments().fadeIn(const Key('showAllComments')),
               _buildEnableDefaultFavorite(),
               _buildEnableDefaultTagSet(),
-              if (GetPlatform.isDesktop && styleSetting.isInDesktopLayout) _buildLaunchInFullScreen(),
               _buildTagSearchConfig(),
               if (preferenceSetting.enableTagZHTranslation.isTrue) _buildShowR18GImageDirectly().fadeIn(const Key('showR18GImageDirectly')),
               _buildShowUtcTime(),

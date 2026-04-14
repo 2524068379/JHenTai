@@ -27,7 +27,7 @@ class LocalGalleryGridPage extends StatelessWidget with Scroll2TopPageMixin, Gri
       centerTitle: true,
       leading: IconButton(
         icon: const Icon(Icons.help),
-        onPressed: () => toast((GetPlatform.isIOS || GetPlatform.isMacOS) ? 'localGalleryHelpInfo4iOSAndMacOS'.tr : 'localGalleryHelpInfo'.tr, isShort: false),
+        onPressed: () => toast('localGalleryHelpInfo'.tr, isShort: false),
       ),
       titleSpacing: 0,
       title: DownloadPageSegmentControl(galleryType: galleryType),

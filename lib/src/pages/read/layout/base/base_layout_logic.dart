@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:clipboard/clipboard.dart';
 import 'package:dio/dio.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -202,12 +201,6 @@ abstract class BaseLayoutLogic extends GetxController with GetTickerProviderStat
       return;
     }
 
-    if (GetPlatform.isDesktop) {
-      await FlutterClipboard.copy(readPageState.images[index]!.url);
-      toast('hasCopiedToClipboard'.tr);
-      return;
-    }
-
     Uint8List? data = await getNetworkImageData(readPageState.images[index]!.url);
     if (data == null) {
       return;
@@ -229,11 +222,6 @@ abstract class BaseLayoutLogic extends GetxController with GetTickerProviderStat
   }
 
   void shareLocalImage(int index) {
-    if (GetPlatform.isDesktop) {
-      FlutterClipboard.copy(readPageState.images[index]!.url).then((_) => toast('hasCopiedToClipboard'.tr));
-      return;
-    }
-
     Share.shareXFiles(
       [
         XFile(
@@ -264,31 +252,17 @@ abstract class BaseLayoutLogic extends GetxController with GetTickerProviderStat
 
     String fileName = '${readPageState.readPageInfo.gid!}_${readPageState.readPageInfo.token!}_$index$ext';
 
-    if (GetPlatform.isDesktop) {
-      File file = File(join(downloadSetting.singleImageSavePath.value, fileName));
-      try {
-        await file.create(recursive: true);
-        await file.writeAsBytes(data);
-        toast('saveSuccess'.tr);
-      } catch (e) {
-        log.error('Save online image failed: $e');
-        toast('saveFailed'.tr);
-        file.delete().ignore();
-        return;
-      }
-    } else {
-      File file = File(join(downloadSetting.tempDownloadPath.value, fileName));
-      try {
-        await file.create(recursive: true);
-        await file.writeAsBytes(data);
-        bool success = await _saveFile2Album(file.path, fileName);
-        toast(success ? 'saveSuccess'.tr : 'saveFailed'.tr);
-      } catch (e) {
-        log.error('Save online image failed: $e');
-        toast('saveFailed'.tr);
-        file.delete().ignore();
-        return;
-      }
+    File file = File(join(downloadSetting.tempDownloadPath.value, fileName));
+    try {
+      await file.create(recursive: true);
+      await file.writeAsBytes(data);
+      bool success = await _saveFile2Album(file.path, fileName);
+      toast(success ? 'saveSuccess'.tr : 'saveFailed'.tr);
+    } catch (e) {
+      log.error('Save online image failed: $e');
+      toast('saveFailed'.tr);
+      file.delete().ignore();
+      return;
     }
   }
 
@@ -352,13 +326,8 @@ abstract class BaseLayoutLogic extends GetxController with GetTickerProviderStat
     }
 
     try {
-      if (GetPlatform.isDesktop) {
-        await file.copy(join(downloadSetting.singleImageSavePath.value, fileName));
-        toast('saveSuccess'.tr);
-      } else {
-        bool success = await _saveFile2Album(downloadPath, fileName);
-        toast(success ? 'saveSuccess'.tr : 'saveFailed'.tr);
-      }
+      bool success = await _saveFile2Album(downloadPath, fileName);
+      toast(success ? 'saveSuccess'.tr : 'saveFailed'.tr);
     } catch (e) {
       log.error('Save original online image failed: $e');
       toast('saveFailed'.tr);
@@ -378,11 +347,7 @@ abstract class BaseLayoutLogic extends GetxController with GetTickerProviderStat
       fileName = '${readPageState.readPageInfo.gid!}_${readPageState.readPageInfo.token!}_$index${extension(image.path)}';
     }
 
-    if (GetPlatform.isDesktop) {
-      image.copy(join(downloadSetting.singleImageSavePath.value, fileName)).then((_) => toast('success'.tr));
-    } else {
-      _saveFile2Album(filePath, fileName).then((_) => toast('success'.tr));
-    }
+    _saveFile2Album(filePath, fileName).then((_) => toast('success'.tr));
   }
 
   /// Compute image container size when we haven't parsed image's size

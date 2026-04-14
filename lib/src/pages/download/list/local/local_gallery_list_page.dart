@@ -45,7 +45,7 @@ class LocalGalleryListPage extends StatelessWidget with Scroll2TopPageMixin {
       title: const DownloadPageSegmentControl(galleryType: DownloadPageGalleryType.local),
       leading: IconButton(
         icon: const Icon(Icons.help),
-        onPressed: () => toast((GetPlatform.isIOS || GetPlatform.isMacOS) ? 'localGalleryHelpInfo4iOSAndMacOS'.tr : 'localGalleryHelpInfo'.tr, isShort: false),
+        onPressed: () => toast('localGalleryHelpInfo'.tr, isShort: false),
       ),
       actions: [
         PopupMenuButton(

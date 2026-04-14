@@ -16,11 +16,11 @@ class SettingSecurityPage extends StatelessWidget {
         () => ListView(
           padding: const EdgeInsets.only(top: 16),
           children: [
-            if (GetPlatform.isMobile) _buildEnableBlurBackgroundApp(),
+            _buildEnableBlurBackgroundApp(),
             _buildEnablePasswordAuth(),
             if (securitySetting.supportBiometricAuth) _buildEnableBiometricAuth(),
-            if (GetPlatform.isMobile) _buildEnableAuthOnResume(),
-            if (GetPlatform.isAndroid) _buildHideImagesInAlbum(),
+            _buildEnableAuthOnResume(),
+            _buildHideImagesInAlbum(),
           ],
         ).withListTileTheme(context),
       ),

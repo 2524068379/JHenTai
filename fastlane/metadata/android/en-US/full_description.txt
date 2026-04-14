@@ -1,12 +1,12 @@
 ## Description
 
-A manga app for E-Hentai, supporting Android & iOS & Windows & MacOS & Linux.
+A manga app for E-Hentai and EXHentai on Android.
 
 Still in development stage, welcome to submit issues or feature requests.
 
 ## Main Features
 
-- Mobile, tablet, desktop layout(3 kinds)
+- Android-focused mobile experience
 - Vertical, horizontal, double column read page layout(4 kinds)
 - GalleryPage, Popular, Favorite, Watched, History, support multiple gallery list style
 - search, search suggestion, tap tag to search, file search, jump to a certain page

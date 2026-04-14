@@ -2,10 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-import 'package:jhentai/src/pages/home_page.dart';
-import 'package:jhentai/src/setting/style_setting.dart';
-import 'package:jhentai/src/utils/route_util.dart';
 
 import '../utils/toast_util.dart';
 
@@ -40,37 +36,7 @@ class _WillPopInterceptorState extends State<WillPopInterceptor> {
   }
 
   /// system back
-  Future<bool> _handlePopApp() {
-    if (styleSetting.isInMobileLayout) {
-      return _handleDoubleTapPopApp();
-    }
-
-    if (styleSetting.isInTabletLayout) {
-      if (Get.global(rightV2).currentState?.canPop() == true) {
-        popRightRoute();
-        return Future.value(false);
-      }
-      if (Get.global(leftV2).currentState?.canPop() == true) {
-        popLeftRoute();
-        return Future.value(false);
-      }
-      return _handleDoubleTapPopApp();
-    }
-
-    if (styleSetting.isInDesktopLayout) {
-      if (Get.global(right).currentState?.canPop() == true) {
-        popRightRoute();
-        return Future.value(false);
-      }
-      if (Get.global(left).currentState?.canPop() == true) {
-        popLeftRoute();
-        return Future.value(false);
-      }
-      return _handleDoubleTapPopApp();
-    }
-
-    return _handleDoubleTapPopApp();
-  }
+  Future<bool> _handlePopApp() => _handleDoubleTapPopApp();
 
   /// double tap back button to exit app
   Future<bool> _handleDoubleTapPopApp() {

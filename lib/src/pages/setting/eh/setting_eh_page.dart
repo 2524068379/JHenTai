@@ -13,7 +13,6 @@ import 'package:jhentai/src/utils/cookie_util.dart';
 import 'package:jhentai/src/utils/eh_spider_parser.dart';
 import 'package:jhentai/src/widget/loading_state_indicator.dart';
 import 'package:retry/retry.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../exception/eh_site_exception.dart';
 import '../../../setting/eh_setting.dart';
@@ -116,11 +115,6 @@ class _SettingEHPageState extends State<SettingEHPage> {
       subtitle: Text('siteSettingHint'.tr),
       trailing: const Icon(Icons.keyboard_arrow_right),
       onTap: () async {
-        if (GetPlatform.isDesktop) {
-          launchUrlString(EHConsts.EUconfig);
-          return;
-        }
-
         await toRoute(
           Routes.webview,
           arguments: {

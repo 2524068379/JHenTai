@@ -40,10 +40,8 @@ class DownloadSetting with JHLifeCircleBeanWithConfigStorage implements JHLifeCi
   void applyBeanConfig(String configString) {
     Map map = jsonDecode(configString);
 
-    if (!GetPlatform.isIOS) {
-      downloadPath.value = map['downloadPath'] ?? downloadPath.value;
-      singleImageSavePath.value = map['singleImageSavePath'] ?? singleImageSavePath.value;
-    }
+    downloadPath.value = map['downloadPath'] ?? downloadPath.value;
+    singleImageSavePath.value = map['singleImageSavePath'] ?? singleImageSavePath.value;
     if (map['extraGalleryScanPath'] != null) {
       extraGalleryScanPath.addAll(map['extraGalleryScanPath'].cast<String>());
       extraGalleryScanPath.value = extraGalleryScanPath.toSet().toList();

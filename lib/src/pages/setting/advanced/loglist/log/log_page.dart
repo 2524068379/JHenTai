@@ -42,7 +42,7 @@ class _LogPageState extends State<LogPage> {
             .titleMedium
             ?.copyWith(fontWeight: FontWeight.bold),
         actions: [
-          if (!GetPlatform.isDesktop) IconButton(onPressed: _shareLog, icon: const Icon(Icons.share)),
+          IconButton(onPressed: _shareLog, icon: const Icon(Icons.share)),
           IconButton(onPressed: _copyLog, icon: const Icon(Icons.copy)),
         ],
       ),
@@ -53,7 +53,7 @@ class _LogPageState extends State<LogPage> {
           style: TextStyle(
             fontSize: 9,
             fontWeight: FontWeight.bold,
-            fontFamily: Platform.isAndroid ? 'monospace' : 'PingFang HK',
+            fontFamily: 'monospace',
           ),
         ),
       ).marginSymmetric(horizontal: 4),

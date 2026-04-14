@@ -26,7 +26,7 @@ class DownloadPage extends StatefulWidget {
 
 class _DownloadPageState extends State<DownloadPage> {
   DownloadPageGalleryType galleryType = DownloadPageGalleryType.download;
-  DownloadPageBodyType bodyType = GetPlatform.isMobile ? DownloadPageBodyType.list : DownloadPageBodyType.grid;
+  DownloadPageBodyType bodyType = DownloadPageBodyType.list;
   Completer<void> bodyTypeCompleter = Completer<void>();
 
   @override

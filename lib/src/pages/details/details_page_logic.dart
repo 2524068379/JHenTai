@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:clipboard/clipboard.dart';
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -828,12 +827,6 @@ class DetailsPageLogic extends GetxController with LoginRequiredMixin, Scroll2To
 
   Future<void> shareGallery() async {
     log.info('Share gallery:${state.galleryUrl}');
-
-    if (GetPlatform.isDesktop) {
-      await FlutterClipboard.copy(state.galleryUrl.url);
-      toast('hasCopiedToClipboard'.tr);
-      return;
-    }
 
     Share.share(
       state.galleryUrl.url,

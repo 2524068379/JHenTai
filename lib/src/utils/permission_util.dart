@@ -8,33 +8,26 @@ import 'package:permission_handler/permission_handler.dart';
 import '../service/log.dart';
 
 Future<void> requestStoragePermission() async {
-  if (!GetPlatform.isMacOS && !GetPlatform.isLinux) {
-    try {
-      await Permission.manageExternalStorage.request().isGranted;
-      log.info(await Permission.manageExternalStorage.status);
-    } on Exception catch (e) {
-      log.error('Request manageExternalStorage permission failed!', e);
-    }
+  try {
+    await Permission.manageExternalStorage.request().isGranted;
+    log.info(await Permission.manageExternalStorage.status);
+  } on Exception catch (e) {
+    log.error('Request manageExternalStorage permission failed!', e);
+  }
 
-    try {
-      await Permission.storage.request().isGranted;
-      log.info(await Permission.storage.status);
-    } on Exception catch (e) {
-      log.error('Request storage permission failed!', e);
-    }
+  try {
+    await Permission.storage.request().isGranted;
+    log.info(await Permission.storage.status);
+  } on Exception catch (e) {
+    log.error('Request storage permission failed!', e);
   }
 }
 
 Future<void> requestAlbumPermission() async {
-  bool statuses;
-  if (Platform.isAndroid) {
-    final deviceInfoPlugin = DeviceInfoPlugin();
-    final deviceInfo = await deviceInfoPlugin.androidInfo;
-    final sdkInt = deviceInfo.version.sdkInt;
-    statuses = sdkInt < 29 ? await Permission.storage.request().isGranted : true;
-  } else {
-    statuses = await Permission.photosAddOnly.request().isGranted;
-  }
+  final deviceInfoPlugin = DeviceInfoPlugin();
+  final deviceInfo = await deviceInfoPlugin.androidInfo;
+  final sdkInt = deviceInfo.version.sdkInt;
+  bool statuses = sdkInt < 29 ? await Permission.storage.request().isGranted : true;
   
   log.info('requestPermission result: $statuses');
 }

@@ -1,12 +1,12 @@
 ## 定位
 
-E-hentai 的一个多端app，现支持Android、iOS、Windows、MacOS和Linux系统。
+面向 E-Hentai / EXHentai 的安卓应用。
 
 仍在发展阶段，十分欢迎提交各种bug反馈或Feature Request。
 
 ## 主要功能
 
-- 支持手机、平板、桌面三端布局
+- 专注安卓手机体验
 - 支持上下、左右、双列等共四种阅读布局
 - 主页、热门、收藏、关注、历史，支持多种画廊样式
 - 搜索、搜索Tag提示、点击Tag快捷搜索、以图搜图、跳页

@@ -72,7 +72,7 @@ class VerticalListLayout extends BaseLayout {
       ],
     );
 
-    if (GetPlatform.isMobile && index == 0) {
+    if (index == 0) {
       return Obx(() => child.marginOnly(top: readSetting.notchOptimization.isTrue ? MediaQuery.of(context).padding.top : 0));
     }
 

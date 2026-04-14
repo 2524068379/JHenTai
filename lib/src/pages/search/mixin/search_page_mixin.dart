@@ -7,7 +7,6 @@ import 'package:jhentai/src/pages/details/details_page_logic.dart';
 import 'package:jhentai/src/pages/gallery_image/gallery_image_page_logic.dart';
 import 'package:jhentai/src/pages/search/mixin/search_page_logic_mixin.dart';
 import 'package:jhentai/src/pages/search/mixin/search_page_state_mixin.dart';
-import 'package:jhentai/src/setting/style_setting.dart';
 import 'package:jhentai/src/utils/search_util.dart';
 
 import '../../../database/database.dart';
@@ -64,7 +63,7 @@ mixin SearchPageMixin<L extends SearchPageLogicMixin, S extends SearchPageStateM
       init: logic,
       id: logic.searchFieldId,
       builder: (_) => SizedBox(
-        height: styleSetting.isInDesktopLayout ? UIConfig.desktopSearchBarHeight : UIConfig.mobileV2SearchBarHeight,
+        height: UIConfig.mobileV2SearchBarHeight,
         child: FutureBuilder(
           future: state.searchConfigInitCompleter.future,
           builder: (_, __) => TextField(
@@ -92,16 +91,16 @@ mixin SearchPageMixin<L extends SearchPageLogicMixin, S extends SearchPageStateM
                 child: GestureDetector(child: const Icon(Icons.search), onTap: logic.handleClearAndRefresh),
               ),
               prefixIconConstraints: BoxConstraints(
-                minHeight: styleSetting.isInDesktopLayout ? UIConfig.desktopSearchBarHeight : UIConfig.mobileV2SearchBarHeight,
-                minWidth: styleSetting.isInDesktopLayout ? 32 : 52,
+                minHeight: UIConfig.mobileV2SearchBarHeight,
+                minWidth: 52,
               ),
               suffixIcon: MouseRegion(
                 cursor: SystemMouseCursors.click,
                 child: GestureDetector(child: const Icon(Icons.cancel), onTap: logic.handleTapClearButton),
               ),
               suffixIconConstraints: BoxConstraints(
-                minHeight: styleSetting.isInDesktopLayout ? UIConfig.desktopSearchBarHeight : UIConfig.mobileV2SearchBarHeight,
-                minWidth: styleSetting.isInDesktopLayout ? 24 : 40,
+                minHeight: UIConfig.mobileV2SearchBarHeight,
+                minWidth: 40,
               ),
             ),
             onTap: () {

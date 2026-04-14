@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -10,7 +9,6 @@ import 'package:jhentai/src/extension/dio_exception_extension.dart';
 import 'package:jhentai/src/extension/get_logic_extension.dart';
 import 'package:jhentai/src/network/eh_request.dart';
 import 'package:jhentai/src/routes/routes.dart';
-import 'package:jhentai/src/service/path_service.dart';
 import 'package:jhentai/src/setting/user_setting.dart';
 import 'package:jhentai/src/utils/eh_spider_parser.dart';
 import 'package:jhentai/src/utils/string_uril.dart';
@@ -250,133 +248,32 @@ class LoginPageLogic extends GetxController {
 
     await ehRequest.requestLogout();
 
-    if (GetPlatform.isWindows || GetPlatform.isLinux) {
-      if (!await WebviewWindow.isWebviewAvailable()) {
-        toast('webLoginIsDisabled'.tr);
-        return;
-      }
-
-      Webview webview = await WebviewWindow.create(
-        configuration: CreateConfiguration(
-          windowWidth: 800,
-          windowHeight: 600,
-          title: EHConsts.appName,
-          userDataFolderWindows: pathService.getVisibleDir().path,
-        ),
-      );
-      webview.addScriptToExecuteOnDocumentCreated('document.cookie = "ipb_member_id=${state.ipbMemberId}"');
-      webview.addScriptToExecuteOnDocumentCreated('document.cookie = "ipb_pass_hash=${state.ipbPassHash}"');
-      webview.isNavigating.addListener(() {
-        if (!webview.isNavigating.value) {
-          _onDesktopPageLoaded4CookieVerification(webview);
-        }
-      });
-      webview.onClose.whenComplete(() {
-        if (state.loginState == LoadingState.loading) {
-          state.loginState = LoadingState.idle;
-          update([loadingStateId]);
-        }
-      });
-
-      webview.launch(EHConsts.EForums);
-    } else {
-      List<Cookie> cookies = [
-        Cookie('ipb_member_id', state.ipbMemberId!),
-        Cookie('ipb_pass_hash', state.ipbPassHash!),
-      ];
-      bool useExSite = false;
-      if (state.igneous != null && state.igneous != '' && state.igneous != 'null' && state.igneous != 'mystery' && state.igneous != 'deleted') {
-        await ehRequest.storeEHCookies([
-          Cookie('igneous', state.igneous!),
-        ]);
-        useExSite = true;
-      }
-
-      toRoute(
-        Routes.webview,
-        arguments: {
-          'title': 'login'.tr,
-          'url': EHConsts.EForums,
-          'cookies': CookieUtil.parse2String(cookies),
-          'onPageFinished': (String url, WebViewController controller) => (_onMobilePageStarted4CookieVerification(url, controller, cookies, useExSite)),
-        },
-      )?.whenComplete(() {
-        if (state.loginState == LoadingState.loading) {
-          state.loginState = LoadingState.idle;
-          update([loadingStateId]);
-        }
-      });
-    }
-  }
-
-  Future<void> _onDesktopPageLoaded4CookieVerification(Webview webview) async {
-    String href = await webview.evaluateJavaScript('window.location.href') as String;
-    if (!href.contains(EHConsts.EForums)) {
-      return;
-    }
-
-    String? rawGuestHint = await webview.evaluateJavaScript('''
-    document.querySelector('#userlinksguest')?.innerText ?? ""
-    ''');
-    
-    String guestHint;
-    try {
-      guestHint = jsonDecode(rawGuestHint!);
-    } catch (e) {
-      guestHint = rawGuestHint!;
-    }
-
-    bool loginFailed = !isEmptyOrNull(guestHint) && guestHint != 'null';
-    if (loginFailed) {
-      log.info('Login failed by cookie via webview.');
-
-      state.loginState = LoadingState.error;
-      update([loadingStateId]);
-      snack('loginFail'.tr, 'invalidCookie'.tr);
-      webview.close();
-      return;
-    }
-
-    String? rawUsername = await webview.evaluateJavaScript('''
-    document.querySelector('.home > b > a')?.innerText ?? ""
-    ''');
-
-    String username;
-    try {
-      username = jsonDecode(rawUsername!);
-    } catch (e) {
-      username = rawUsername!;
-    }
-    if (isEmptyOrNull(username) || username == 'null') {
-      return;
-    }
-
-    await ehRequest.storeEHCookies([
+    List<Cookie> cookies = [
       Cookie('ipb_member_id', state.ipbMemberId!),
       Cookie('ipb_pass_hash', state.ipbPassHash!),
-    ]);
+    ];
+    bool useExSite = false;
     if (state.igneous != null && state.igneous != '' && state.igneous != 'null' && state.igneous != 'mystery' && state.igneous != 'deleted') {
       await ehRequest.storeEHCookies([
         Cookie('igneous', state.igneous!),
       ]);
-      ehSetting.site.value = 'EX';
+      useExSite = true;
     }
-    await userSetting.saveUserInfo(
-      userName: username,
-      ipbMemberId: int.parse(state.ipbMemberId!),
-      ipbPassHash: state.ipbPassHash!,
-    );
 
-    log.info('Login success by web via webview.');
-    state.loginState = LoadingState.success;
-    update([loadingStateId]);
-    toast('loginSuccess'.tr);
-    webview.close();
-
-    untilRoute(
-      currentRoute: Routes.login,
-      predicate: (route) => route.settings.name == Routes.settingAccount || route.settings.name == Routes.blank || route.settings.name == Routes.home,
-    );
+    toRoute(
+      Routes.webview,
+      arguments: {
+        'title': 'login'.tr,
+        'url': EHConsts.EForums,
+        'cookies': CookieUtil.parse2String(cookies),
+        'onPageFinished': (String url, WebViewController controller) => (_onMobilePageStarted4CookieVerification(url, controller, cookies, useExSite)),
+      },
+    )?.whenComplete(() {
+      if (state.loginState == LoadingState.loading) {
+        state.loginState = LoadingState.idle;
+        update([loadingStateId]);
+      }
+    });
   }
 
   Future<void> _onMobilePageStarted4CookieVerification(String url, WebViewController controller, List<Cookie> cookies, bool useExSite) async {
@@ -483,78 +380,14 @@ class LoginPageLogic extends GetxController {
   }
 
   Future<void> handleWebLogin() async {
-    if (GetPlatform.isWindows || GetPlatform.isLinux) {
-      if (!await WebviewWindow.isWebviewAvailable()) {
-        toast('webLoginIsDisabled'.tr);
-        return;
-      }
-      Webview webview = await WebviewWindow.create(
-        configuration: CreateConfiguration(
-          windowWidth: 800,
-          windowHeight: 600,
-          title: EHConsts.appName,
-          userDataFolderWindows: pathService.getVisibleDir().path,
-        ),
-      );
-      webview.addOnUrlRequestCallback((url) {
-        _onDesktopPageStarted4WebLogin(webview, url);
-      });
-      webview.launch(EHConsts.ELogin);
-    } else {
-      toRoute(
-        Routes.webview,
-        arguments: {
-          'title': 'login'.tr,
-          'url': EHConsts.ELogin,
-          'onPageStarted': _onMobilePageStarted4WebLogin,
-        },
-      );
-    }
-  }
-
-  Future<void> _onDesktopPageStarted4WebLogin(Webview webview, String url) async {
-    if (state.cookieLoginLoadingState != LoadingState.idle) {
-      return;
-    }
-
-    String cookieString = await webview.evaluateJavaScript('document.cookie') as String;
-    cookieString = cookieString.replaceAll('"', '');
-    if (!CookieUtil.validateCookiesString(cookieString)) {
-      return;
-    }
-
-    log.info('Login success by web.');
-    state.cookieLoginLoadingState = LoadingState.loading;
-
-    try {
-      List<Cookie> cookies = CookieUtil.parse2Cookies(cookieString);
-      ehRequest.storeEHCookies(CookieUtil.parse2Cookies(cookieString));
-
-      int ipbMemberId = int.parse(cookies.firstWhere((cookie) => cookie.name == 'ipb_member_id').value);
-      String ipbPassHash = cookies.firstWhere((cookie) => cookie.name == 'ipb_pass_hash').value;
-
-      /// temporary name
-      userSetting.saveUserInfo(userName: 'EHUser'.tr, ipbMemberId: ipbMemberId, ipbPassHash: ipbPassHash);
-
-      webview.close();
-      toast('loginSuccess'.tr);
-      untilRoute(
-        currentRoute: Routes.login,
-        predicate: (route) => route.settings.name == Routes.settingAccount || route.settings.name == Routes.blank || route.settings.name == Routes.home,
-      );
-
-      /// get username and avatar
-      Map<String, String?>? userInfo = await ehRequest.requestForum(ipbMemberId, EHSpiderParser.profilePage2UserInfo);
-      userSetting.saveUserNameAndAvatarAndNickName(
-        userName: userInfo!['userName']!,
-        avatarImgUrl: userInfo['avatarImgUrl'],
-        nickName: userInfo['nickName']!,
-      );
-
-      state.cookieLoginLoadingState = LoadingState.success;
-    } finally {
-      state.cookieLoginLoadingState = LoadingState.idle;
-    }
+    toRoute(
+      Routes.webview,
+      arguments: {
+        'title': 'login'.tr,
+        'url': EHConsts.ELogin,
+        'onPageStarted': _onMobilePageStarted4WebLogin,
+      },
+    );
   }
 
   Future<void> _onMobilePageStarted4WebLogin(String url, WebViewController controller) async {
