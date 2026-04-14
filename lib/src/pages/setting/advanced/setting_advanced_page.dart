@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:extended_image/extended_image.dart';
@@ -62,7 +63,8 @@ class _SettingAdvancedPageState extends State<SettingAdvancedPage> {
           padding: const EdgeInsets.only(top: 16),
           children: [
             _buildEnableLogging(),
-            if (advancedSetting.enableLogging.isTrue) _buildRecordAllLogs().fadeIn(),
+            if (advancedSetting.enableLogging.isTrue)
+              _buildRecordAllLogs().fadeIn(),
             _buildOpenLogs(),
             _buildClearLogs(context),
             _buildClearImageCache(context),
@@ -83,7 +85,9 @@ class _SettingAdvancedPageState extends State<SettingAdvancedPage> {
     return ListTile(
       title: Text('enableLogging'.tr),
       subtitle: Text('needRestart'.tr),
-      trailing: Switch(value: advancedSetting.enableLogging.value, onChanged: advancedSetting.saveEnableLogging),
+      trailing: Switch(
+          value: advancedSetting.enableLogging.value,
+          onChanged: advancedSetting.saveEnableLogging),
     );
   }
 
@@ -116,7 +120,9 @@ class _SettingAdvancedPageState extends State<SettingAdvancedPage> {
             useCupertinoIndicator: true,
             successWidgetBuilder: () => Text(
               _logSize,
-              style: TextStyle(color: UIConfig.resumePauseButtonColor(context), fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  color: UIConfig.resumePauseButtonColor(context),
+                  fontWeight: FontWeight.w500),
             ),
             errorTapCallback: _loadingLogSize,
           ).marginOnly(right: 8)
@@ -138,7 +144,9 @@ class _SettingAdvancedPageState extends State<SettingAdvancedPage> {
             useCupertinoIndicator: true,
             successWidgetBuilder: () => Text(
               _imageCacheSize,
-              style: TextStyle(color: UIConfig.resumePauseButtonColor(context), fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  color: UIConfig.resumePauseButtonColor(context),
+                  fontWeight: FontWeight.w500),
             ),
             errorTapCallback: _getImagesCacheSize,
           ).marginOnly(right: 8)
@@ -287,7 +295,10 @@ class _SettingAdvancedPageState extends State<SettingAdvancedPage> {
           if (!cacheImagesDirectory.existsSync()) {
             totalBytes = 0;
           } else {
-            totalBytes = cacheImagesDirectory.listSync().fold<int>(0, (previousValue, element) => previousValue += (element as File).lengthSync());
+            totalBytes = cacheImagesDirectory.listSync().fold<int>(
+                0,
+                (previousValue, element) =>
+                    previousValue += (element as File).lengthSync());
           }
 
           return byte2String(totalBytes.toDouble());
@@ -318,10 +329,9 @@ class _SettingAdvancedPageState extends State<SettingAdvancedPage> {
   Future<void> _importData(BuildContext context) async {
     FilePickerResult? result;
     try {
-      result = await FilePicker.platform.pickFiles(
+      result = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['json'],
-        allowCompression: false,
         compressionQuality: 0,
       );
     } on Exception catch (e) {
@@ -345,7 +355,8 @@ class _SettingAdvancedPageState extends State<SettingAdvancedPage> {
 
     try {
       List list = await isolateService.jsonDecodeAsync(string);
-      List<CloudConfig> configs = list.map((e) => CloudConfig.fromJson(e)).toList();
+      List<CloudConfig> configs =
+          list.map((e) => CloudConfig.fromJson(e)).toList();
       for (CloudConfig config in configs) {
         await cloudConfigService.importConfig(config);
       }
@@ -369,11 +380,13 @@ class _SettingAdvancedPageState extends State<SettingAdvancedPage> {
       return;
     }
 
-    String fileName = '${CloudConfigService.configFileName}-${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.json';
+    String fileName =
+        '${CloudConfigService.configFileName}-${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.json';
     return _exportDataMobile(fileName, result);
   }
 
-  Future<void> _exportDataMobile(String fileName, List<CloudConfigTypeEnum>? result) async {
+  Future<void> _exportDataMobile(
+      String fileName, List<CloudConfigTypeEnum>? result) async {
     if (_exportDataLoadingState == LoadingState.loading) {
       return;
     }
@@ -388,11 +401,12 @@ class _SettingAdvancedPageState extends State<SettingAdvancedPage> {
     }
 
     try {
-      String? savedPath = await FilePicker.platform.saveFile(
+      String? savedPath = await FilePicker.saveFile(
         fileName: fileName,
         type: FileType.custom,
         allowedExtensions: ['json'],
-        bytes: utf8.encode(await isolateService.jsonEncodeAsync(uploadConfigs)),
+        bytes: Uint8List.fromList(
+            utf8.encode(await isolateService.jsonEncodeAsync(uploadConfigs))),
         lockParentWindow: true,
       );
       if (savedPath != null) {
@@ -406,5 +420,4 @@ class _SettingAdvancedPageState extends State<SettingAdvancedPage> {
       setStateSafely(() => _exportDataLoadingState = LoadingState.error);
     }
   }
-
 }

@@ -33,7 +33,8 @@ class EHTag extends StatefulWidget {
 class _EHTagState extends State<EHTag> with AnimationMixin {
   bool inDeleteMode = false;
 
-  late Animation<double> animation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(parent: controller, curve: Curves.easeIn));
+  late Animation<double> animation = Tween<double>(begin: 0, end: 1)
+      .animate(CurvedAnimation(parent: controller, curve: Curves.easeIn));
 
   @override
   void initState() {
@@ -70,7 +71,10 @@ class _EHTagState extends State<EHTag> with AnimationMixin {
       style: TextStyle(
         fontSize: 12,
         height: 1,
-        color: widget.tag.color ?? (widget.addNameSpaceColor ? UIConfig.tagNameSpaceTextColor : UIConfig.ehTagTextColor(context)),
+        color: widget.tag.color ??
+            (widget.addNameSpaceColor
+                ? UIConfig.tagNameSpaceTextColor
+                : UIConfig.ehTagTextColor(context)),
       ),
     );
 
@@ -102,17 +106,24 @@ class _EHTagState extends State<EHTag> with AnimationMixin {
       child: child,
     );
 
-    if (widget.showTagStatus && widget.tag.tagStatus != EHTagStatus.confidence) {
+    if (widget.showTagStatus &&
+        widget.tag.tagStatus != EHTagStatus.confidence) {
       child = DottedBorder(
-        customPath: (size) {
-          return Path()
-            ..moveTo(0, size.height)
-            ..lineTo(size.width, size.height);
-        },
-        color: UIConfig.ehTagUnderLineColor(context),
-        dashPattern: widget.tag.tagStatus == EHTagStatus.skepticism ? const <double>[3, 4] : const <double>[1, 2],
-        padding: EdgeInsets.zero,
-        strokeCap: widget.tag.tagStatus == EHTagStatus.skepticism ? StrokeCap.round : StrokeCap.butt,
+        options: CustomPathDottedBorderOptions(
+          customPath: (size) {
+            return Path()
+              ..moveTo(0, size.height)
+              ..lineTo(size.width, size.height);
+          },
+          color: UIConfig.ehTagUnderLineColor(context),
+          dashPattern: widget.tag.tagStatus == EHTagStatus.skepticism
+              ? const <double>[3, 4]
+              : const <double>[1, 2],
+          padding: EdgeInsets.zero,
+          strokeCap: widget.tag.tagStatus == EHTagStatus.skepticism
+              ? StrokeCap.round
+              : StrokeCap.butt,
+        ),
         child: child,
       );
     }
@@ -123,19 +134,25 @@ class _EHTagState extends State<EHTag> with AnimationMixin {
       decoration: BoxDecoration(
         color: widget.tag.backgroundColor ??
             (widget.addNameSpaceColor
-                ? UIConfig.zhTagNameSpaceColor[widget.tag.tagData.key] ?? UIConfig.tagNameSpaceColor[widget.tag.tagData.key] ?? UIConfig.tagNameSpaceColor['default']
+                ? UIConfig.zhTagNameSpaceColor[widget.tag.tagData.key] ??
+                    UIConfig.tagNameSpaceColor[widget.tag.tagData.key] ??
+                    UIConfig.tagNameSpaceColor['default']
                 : UIConfig.ehTagBackGroundColor(context)),
         borderRadius: BorderRadius.circular(8),
       ),
       child: child,
     );
 
-    if (widget.onTap != null || widget.onSecondaryTap != null || widget.onLongPress != null) {
+    if (widget.onTap != null ||
+        widget.onSecondaryTap != null ||
+        widget.onLongPress != null) {
       child = MouseRegion(
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
           onTap: widget.onTap != null ? () => widget.onTap!(widget.tag) : null,
-          onSecondaryTap: widget.onSecondaryTap != null ? () => widget.onSecondaryTap!(widget.tag) : null,
+          onSecondaryTap: widget.onSecondaryTap != null
+              ? () => widget.onSecondaryTap!(widget.tag)
+              : null,
           onLongPress: widget.onLongPress != null
               ? () {
                   Feedback.forLongPress(context);

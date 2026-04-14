@@ -52,14 +52,17 @@ mixin SearchPageLogicMixin on BasePageLogic {
   final String galleryBodyId = 'galleryBodyId';
   final String searchFieldId = 'searchFieldId';
 
-  final Debouncing suggestDebouncing = Debouncing(duration: const Duration(milliseconds: 300));
-  final Debouncing recordDebouncing = Debouncing(duration: const Duration(milliseconds: 1000));
+  final Debouncing suggestDebouncing =
+      Debouncing(duration: const Duration(milliseconds: 300));
+  final Debouncing recordDebouncing =
+      Debouncing(duration: const Duration(milliseconds: 1000));
 
   @override
   Future<void> onInit() async {
     await super.onInit();
 
-    String? configString = await localConfigService.read(configKey: ConfigEnum.enableSearchHistoryTranslation);
+    String? configString = await localConfigService.read(
+        configKey: ConfigEnum.enableSearchHistoryTranslation);
     if (configString != null) {
       state.enableSearchHistoryTranslation = configString == 'true';
     }
@@ -87,7 +90,8 @@ mixin SearchPageLogicMixin on BasePageLogic {
     writeHistory();
 
     /// reset scroll offset
-    state.pageStorageKey = PageStorageKey('$runtimeType::${Random().nextInt(9999999)}');
+    state.pageStorageKey =
+        PageStorageKey('$runtimeType::${Random().nextInt(9999999)}');
 
     return super.handleClearAndRefresh();
   }
@@ -95,9 +99,8 @@ mixin SearchPageLogicMixin on BasePageLogic {
   Future<void> handleFileSearch() async {
     FilePickerResult? result;
     try {
-      result = await FilePicker.platform.pickFiles(
+      result = await FilePicker.pickFiles(
         type: FileType.image,
-        allowCompression: false,
         compressionQuality: 0,
       );
     } on Exception catch (e) {
@@ -171,7 +174,8 @@ mixin SearchPageLogicMixin on BasePageLogic {
       return;
     }
 
-    GalleryImagePageUrl? galleryImagePageUrl = GalleryImagePageUrl.tryParse(text);
+    GalleryImagePageUrl? galleryImagePageUrl =
+        GalleryImagePageUrl.tryParse(text);
     if (galleryImagePageUrl != null) {
       state.inputGalleryUrl = null;
       state.inputGalleryImagePageUrl = galleryImagePageUrl;
@@ -204,11 +208,13 @@ mixin SearchPageLogicMixin on BasePageLogic {
 
     /// chinese => database; other => EH api
     if (tagTranslationService.isReady) {
-      state.suggestions = await tagTranslationService.searchTags(keyword, limit: 100);
+      state.suggestions =
+          await tagTranslationService.searchTags(keyword, limit: 100);
     } else {
       String lastPart = keyword.split(' ').last;
       try {
-        List<EHRawTag> tags = await ehRequest.requestTagSuggestion(lastPart, EHSpiderParser.tagSuggestion2TagList);
+        List<EHRawTag> tags = await ehRequest.requestTagSuggestion(
+            lastPart, EHSpiderParser.tagSuggestion2TagList);
         state.suggestions = tags
             .map((t) => (
                   searchText: keyword,
@@ -217,10 +223,19 @@ mixin SearchPageLogicMixin on BasePageLogic {
                   tagData: TagData(namespace: t.namespace, key: t.key),
                   operator: null,
                   score: 0.0,
-                  namespaceMatch:
-                      t.namespace.contains(lastPart) ? (start: t.namespace.indexOf(lastPart), end: t.namespace.indexOf(lastPart) + lastPart.length) : null,
+                  namespaceMatch: t.namespace.contains(lastPart)
+                      ? (
+                          start: t.namespace.indexOf(lastPart),
+                          end: t.namespace.indexOf(lastPart) + lastPart.length
+                        )
+                      : null,
                   translatedNamespaceMatch: null,
-                  keyMatch: t.key.contains(lastPart) ? (start: t.key.indexOf(lastPart), end: t.key.indexOf(lastPart) + lastPart.length) : null,
+                  keyMatch: t.key.contains(lastPart)
+                      ? (
+                          start: t.key.indexOf(lastPart),
+                          end: t.key.indexOf(lastPart) + lastPart.length
+                        )
+                      : null,
                   tagNameMatch: null,
                 ))
             .toList();
@@ -250,12 +265,15 @@ mixin SearchPageLogicMixin on BasePageLogic {
   }
 
   @override
-  Future<GalleryPageInfo> getGalleryPage({String? prevGid, String? nextGid, DateTime? seek}) {
+  Future<GalleryPageInfo> getGalleryPage(
+      {String? prevGid, String? nextGid, DateTime? seek}) {
     if (state.redirectUrl == null) {
-      return super.getGalleryPage(prevGid: prevGid, nextGid: nextGid, seek: seek);
+      return super
+          .getGalleryPage(prevGid: prevGid, nextGid: nextGid, seek: seek);
     }
 
-    log.info('Get gallerys data with file search, prevGid:$prevGid, nextGid:$nextGid');
+    log.info(
+        'Get gallerys data with file search, prevGid:$prevGid, nextGid:$nextGid');
     return ehRequest.requestGalleryPage(
       prevGid: prevGid,
       nextGid: nextGid,
@@ -325,7 +343,9 @@ mixin SearchPageLogicMixin on BasePageLogic {
   }
 
   void toggleBodyType() {
-    state.bodyType = (state.bodyType == SearchPageBodyType.gallerys ? SearchPageBodyType.suggestionAndHistory : SearchPageBodyType.gallerys);
+    state.bodyType = (state.bodyType == SearchPageBodyType.gallerys
+        ? SearchPageBodyType.suggestionAndHistory
+        : SearchPageBodyType.gallerys);
     update();
   }
 
@@ -336,9 +356,12 @@ mixin SearchPageLogicMixin on BasePageLogic {
 
   Future<void> toggleEnableSearchHistoryTranslation() async {
     await state.enableSearchHistoryTranslationCompleter.future;
-    
-    state.enableSearchHistoryTranslation = !state.enableSearchHistoryTranslation;
-    await localConfigService.write(configKey: ConfigEnum.enableSearchHistoryTranslation, value: state.enableSearchHistoryTranslation.toString());
+
+    state.enableSearchHistoryTranslation =
+        !state.enableSearchHistoryTranslation;
+    await localConfigService.write(
+        configKey: ConfigEnum.enableSearchHistoryTranslation,
+        value: state.enableSearchHistoryTranslation.toString());
     update([suggestionBodyId]);
   }
 }

@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:jhentai/src/config/ui_config.dart';
 import 'package:jhentai/src/enum/config_enum.dart';
 import 'package:jhentai/src/service/jh_service.dart';
@@ -9,7 +12,9 @@ import '../model/jh_layout.dart';
 
 StyleSetting styleSetting = StyleSetting();
 
-class StyleSetting with JHLifeCircleBeanWithConfigStorage implements JHLifeCircleBean {
+class StyleSetting
+    with JHLifeCircleBeanWithConfigStorage
+    implements JHLifeCircleBean {
   Rx<ThemeMode> themeMode = ThemeMode.system.obs;
   Rx<Color> lightThemeColor = UIConfig.defaultLightThemeColor.obs;
   Rx<Color> darkThemeColor = UIConfig.defaultDarkThemeColor.obs;
@@ -23,7 +28,9 @@ class StyleSetting with JHLifeCircleBeanWithConfigStorage implements JHLifeCircl
   Rx<LayoutMode> layout = LayoutMode.mobileV2.obs;
 
   bool get isInWaterFlowListMode =>
-      listMode.value == ListMode.waterfallFlowBig || listMode.value == ListMode.waterfallFlowSmall || listMode.value == ListMode.waterfallFlowMedium;
+      listMode.value == ListMode.waterfallFlowBig ||
+      listMode.value == ListMode.waterfallFlowSmall ||
+      listMode.value == ListMode.waterfallFlowMedium;
 
   Brightness currentBrightness() => themeMode.value == ThemeMode.system
       ? PlatformDispatcher.instance.platformBrightness
@@ -47,15 +54,23 @@ class StyleSetting with JHLifeCircleBeanWithConfigStorage implements JHLifeCircl
     Map map = jsonDecode(configString);
 
     themeMode.value = ThemeMode.values[map['themeMode']];
-    lightThemeColor.value = Color(map['lightThemeColor'] ?? lightThemeColor.value.value);
-    darkThemeColor.value = Color(map['darkThemeColor'] ?? darkThemeColor.value.value);
+    lightThemeColor.value =
+        Color(map['lightThemeColor'] ?? lightThemeColor.value.value);
+    darkThemeColor.value =
+        Color(map['darkThemeColor'] ?? darkThemeColor.value.value);
     listMode.value = ListMode.values[map['listMode']];
     crossAxisCountInWaterFallFlow.value = map['crossAxisCountInWaterFallFlow'];
-    crossAxisCountInGridDownloadPageForGroup.value = map['crossAxisCountInGridDownloadPageForGroup'];
-    crossAxisCountInGridDownloadPageForGallery.value = map['crossAxisCountInGridDownloadPageForGallery'];
+    crossAxisCountInGridDownloadPageForGroup.value =
+        map['crossAxisCountInGridDownloadPageForGroup'];
+    crossAxisCountInGridDownloadPageForGallery.value =
+        map['crossAxisCountInGridDownloadPageForGallery'];
     crossAxisCountInDetailPage.value = map['crossAxisCountInDetailPage'];
-    pageListMode.value = Map.from(map['pageListMode']?.map((route, listModeIndex) => MapEntry(route, ListMode.values[listModeIndex])) ?? {});
-    moveCover2RightSide.value = map['moveCover2RightSide'] ?? moveCover2RightSide.value;
+    pageListMode.value = Map.from(map['pageListMode']?.map(
+            (route, listModeIndex) =>
+                MapEntry(route, ListMode.values[listModeIndex])) ??
+        {});
+    moveCover2RightSide.value =
+        map['moveCover2RightSide'] ?? moveCover2RightSide.value;
     layout.value = LayoutMode.mobileV2;
     actualLayout = LayoutMode.mobileV2;
   }
@@ -68,10 +83,13 @@ class StyleSetting with JHLifeCircleBeanWithConfigStorage implements JHLifeCircl
       'darkThemeColor': darkThemeColor.value.value,
       'listMode': listMode.value.index,
       'crossAxisCountInWaterFallFlow': crossAxisCountInWaterFallFlow.value,
-      'crossAxisCountInGridDownloadPageForGroup': crossAxisCountInGridDownloadPageForGroup.value,
-      'crossAxisCountInGridDownloadPageForGallery': crossAxisCountInGridDownloadPageForGallery.value,
+      'crossAxisCountInGridDownloadPageForGroup':
+          crossAxisCountInGridDownloadPageForGroup.value,
+      'crossAxisCountInGridDownloadPageForGallery':
+          crossAxisCountInGridDownloadPageForGallery.value,
       'crossAxisCountInDetailPage': crossAxisCountInDetailPage.value,
-      'pageListMode': pageListMode.map((route, listMode) => MapEntry(route, listMode.index)),
+      'pageListMode': pageListMode
+          .map((route, listMode) => MapEntry(route, listMode.index)),
       'moveCover2RightSide': moveCover2RightSide.value,
       'layout': layout.value.index,
     });
@@ -111,25 +129,34 @@ class StyleSetting with JHLifeCircleBeanWithConfigStorage implements JHLifeCircl
     await saveBeanConfig();
   }
 
-  Future<void> saveCrossAxisCountInWaterFallFlow(int? crossAxisCountInWaterFallFlow) async {
-    log.debug('saveCrossAxisCountInWaterFallFlow:$crossAxisCountInWaterFallFlow');
+  Future<void> saveCrossAxisCountInWaterFallFlow(
+      int? crossAxisCountInWaterFallFlow) async {
+    log.debug(
+        'saveCrossAxisCountInWaterFallFlow:$crossAxisCountInWaterFallFlow');
     this.crossAxisCountInWaterFallFlow.value = crossAxisCountInWaterFallFlow;
     await saveBeanConfig();
   }
 
-  Future<void> saveCrossAxisCountInGridDownloadPageForGroup(int? crossAxisCountInGridDownloadPageForGroup) async {
-    log.debug('saveCrossAxisCountInGridDownloadPageForGroup:$crossAxisCountInGridDownloadPageForGroup');
-    this.crossAxisCountInGridDownloadPageForGroup.value = crossAxisCountInGridDownloadPageForGroup;
+  Future<void> saveCrossAxisCountInGridDownloadPageForGroup(
+      int? crossAxisCountInGridDownloadPageForGroup) async {
+    log.debug(
+        'saveCrossAxisCountInGridDownloadPageForGroup:$crossAxisCountInGridDownloadPageForGroup');
+    this.crossAxisCountInGridDownloadPageForGroup.value =
+        crossAxisCountInGridDownloadPageForGroup;
     await saveBeanConfig();
   }
 
-  Future<void> saveCrossAxisCountInGridDownloadPageForGallery(int? crossAxisCountInGridDownloadPageForGallery) async {
-    log.debug('saveCrossAxisCountInGridDownloadPageForGallery:$crossAxisCountInGridDownloadPageForGallery');
-    this.crossAxisCountInGridDownloadPageForGallery.value = crossAxisCountInGridDownloadPageForGallery;
+  Future<void> saveCrossAxisCountInGridDownloadPageForGallery(
+      int? crossAxisCountInGridDownloadPageForGallery) async {
+    log.debug(
+        'saveCrossAxisCountInGridDownloadPageForGallery:$crossAxisCountInGridDownloadPageForGallery');
+    this.crossAxisCountInGridDownloadPageForGallery.value =
+        crossAxisCountInGridDownloadPageForGallery;
     await saveBeanConfig();
   }
 
-  Future<void> saveCrossAxisCountInDetailPage(int? crossAxisCountInDetailPage) async {
+  Future<void> saveCrossAxisCountInDetailPage(
+      int? crossAxisCountInDetailPage) async {
     log.debug('saveCrossAxisCountInDetailPage:$crossAxisCountInDetailPage');
     this.crossAxisCountInDetailPage.value = crossAxisCountInDetailPage;
     await saveBeanConfig();

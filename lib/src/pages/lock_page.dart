@@ -74,7 +74,8 @@ class _LockPageState extends State<LockPage> {
                     textStyle: TextStyle(fontSize: 24),
                   ),
                   onCompleted: (String value) {
-                    if (keyToMd5(value) != securitySetting.encryptedPassword.value) {
+                    if (keyToMd5(value) !=
+                        securitySetting.encryptedPassword.value) {
                       setState(() {
                         controller.clear();
                         hintText = 'passwordErrorHint'.tr;
@@ -92,7 +93,10 @@ class _LockPageState extends State<LockPage> {
                 child: Text(hintText),
               ),
               if (securitySetting.enableBiometricAuth.isTrue)
-                IconButton(onPressed: biometricAuth, icon: const Icon(Icons.fingerprint, size: 40)).marginOnly(top: 24),
+                IconButton(
+                        onPressed: biometricAuth,
+                        icon: const Icon(Icons.fingerprint, size: 40))
+                    .marginOnly(top: 24),
             ],
           ),
         ),
@@ -106,14 +110,12 @@ class _LockPageState extends State<LockPage> {
       authMessages: [
         AndroidAuthMessages(
           signInTitle: 'localizedReason'.tr,
-          biometricHint: '',
+          signInHint: '',
           cancelButton: 'cancel'.tr,
         ),
       ],
-      options: AuthenticationOptions(
-        stickyAuth: true,
-        biometricOnly: true,
-      ),
+      biometricOnly: true,
+      persistAcrossBackgrounding: true,
     );
 
     if (!success) {

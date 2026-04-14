@@ -19,7 +19,8 @@ import '../../../widget/eh_wheel_speed_controller.dart';
 import '../../../widget/loading_state_indicator.dart';
 
 class ThumbnailsPage extends StatelessWidget with Scroll2TopPageMixin {
-  final ThumbnailsPageLogic logic = Get.put<ThumbnailsPageLogic>(ThumbnailsPageLogic());
+  final ThumbnailsPageLogic logic =
+      Get.put<ThumbnailsPageLogic>(ThumbnailsPageLogic());
   final ThumbnailsPageState state = Get.find<ThumbnailsPageLogic>().state;
 
   @override
@@ -52,10 +53,11 @@ class ThumbnailsPage extends StatelessWidget with Scroll2TopPageMixin {
 
   AppBar buildAppBar() {
     return AppBar(
-      title: Text(_mainTitleText, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+      title: Text(_mainTitleText,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
       actions: [
         IconButton(
-          icon: const Icon(FontAwesomeIcons.paperPlane, size: 21),
+          icon: const FaIcon(FontAwesomeIcons.paperPlane, size: 21),
           visualDensity: const VisualDensity(vertical: -2),
           onPressed: logic.handleTapJumpButton,
         ),
@@ -91,35 +93,41 @@ class ThumbnailsPage extends StatelessWidget with Scroll2TopPageMixin {
           return SliverGrid(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
-                if (index == state.thumbnails.length - 1 && state.loadingState == LoadingState.idle) {
-                  SchedulerBinding.instance.addPostFrameCallback((_) => logic.loadMoreThumbnails());
+                if (index == state.thumbnails.length - 1 &&
+                    state.loadingState == LoadingState.idle) {
+                  SchedulerBinding.instance
+                      .addPostFrameCallback((_) => logic.loadMoreThumbnails());
                 }
 
                 GalleryImage? downloadedImage = galleryDownloadService
-                    .galleryDownloadInfos[logic.detailsPageState.galleryDetails!.galleryUrl.gid]?.images[state.absoluteIndexOfThumbnails[index]];
+                    .galleryDownloadInfos[
+                        logic.detailsPageState.galleryDetails!.galleryUrl.gid]
+                    ?.images[state.absoluteIndexOfThumbnails[index]];
 
                 return Column(
                   children: [
                     Expanded(
                       child: Center(
                         child: GestureDetector(
-                          onTap: () => logic.detailsPageLogic.goToReadPage(state.absoluteIndexOfThumbnails[index]),
+                          onTap: () => logic.detailsPageLogic.goToReadPage(
+                              state.absoluteIndexOfThumbnails[index]),
                           child: LayoutBuilder(
                             builder: (_, constraints) {
-                              return downloadedImage?.downloadStatus == DownloadStatus.downloaded
+                              return downloadedImage?.downloadStatus ==
+                                      DownloadStatus.downloaded
                                   ? EHImage(
-                                galleryImage: downloadedImage!,
-                                containerHeight: constraints.maxHeight,
-                                containerWidth: constraints.maxWidth,
-                                borderRadius: BorderRadius.circular(8),
-                                maxBytes: 128 * 1024,
-                              )
+                                      galleryImage: downloadedImage!,
+                                      containerHeight: constraints.maxHeight,
+                                      containerWidth: constraints.maxWidth,
+                                      borderRadius: BorderRadius.circular(8),
+                                      maxBytes: 128 * 1024,
+                                    )
                                   : EHThumbnail(
-                                thumbnail: state.thumbnails[index],
-                                containerHeight: constraints.maxHeight,
-                                containerWidth: constraints.maxWidth,
-                                borderRadius: BorderRadius.circular(8),
-                              );
+                                      thumbnail: state.thumbnails[index],
+                                      containerHeight: constraints.maxHeight,
+                                      containerWidth: constraints.maxWidth,
+                                      borderRadius: BorderRadius.circular(8),
+                                    );
                             },
                           ),
                         ),
@@ -127,7 +135,9 @@ class ThumbnailsPage extends StatelessWidget with Scroll2TopPageMixin {
                     ),
                     Text(
                       (state.absoluteIndexOfThumbnails[index] + 1).toString(),
-                      style: TextStyle(color: UIConfig.detailsPageThumbnailIndexColor(context)),
+                      style: TextStyle(
+                          color:
+                              UIConfig.detailsPageThumbnailIndexColor(context)),
                     ).paddingOnly(top: 3),
                   ],
                 );
@@ -142,10 +152,12 @@ class ThumbnailsPage extends StatelessWidget with Scroll2TopPageMixin {
                     crossAxisSpacing: 5,
                   )
                 : SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: styleSetting.crossAxisCountInDetailPage.value!,
+                    crossAxisCount:
+                        styleSetting.crossAxisCountInDetailPage.value!,
                     mainAxisSpacing: 20,
                     crossAxisSpacing: 5,
-                    childAspectRatio: UIConfig.detailsPageGridViewCardAspectRatio,
+                    childAspectRatio:
+                        UIConfig.detailsPageGridViewCardAspectRatio,
                   ),
           );
         },

@@ -38,33 +38,48 @@ class _EHTagSetDialogState extends State<EHTagSetDialog> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      contentPadding: const EdgeInsets.only(top: 16, left: 12, right: 12, bottom: 16),
+      contentPadding:
+          const EdgeInsets.only(top: 16, left: 12, right: 12, bottom: 16),
       title: Text('chooseTagSet'.tr),
       children: [
-        if (_loadingState == LoadingState.loading) SizedBox(height: 24, child: Center(child: UIConfig.loadingAnimation(context))),
+        if (_loadingState == LoadingState.loading)
+          SizedBox(
+              height: 24,
+              child: Center(child: UIConfig.loadingAnimation(context))),
         if (_loadingState == LoadingState.error)
           GestureDetector(
             onTap: _getTagSet,
-            child: Icon(FontAwesomeIcons.redoAlt, size: 24, color: UIConfig.loadingStateIndicatorButtonColor(context)),
+            child: FaIcon(FontAwesomeIcons.redoAlt,
+                size: 24,
+                color: UIConfig.loadingStateIndicatorButtonColor(context)),
           ),
         if (_loadingState == LoadingState.success)
           ..._tagSets
               .map(
                 (tagSet) => ListTile(
                   title: Text(tagSet.name),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                  onTap: () => backRoute(result: (tagSetNo: tagSet.number, remember: remember)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24)),
+                  onTap: () => backRoute(
+                      result: (tagSetNo: tagSet.number, remember: remember)),
                 ),
               )
               .toList(),
-        if (_loadingState == LoadingState.success && preferenceSetting.enableDefaultTagSet.isTrue)
+        if (_loadingState == LoadingState.success &&
+            preferenceSetting.enableDefaultTagSet.isTrue)
           ListTile(
             dense: true,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
             visualDensity: const VisualDensity(vertical: -2, horizontal: -4),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
-              children: [Text('asYourDefault'.tr), Checkbox(value: remember, onChanged: (value) => setState(() => remember = value!))],
+              children: [
+                Text('asYourDefault'.tr),
+                Checkbox(
+                    value: remember,
+                    onChanged: (value) => setState(() => remember = value!))
+              ],
             ),
           )
       ],
@@ -76,7 +91,13 @@ class _EHTagSetDialogState extends State<EHTagSetDialog> {
       _loadingState = LoadingState.loading;
     });
 
-    ({List<({int number, String name})> tagSets, bool tagSetEnable, Color? tagSetBackgroundColor, List<WatchedTag> tags, String apikey}) pageInfo;
+    ({
+      List<({int number, String name})> tagSets,
+      bool tagSetEnable,
+      Color? tagSetBackgroundColor,
+      List<WatchedTag> tags,
+      String apikey
+    }) pageInfo;
     try {
       pageInfo = await ehRequest.requestMyTagsPage(
         parser: EHSpiderParser.myTagsPage2TagSetNamesAndTagSetsAndApikey,

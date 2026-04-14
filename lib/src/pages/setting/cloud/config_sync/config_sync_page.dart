@@ -50,7 +50,8 @@ class _ConfigSyncPageState extends State<ConfigSyncPage> {
       body: LoadingStateIndicator(
         loadingState: _loadingState,
         successWidgetBuilder: () => configs.isEmpty
-            ? Center(child: Text('noData'.tr, style: const TextStyle(fontSize: 16)))
+            ? Center(
+                child: Text('noData'.tr, style: const TextStyle(fontSize: 16)))
             : ListView(
                 padding: const EdgeInsets.only(top: 16),
                 children: configs
@@ -60,8 +61,10 @@ class _ConfigSyncPageState extends State<ConfigSyncPage> {
                         leading: Text((configs.length - index).toString()),
                         isThreeLine: true,
                         title: Text(config.type.name.tr),
-                        subtitle: Text('v${config.version}\n${config.shareCode}'),
-                        trailing: Text(DateFormat('yyyy-MM-dd HH:mm:ss').format(config.ctime)),
+                        subtitle:
+                            Text('v${config.version}\n${config.shareCode}'),
+                        trailing: Text(DateFormat('yyyy-MM-dd HH:mm:ss')
+                            .format(config.ctime)),
                         onTap: () => _handleTapConfig(context, config),
                       ),
                     )
@@ -69,7 +72,9 @@ class _ConfigSyncPageState extends State<ConfigSyncPage> {
               ).withListTileTheme(context),
         errorTapCallback: _refresh,
       ),
-      floatingActionButton: userSetting.hasLoggedIn() ? _buildFloatingActionButton(context) : null,
+      floatingActionButton: userSetting.hasLoggedIn()
+          ? _buildFloatingActionButton(context)
+          : null,
     );
   }
 
@@ -83,7 +88,8 @@ class _ConfigSyncPageState extends State<ConfigSyncPage> {
 
         List<CloudConfigTypeEnum>? result = await showDialog(
           context: context,
-          builder: (_) => EHConfigTypeSelectDialog(title: '${'upload2cloud'.tr}?'),
+          builder: (_) =>
+              EHConfigTypeSelectDialog(title: '${'upload2cloud'.tr}?'),
         );
 
         if (result?.isNotEmpty ?? false) {
@@ -106,7 +112,9 @@ class _ConfigSyncPageState extends State<ConfigSyncPage> {
     setStateSafely(() => _loadingState = LoadingState.loading);
 
     try {
-      List<CloudConfig> configs = await jhRequest.requestListConfig<List<CloudConfig>>(parser: JHResponseParser.listConfigApi2Configs);
+      List<CloudConfig> configs =
+          await jhRequest.requestListConfig<List<CloudConfig>>(
+              parser: JHResponseParser.listConfigApi2Configs);
       setStateSafely(() {
         this.configs = configs;
         _loadingState = LoadingState.success;
@@ -124,7 +132,8 @@ class _ConfigSyncPageState extends State<ConfigSyncPage> {
     }
   }
 
-  Future<void> _handleTapConfig(BuildContext context, CloudConfig config) async {
+  Future<void> _handleTapConfig(
+      BuildContext context, CloudConfig config) async {
     showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) => CupertinoActionSheet(
@@ -152,14 +161,16 @@ class _ConfigSyncPageState extends State<ConfigSyncPage> {
             },
           ),
           CupertinoActionSheetAction(
-            child: Text('delete'.tr, style: TextStyle(color: UIConfig.alertColor(context))),
+            child: Text('delete'.tr,
+                style: TextStyle(color: UIConfig.alertColor(context))),
             onPressed: () {
               backRoute();
               _deleteConfig(config);
             },
           ),
         ],
-        cancelButton: CupertinoActionSheetAction(child: Text('cancel'.tr), onPressed: backRoute),
+        cancelButton: CupertinoActionSheetAction(
+            child: Text('cancel'.tr), onPressed: backRoute),
       ),
     );
   }
@@ -169,7 +180,7 @@ class _ConfigSyncPageState extends State<ConfigSyncPage> {
 
     String? path;
     try {
-      path = await FilePicker.platform.getDirectoryPath();
+      path = await FilePicker.getDirectoryPath();
     } on Exception catch (e) {
       log.error('Pick download config path failed', e);
     }
@@ -183,7 +194,8 @@ class _ConfigSyncPageState extends State<ConfigSyncPage> {
       return;
     }
 
-    String fileName = '${config.type.name.tr}_${config.version}_${config.shareCode}.json';
+    String fileName =
+        '${config.type.name.tr}_${config.version}_${config.shareCode}.json';
     File file = File('$path/$fileName');
     if (!await file.exists()) {
       await file.create(recursive: true);
@@ -244,7 +256,10 @@ class _ConfigSyncPageState extends State<ConfigSyncPage> {
     });
 
     Map<CloudConfigTypeEnum, String> currentConfigMap = {};
-    List<({int type, String version, String config})> uploadConfigs = currentConfigMap.entries.where((entry) => types.contains(entry.key)).map((entry) {
+    List<({int type, String version, String config})> uploadConfigs =
+        currentConfigMap.entries
+            .where((entry) => types.contains(entry.key))
+            .map((entry) {
       return (
         type: entry.key.code,
         version: CloudConfigService.configTypeVersionMap[entry.key] ?? '1.0.0',

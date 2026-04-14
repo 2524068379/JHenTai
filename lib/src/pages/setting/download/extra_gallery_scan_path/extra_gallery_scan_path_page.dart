@@ -41,7 +41,7 @@ class ExtraGalleryScanPathPage extends StatelessWidget {
 
     String? newPath;
     try {
-      newPath = await FilePicker.platform.getDirectoryPath();
+      newPath = await FilePicker.getDirectoryPath();
     } on Exception catch (e) {
       log.error('Pick extra path failed', e);
     }

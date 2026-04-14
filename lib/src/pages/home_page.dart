@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jhentai/src/model/gallery_image_page_url.dart';
 import 'package:jhentai/src/model/gallery_url.dart';
+import 'package:jhentai/src/model/jh_layout.dart';
 import 'package:jhentai/src/pages/details/details_page_logic.dart';
 import 'package:jhentai/src/pages/gallery_image/gallery_image_page_logic.dart';
 import 'package:jhentai/src/pages/layout/mobile_v2/mobile_layout_page_v2.dart';
@@ -69,7 +70,8 @@ class _HomePageState extends State<HomePage> with LoginRequiredMixin {
         }
 
         SharedMediaFile file = files.first;
-        if (file.type != SharedMediaType.url && file.type != SharedMediaType.text) {
+        if (file.type != SharedMediaType.url &&
+            file.type != SharedMediaType.text) {
           return;
         }
 
@@ -84,11 +86,13 @@ class _HomePageState extends State<HomePage> with LoginRequiredMixin {
           return;
         }
 
-        GalleryImagePageUrl? galleryImagePageUrl = GalleryImagePageUrl.tryParse(file.path);
+        GalleryImagePageUrl? galleryImagePageUrl =
+            GalleryImagePageUrl.tryParse(file.path);
         if (galleryImagePageUrl != null) {
           toRoute(
             Routes.imagePage,
-            arguments: GalleryImagePageArgument(galleryImagePageUrl: galleryImagePageUrl),
+            arguments: GalleryImagePageArgument(
+                galleryImagePageUrl: galleryImagePageUrl),
             offAllBefore: false,
           );
           return;
@@ -100,20 +104,24 @@ class _HomePageState extends State<HomePage> with LoginRequiredMixin {
       ReceiveSharingIntent.instance.reset();
     });
 
-    _intentDataStreamSubscription = ReceiveSharingIntent.instance.getMediaStream().listen(
+    _intentDataStreamSubscription =
+        ReceiveSharingIntent.instance.getMediaStream().listen(
       (List<SharedMediaFile> files) {
         if (files.isEmpty) {
           return;
         }
 
         SharedMediaFile file = files.first;
-        if (file.type != SharedMediaType.url && file.type != SharedMediaType.text) {
+        if (file.type != SharedMediaType.url &&
+            file.type != SharedMediaType.text) {
           return;
         }
 
         GalleryUrl? galleryUrl = GalleryUrl.tryParse(file.path);
         if (galleryUrl != null) {
-          untilRoute(currentRoute: Routes.details, predicate: (route) => route.settings.name != Routes.read);
+          untilRoute(
+              currentRoute: Routes.details,
+              predicate: (route) => route.settings.name != Routes.read);
           toRoute(
             Routes.details,
             arguments: DetailsPageArgument(galleryUrl: galleryUrl),
@@ -123,12 +131,16 @@ class _HomePageState extends State<HomePage> with LoginRequiredMixin {
           return;
         }
 
-        GalleryImagePageUrl? galleryImagePageUrl = GalleryImagePageUrl.tryParse(file.path);
+        GalleryImagePageUrl? galleryImagePageUrl =
+            GalleryImagePageUrl.tryParse(file.path);
         if (galleryImagePageUrl != null) {
-          untilRoute(currentRoute: Routes.details, predicate: (route) => route.settings.name != Routes.read);
+          untilRoute(
+              currentRoute: Routes.details,
+              predicate: (route) => route.settings.name != Routes.read);
           toRoute(
             Routes.imagePage,
-            arguments: GalleryImagePageArgument(galleryImagePageUrl: galleryImagePageUrl),
+            arguments: GalleryImagePageArgument(
+                galleryImagePageUrl: galleryImagePageUrl),
             offAllBefore: false,
           );
           return;
@@ -149,7 +161,8 @@ class _HomePageState extends State<HomePage> with LoginRequiredMixin {
 
     String rawText = await FlutterClipboard.paste();
     GalleryUrl? galleryUrl = GalleryUrl.tryParse(rawText);
-    GalleryImagePageUrl? galleryImagePageUrl = GalleryImagePageUrl.tryParse(rawText);
+    GalleryImagePageUrl? galleryImagePageUrl =
+        GalleryImagePageUrl.tryParse(rawText);
 
     if (galleryUrl == null && galleryImagePageUrl == null) {
       return;
@@ -190,7 +203,8 @@ class _HomePageState extends State<HomePage> with LoginRequiredMixin {
           }
           toRoute(
             Routes.imagePage,
-            arguments: GalleryImagePageArgument(galleryImagePageUrl: galleryImagePageUrl),
+            arguments: GalleryImagePageArgument(
+                galleryImagePageUrl: galleryImagePageUrl),
             offAllBefore: false,
           );
         },

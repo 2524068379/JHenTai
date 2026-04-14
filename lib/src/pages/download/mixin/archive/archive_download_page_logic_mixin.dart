@@ -16,6 +16,7 @@ import '../../../../service/read_progress_service.dart';
 import '../../../../setting/read_setting.dart';
 import '../../../../utils/process_util.dart';
 import '../../../../utils/route_util.dart';
+import '../../../../widget/eh_alert_dialog.dart';
 import '../../../../widget/eh_download_dialog.dart';
 import '../../../../widget/re_unlock_dialog.dart';
 import '../basic/multi_select/multi_select_download_page_logic_mixin.dart';
@@ -23,16 +24,21 @@ import '../basic/multi_select/multi_select_download_page_state_mixin.dart';
 import 'archive_download_page_state_mixin.dart';
 
 mixin ArchiveDownloadPageLogicMixin on GetxController
-    implements Scroll2TopLogicMixin, MultiSelectDownloadPageLogicMixin<ArchiveDownloadedData>, UpdateGlobalGalleryStatusLogicMixin {
+    implements
+        Scroll2TopLogicMixin,
+        MultiSelectDownloadPageLogicMixin<ArchiveDownloadedData>,
+        UpdateGlobalGalleryStatusLogicMixin {
   final String bodyId = 'bodyId';
 
   ArchiveDownloadPageStateMixin get archiveDownloadPageState;
 
   @override
-  MultiSelectDownloadPageStateMixin get multiSelectDownloadPageState => archiveDownloadPageState;
+  MultiSelectDownloadPageStateMixin get multiSelectDownloadPageState =>
+      archiveDownloadPageState;
 
   Future<void> handleChangeArchiveGroup(ArchiveDownloadedData archive) async {
-    String oldGroup = archiveDownloadService.archiveDownloadInfos[archive.gid]!.group;
+    String oldGroup =
+        archiveDownloadService.archiveDownloadInfos[archive.gid]!.group;
 
     ({String group, bool downloadOriginalImage})? result = await Get.dialog(
       EHDownloadDialog(
@@ -65,7 +71,8 @@ mixin ArchiveDownloadPageLogicMixin on GetxController
   }
 
   @override
-  void handleLongPressOrSecondaryTapItem(ArchiveDownloadedData item, BuildContext context) {
+  void handleLongPressOrSecondaryTapItem(
+      ArchiveDownloadedData item, BuildContext context) {
     if (multiSelectDownloadPageState.inMultiSelectMode) {
       toggleSelectItem(item.gid);
     } else {
@@ -74,7 +81,8 @@ mixin ArchiveDownloadPageLogicMixin on GetxController
   }
 
   Future<void> handleLongPressGroup(String groupName) {
-    if (archiveDownloadService.archiveDownloadInfos.values.every((a) => a.group != groupName)) {
+    if (archiveDownloadService.archiveDownloadInfos.values
+        .every((a) => a.group != groupName)) {
       return handleDeleteGroup(groupName);
     }
     return handleRenameGroup(groupName);
@@ -126,20 +134,27 @@ mixin ArchiveDownloadPageLogicMixin on GetxController
   }
 
   void handleRemoveItem(ArchiveDownloadedData archive) {
-    archiveDownloadService.update([archiveDownloadService.galleryCountChangedId]);
+    archiveDownloadService
+        .update([archiveDownloadService.galleryCountChangedId]);
   }
 
   Future<void> goToReadPage(ArchiveDownloadedData archive) async {
-    if (archiveDownloadService.archiveDownloadInfos[archive.gid]?.archiveStatus != ArchiveStatus.completed) {
+    if (archiveDownloadService
+            .archiveDownloadInfos[archive.gid]?.archiveStatus !=
+        ArchiveStatus.completed) {
       return;
     }
 
-    if (readSetting.useThirdPartyViewer.isTrue && readSetting.thirdPartyViewerPath.value != null) {
-      openThirdPartyViewer(archiveDownloadService.computeArchiveUnpackingPath(archive.title, archive.gid));
+    if (readSetting.useThirdPartyViewer.isTrue &&
+        readSetting.thirdPartyViewerPath.value != null) {
+      openThirdPartyViewer(archiveDownloadService.computeArchiveUnpackingPath(
+          archive.title, archive.gid));
     } else {
-      int readIndexRecord = await readProgressService.getReadProgress(archive.gid);
+      int readIndexRecord =
+          await readProgressService.getReadProgress(archive.gid);
 
-      List<GalleryImage> images = await archiveDownloadService.getUnpackedImages(archive.gid);
+      List<GalleryImage> images =
+          await archiveDownloadService.getUnpackedImages(archive.gid);
 
       toRoute(
         Routes.read,
@@ -159,14 +174,16 @@ mixin ArchiveDownloadPageLogicMixin on GetxController
   }
 
   void showBottomSheet(ArchiveDownloadedData archive, BuildContext context) {
-    ArchiveDownloadInfo? archiveDownloadInfo = archiveDownloadService.archiveDownloadInfos[archive.gid];
+    ArchiveDownloadInfo? archiveDownloadInfo =
+        archiveDownloadService.archiveDownloadInfos[archive.gid];
 
     showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) => CupertinoActionSheet(
         actions: <CupertinoActionSheetAction>[
           if (archiveDownloadInfo != null &&
-              archiveDownloadInfo.archiveStatus.code < ArchiveStatus.downloaded.code &&
+              archiveDownloadInfo.archiveStatus.code <
+                  ArchiveStatus.downloaded.code &&
               archiveDownloadInfo.parseSource == ArchiveParseSource.bot.code)
             CupertinoActionSheetAction(
               child: Text('changeParseSource2Official'.tr),
@@ -176,9 +193,11 @@ mixin ArchiveDownloadPageLogicMixin on GetxController
               },
             ),
           if (archiveDownloadInfo != null &&
-              archiveDownloadInfo.archiveStatus.code < ArchiveStatus.downloaded.code &&
+              archiveDownloadInfo.archiveStatus.code <
+                  ArchiveStatus.downloaded.code &&
               archiveBotSetting.isReady &&
-              archiveDownloadInfo.parseSource == ArchiveParseSource.official.code)
+              archiveDownloadInfo.parseSource ==
+                  ArchiveParseSource.official.code)
             CupertinoActionSheetAction(
               child: Text('changeParseSource2Bot'.tr),
               onPressed: () {
@@ -194,7 +213,8 @@ mixin ArchiveDownloadPageLogicMixin on GetxController
             },
           ),
           CupertinoActionSheetAction(
-            child: Text('delete'.tr, style: TextStyle(color: UIConfig.alertColor(context))),
+            child: Text('delete'.tr,
+                style: TextStyle(color: UIConfig.alertColor(context))),
             onPressed: () {
               handleRemoveItem(archive);
               backRoute();
@@ -213,7 +233,8 @@ mixin ArchiveDownloadPageLogicMixin on GetxController
     bool? ok = await Get.dialog(const ReUnlockDialog());
     if (ok ?? false) {
       await archiveDownloadService.cancelArchive(archive.gid);
-      await archiveDownloadService.downloadArchive(archive, resume: true, reParse: true);
+      await archiveDownloadService.downloadArchive(archive,
+          resume: true, reParse: true);
     }
   }
 
@@ -269,14 +290,15 @@ mixin ArchiveDownloadPageLogicMixin on GetxController
       }
 
       exitSelectMode();
-      
+
       await Future.wait(futures);
       updateGlobalGalleryStatus();
     }
   }
 
   Future<void> handleChangeParseSource() async {
-    ArchiveParseSource? result = await Get.dialog(const EHArchiveParseSourceSelectDialog());
+    ArchiveParseSource? result =
+        await Get.dialog(const EHArchiveParseSourceSelectDialog());
 
     if (result == null) {
       return;
@@ -291,7 +313,8 @@ mixin ArchiveDownloadPageLogicMixin on GetxController
     updateSafely([bottomAppbarId, bodyId]);
   }
 
-  Future<void> changeParseSource(int gid, ArchiveParseSource parseSource) async {
+  Future<void> changeParseSource(
+      int gid, ArchiveParseSource parseSource) async {
     return archiveDownloadService.changeParseSource(gid, parseSource);
   }
 }

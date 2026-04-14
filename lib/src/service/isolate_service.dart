@@ -6,7 +6,9 @@ import 'jh_service.dart';
 
 IsolateService isolateService = IsolateService();
 
-class IsolateService with JHLifeCircleBeanErrorCatch implements JHLifeCircleBean {
+class IsolateService
+    with JHLifeCircleBeanErrorCatch
+    implements JHLifeCircleBean {
   late final StatefulIsolate _isolate;
 
   @override
@@ -26,7 +28,8 @@ class IsolateService with JHLifeCircleBeanErrorCatch implements JHLifeCircleBean
     return run(jsonDecode, string);
   }
 
-  Future<R> run<Q, R>(IsolateCallback<Q, R> callback, Q message, {String? debugLabel}) {
-    return _isolate.isolate(callback, message, debugLabel: debugLabel);
+  Future<R> run<Q, R>(IsolateCallback<Q, R> callback, Q message,
+      {String? debugLabel}) {
+    return _isolate.compute(callback, message, debugLabel: debugLabel);
   }
 }
