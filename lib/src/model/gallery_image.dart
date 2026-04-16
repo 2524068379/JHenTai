@@ -1,3 +1,5 @@
+import 'package:path/path.dart' as p;
+
 import '../service/gallery_download_service.dart';
 
 class GalleryImage {
@@ -77,7 +79,7 @@ class GalleryImage {
       originalImageUrl: originalImageUrl ?? this.originalImageUrl,
       originalImageHeight: originalImageHeight ?? this.originalImageHeight,
       originalImageWidth: originalImageWidth ?? this.originalImageWidth,
-      reloadKey: reloadKey ?? this.reloadKey,
+      reloadKey: reloadKey,
       imageHash: imageHash ?? this.imageHash,
       path: path ?? this.path,
       downloadStatus: downloadStatus ?? this.downloadStatus,
@@ -87,5 +89,17 @@ class GalleryImage {
   @override
   String toString() {
     return 'GalleryImage{url: $url, height: $height, width: $width, originalImageUrl: $originalImageUrl, originalImageHeight: $originalImageHeight, originalImageWidth: $originalImageWidth, reloadKey: $reloadKey, path: $path, imageHash: $imageHash, downloadStatus: $downloadStatus}';
+  }
+
+  bool get isGif =>
+      _isGifPath(path) || _isGifPath(url) || _isGifPath(originalImageUrl);
+
+  bool _isGifPath(String? rawPath) {
+    if (rawPath == null || rawPath.isEmpty) {
+      return false;
+    }
+
+    final String candidate = Uri.tryParse(rawPath)?.path ?? rawPath;
+    return p.extension(candidate).toLowerCase() == '.gif';
   }
 }

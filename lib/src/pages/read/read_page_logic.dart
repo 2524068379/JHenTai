@@ -343,8 +343,13 @@ class ReadPageLogic extends GetxController {
       return;
     }
 
+    final bool hadAnimatedImages =
+        state.images.any((loadedImage) => loadedImage?.isGif ?? false);
     state.images[index] = image;
     state.parseImageUrlStates[index] = LoadingState.success;
+    if (!hadAnimatedImages && image.isGif) {
+      updateSafely([layoutId]);
+    }
     updateSafely(['$onlineImageId::$index']);
   }
 

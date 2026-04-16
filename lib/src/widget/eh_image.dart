@@ -168,12 +168,14 @@ class EHImage extends StatelessWidget {
               ),
             );
 
-            return forceFadeIn || !state.wasSynchronouslyLoaded
+            return _shouldFadeIn(state)
                 ? WidgetExtension(child).fadeIn()
                 : child;
         }
       },
-      maxBytes: maxBytes,
+      maxBytes: _effectiveMaxBytes,
+      filterQuality:
+          galleryImage.isGif ? FilterQuality.low : FilterQuality.medium,
     );
   }
 
@@ -200,7 +202,7 @@ class EHImage extends StatelessWidget {
           completedWidgetBuilder != null,
       enableSlideOutPage: enableSlideOutPage,
       borderRadius: borderRadius,
-      shape: borderRadius != null ? BoxShape.rectangle : null,
+      shape: BoxShape.rectangle,
       clearMemoryCacheWhenDispose: clearMemoryCacheWhenDispose,
       loadStateChanged: (ExtendedImageState state) {
         switch (state.extendedImageLoadState) {
@@ -221,7 +223,7 @@ class EHImage extends StatelessWidget {
             Widget child = completedWidgetBuilder?.call(state) ??
                 _buildExtendedRawImage(state);
 
-            if (borderRadius != null) {
+            if (borderRadius != BorderRadius.zero) {
               child = ClipRRect(child: child, borderRadius: borderRadius);
             }
 
@@ -231,19 +233,20 @@ class EHImage extends StatelessWidget {
                   extendedImageSlidePageState: state.slidePageState);
             }
 
-            return FadeIn(
-              child: Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                      boxShadow: shadows, borderRadius: borderRadius),
-                  child: child,
-                ),
+            child = Center(
+              child: Container(
+                decoration: BoxDecoration(
+                    boxShadow: shadows, borderRadius: borderRadius),
+                child: child,
               ),
             );
+
+            return _shouldFadeIn(state) ? FadeIn(child: child) : child;
         }
       },
-      maxBytes: maxBytes,
-      filterQuality: FilterQuality.medium,
+      maxBytes: _effectiveMaxBytes,
+      filterQuality:
+          galleryImage.isGif ? FilterQuality.low : FilterQuality.medium,
     );
   }
 
@@ -290,6 +293,18 @@ class EHImage extends StatelessWidget {
           : fittedSizes.destination.width,
       scale: state.extendedImageInfo?.scale ?? 1.0,
       fit: fit,
+      filterQuality:
+          galleryImage.isGif ? FilterQuality.low : FilterQuality.medium,
     );
+  }
+
+  int? get _effectiveMaxBytes => galleryImage.isGif ? null : maxBytes;
+
+  bool _shouldFadeIn(ExtendedImageState state) {
+    if ((state.frameNumber ?? 0) > 0) {
+      return false;
+    }
+
+    return forceFadeIn || !state.wasSynchronouslyLoaded;
   }
 }

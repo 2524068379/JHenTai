@@ -17,9 +17,13 @@ class HorizontalDoubleColumnLayout extends BaseLayout {
   HorizontalDoubleColumnLayout({Key? key}) : super(key: key);
 
   @override
-  final HorizontalDoubleColumnLayoutLogic logic = Get.put<HorizontalDoubleColumnLayoutLogic>(HorizontalDoubleColumnLayoutLogic(), permanent: true);
+  final HorizontalDoubleColumnLayoutLogic logic =
+      Get.put<HorizontalDoubleColumnLayoutLogic>(
+          HorizontalDoubleColumnLayoutLogic(),
+          permanent: true);
 
-  final HorizontalDoubleColumnLayoutState state = Get.find<HorizontalDoubleColumnLayoutLogic>().state;
+  final HorizontalDoubleColumnLayoutState state =
+      Get.find<HorizontalDoubleColumnLayoutLogic>().state;
 
   @override
   Widget buildBody(BuildContext context) {
@@ -32,16 +36,20 @@ class HorizontalDoubleColumnLayout extends BaseLayout {
             return PhotoViewGallery.builder(
               scrollPhysics: const ClampingScrollPhysics(),
               pageController: state.pageController,
-              cacheExtent: readPageState.readPageInfo.mode == ReadMode.online
-                  ? (readSetting.preloadPageCount.value.toDouble() + 1) / 2
-                  : (readSetting.preloadPageCountLocal.value.toDouble() + 1) / 2,
+              cacheExtent: logic.getEffectivePageCacheExtent(
+                readPageState.readPageInfo.mode == ReadMode.online,
+                doubleColumn: true,
+              ),
               reverse: readSetting.isInRight2LeftDirection,
               itemCount: state.pageCount,
-              builder: (context, index) => PhotoViewGalleryPageOptions.customChild(
+              builder: (context, index) =>
+                  PhotoViewGalleryPageOptions.customChild(
                 initialScale: 1.0,
                 minScale: 1.0,
                 maxScale: 2.5,
-                scaleStateCycle: readSetting.enableDoubleTapToScaleUp.isTrue ? logic.scaleStateCycle : null,
+                scaleStateCycle: readSetting.enableDoubleTapToScaleUp.isTrue
+                    ? logic.scaleStateCycle
+                    : null,
                 enableTapDragZoom: readSetting.enableTapDragToScaleUp.isTrue,
                 child: index < 0 || index >= state.pageCount
                     ? null
@@ -57,7 +65,8 @@ class HorizontalDoubleColumnLayout extends BaseLayout {
     );
   }
 
-  Widget? _buildDoubleColumnItemInOnlineMode(BuildContext context, int pageIndex) {
+  Widget? _buildDoubleColumnItemInOnlineMode(
+      BuildContext context, int pageIndex) {
     List<int> displayImageIndexes = logic.computeImagesInPageIndex(pageIndex);
     if (displayImageIndexes.isEmpty) {
       return null;
@@ -68,7 +77,8 @@ class HorizontalDoubleColumnLayout extends BaseLayout {
     }
 
     if (displayImageIndexes.length == 1) {
-      return Center(child: buildItemInOnlineMode(context, displayImageIndexes[0]));
+      return Center(
+          child: buildItemInOnlineMode(context, displayImageIndexes[0]));
     }
 
     return Row(
@@ -82,7 +92,8 @@ class HorizontalDoubleColumnLayout extends BaseLayout {
     );
   }
 
-  Widget? _buildDoubleColumnItemInLocalMode(BuildContext context, int pageIndex) {
+  Widget? _buildDoubleColumnItemInLocalMode(
+      BuildContext context, int pageIndex) {
     List<int> displayImageIndexes = logic.computeImagesInPageIndex(pageIndex);
     if (displayImageIndexes.isEmpty) {
       return null;
@@ -93,7 +104,8 @@ class HorizontalDoubleColumnLayout extends BaseLayout {
     }
 
     if (displayImageIndexes.length == 1) {
-      return Center(child: buildItemInLocalMode(context, displayImageIndexes[0]));
+      return Center(
+          child: buildItemInLocalMode(context, displayImageIndexes[0]));
     }
 
     return Row(
@@ -109,16 +121,19 @@ class HorizontalDoubleColumnLayout extends BaseLayout {
 
   @override
   Widget? completedWidgetBuilderCallBack(int index, ExtendedImageState state) {
-    if (state.extendedImageInfo == null || logic.readPageState.imageContainerSizes[index] != null) {
+    if (state.extendedImageInfo == null ||
+        logic.readPageState.imageContainerSizes[index] != null) {
       return null;
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (state.extendedImageInfo == null || logic.readPageState.imageContainerSizes[index] != null) {
+      if (state.extendedImageInfo == null ||
+          logic.readPageState.imageContainerSizes[index] != null) {
         return;
       }
 
-      bool isSpreadPage = state.extendedImageInfo!.image.width > state.extendedImageInfo!.image.height;
+      bool isSpreadPage = state.extendedImageInfo!.image.width >
+          state.extendedImageInfo!.image.height;
 
       FittedSizes fittedSizes = logic.getImageFittedSizeIncludeSpread(
         Size(
@@ -133,7 +148,8 @@ class HorizontalDoubleColumnLayout extends BaseLayout {
       if (isSpreadPage && !this.state.isSpreadPage[index]) {
         logic.updateSpreadPage(index);
       } else {
-        logic.readPageLogic.updateSafely(['${readPageLogic.onlineImageId}::$index']);
+        logic.readPageLogic
+            .updateSafely(['${readPageLogic.onlineImageId}::$index']);
       }
     });
 
@@ -141,17 +157,21 @@ class HorizontalDoubleColumnLayout extends BaseLayout {
   }
 
   @override
-  Widget? completedWidgetBuilderForLocalModeCallBack(int index, ExtendedImageState state) {
-    if (state.extendedImageInfo == null || logic.readPageState.imageContainerSizes[index] != null) {
+  Widget? completedWidgetBuilderForLocalModeCallBack(
+      int index, ExtendedImageState state) {
+    if (state.extendedImageInfo == null ||
+        logic.readPageState.imageContainerSizes[index] != null) {
       return null;
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (state.extendedImageInfo == null || logic.readPageState.imageContainerSizes[index] != null) {
+      if (state.extendedImageInfo == null ||
+          logic.readPageState.imageContainerSizes[index] != null) {
         return;
       }
 
-      bool isSpreadPage = state.extendedImageInfo!.image.width > state.extendedImageInfo!.image.height;
+      bool isSpreadPage = state.extendedImageInfo!.image.width >
+          state.extendedImageInfo!.image.height;
 
       FittedSizes fittedSizes = logic.getImageFittedSizeIncludeSpread(
         Size(
@@ -166,7 +186,9 @@ class HorizontalDoubleColumnLayout extends BaseLayout {
       if (isSpreadPage && !this.state.isSpreadPage[index]) {
         logic.updateSpreadPage(index);
       } else {
-        galleryDownloadService.updateSafely(['${galleryDownloadService.downloadImageId}::${readPageState.readPageInfo.gid}::$index']);
+        galleryDownloadService.updateSafely([
+          '${galleryDownloadService.downloadImageId}::${readPageState.readPageInfo.gid}::$index'
+        ]);
       }
     });
 

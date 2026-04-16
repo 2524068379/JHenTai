@@ -13,30 +13,38 @@ class HorizontalPageLayout extends BaseLayout {
   HorizontalPageLayout({Key? key}) : super(key: key);
 
   @override
-  final HorizontalPageLayoutLogic logic = Get.put<HorizontalPageLayoutLogic>(HorizontalPageLayoutLogic(), permanent: true);
+  final HorizontalPageLayoutLogic logic = Get.put<HorizontalPageLayoutLogic>(
+      HorizontalPageLayoutLogic(),
+      permanent: true);
 
-  final HorizontalPageLayoutState state = Get.find<HorizontalPageLayoutLogic>().state;
+  final HorizontalPageLayoutState state =
+      Get.find<HorizontalPageLayoutLogic>().state;
 
   @override
   Widget buildBody(BuildContext context) {
     return EHWheelListener(
-      onPointerScroll: readSetting.isInFitWidthReadDirection ? null : logic.onPointerScroll,
+      onPointerScroll:
+          readSetting.isInFitWidthReadDirection ? null : logic.onPointerScroll,
       child: PhotoViewGallery.builder(
         itemCount: readPageState.readPageInfo.pageCount,
         scrollPhysics: const ClampingScrollPhysics(),
         pageController: logic.pageController,
-        cacheExtent: readPageState.readPageInfo.mode == ReadMode.online
-            ? readSetting.preloadPageCount.value.toDouble()
-            : readSetting.preloadPageCountLocal.value.toDouble(),
+        cacheExtent: logic.getEffectivePageCacheExtent(
+          readPageState.readPageInfo.mode == ReadMode.online,
+        ),
         reverse: readSetting.isInRight2LeftDirection,
         builder: (context, index) => PhotoViewGalleryPageOptions.customChild(
           initialScale: 1.0,
           minScale: 1.0,
           maxScale: 2.5,
-          scaleStateCycle: readSetting.enableDoubleTapToScaleUp.isTrue ? logic.scaleStateCycle : null,
+          scaleStateCycle: readSetting.enableDoubleTapToScaleUp.isTrue
+              ? logic.scaleStateCycle
+              : null,
           enableTapDragZoom: readSetting.enableTapDragToScaleUp.isTrue,
           child: Obx(() {
-            Widget item = readPageState.readPageInfo.mode == ReadMode.online ? buildItemInOnlineMode(context, index) : buildItemInLocalMode(context, index);
+            Widget item = readPageState.readPageInfo.mode == ReadMode.online
+                ? buildItemInOnlineMode(context, index)
+                : buildItemInLocalMode(context, index);
 
             if (readSetting.isInFitWidthReadDirection) {
               item = Center(child: SingleChildScrollView(child: item));
