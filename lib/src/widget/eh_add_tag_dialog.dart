@@ -77,14 +77,7 @@ class EHAddTagDialog extends StatelessWidget {
           focusNode: state.focusNode,
           textInputAction: TextInputAction.search,
           textAlignVertical: TextAlignVertical.center,
-          controller: TextEditingController.fromValue(
-            TextEditingValue(
-              text: state.keyword ?? '',
-
-              /// make cursor stay at last letter
-              selection: TextSelection.fromPosition(TextPosition(offset: state.keyword.length ?? 0)),
-            ),
-          ),
+          controller: state.keywordController,
           onChanged: (text) {
             state.keyword = text;
             logic.waitAndSearchTags();
@@ -217,8 +210,10 @@ class EHAddTagDialogLogic extends GetxController {
 
   @override
   void onClose() {
-    super.onClose();
+    state.keywordController.dispose();
     state.focusNode.dispose();
+    state.searchDebouncing.close();
+    super.onClose();
   }
 
   void waitAndSearchTags() {
@@ -284,6 +279,10 @@ class EHAddTagDialogLogic extends GetxController {
     segments.removeLast();
     segments.add('${tag.namespace}:${tag.key}');
     state.keyword = segments.joinNewElement(',', joinAtLast: true).join('');
+    state.keywordController.value = TextEditingValue(
+      text: state.keyword,
+      selection: TextSelection.fromPosition(TextPosition(offset: state.keyword.length)),
+    );
     updateSafely([searchFieldId]);
     state.focusNode.requestFocus();
   }
@@ -297,5 +296,6 @@ class EHAddTagDialogState {
 
   final Debouncing searchDebouncing = Debouncing(duration: const Duration(milliseconds: 300));
   LoadingState searchLoadingState = LoadingState.idle;
+  final TextEditingController keywordController = TextEditingController();
   FocusNode focusNode = FocusNode();
 }

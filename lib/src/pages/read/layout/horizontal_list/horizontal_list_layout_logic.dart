@@ -23,6 +23,13 @@ class HorizontalListLayoutLogic extends BaseLayoutLogic {
   }
 
   @override
+  void onClose() {
+    state.itemPositionsListener.itemPositions.removeListener(_readProgressListener);
+    state.photoViewController.dispose();
+    super.onClose();
+  }
+
+  @override
   void toLeft() {
     if (readSetting.isInRight2LeftDirection) {
       toNext();

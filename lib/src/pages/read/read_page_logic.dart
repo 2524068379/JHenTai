@@ -195,11 +195,11 @@ class ReadPageLogic extends GetxController {
 
   @override
   void onClose() {
-    super.onClose();
-
     state.focusNode.dispose();
     refreshCurrentTimeAndBatteryLevelTimer.cancel();
+    toggleTurnPageByVolumeKeyLister.dispose();
     toggleCurrentImmersiveModeLister.dispose();
+    toggleDeviceOrientationLister.dispose();
     readDirectionLister.dispose();
     imageSpaceLister.dispose();
     flushReadProgressTimer.cancel();
@@ -228,6 +228,8 @@ class ReadPageLogic extends GetxController {
     executor.close();
 
     WakelockPlus.disable();
+
+    super.onClose();
   }
 
   void beginToParseImageHref(int index) {

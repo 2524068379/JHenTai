@@ -186,7 +186,7 @@ class LoginPage extends StatelessWidget {
       child: TextFormField(
         key: const Key('ipbMemberId'),
         onEditingComplete: state.passwordFocusNode.requestFocus,
-        controller: TextEditingController(text: state.ipbMemberId ?? ''),
+        controller: state.ipbMemberIdController,
         decoration: InputDecoration(
           hintText: 'ipb_member_id',
           hintStyle: TextStyle(
@@ -213,7 +213,7 @@ class LoginPage extends StatelessWidget {
       child: TextFormField(
         key: const Key('ipbPassHash'),
         focusNode: state.ipbPassHashFocusNode,
-        controller: TextEditingController(text: state.ipbPassHash ?? ''),
+        controller: state.ipbPassHashController,
         decoration: InputDecoration(
           hintText: 'ipb_pass_hash',
           hintStyle: TextStyle(
@@ -242,7 +242,7 @@ class LoginPage extends StatelessWidget {
       child: TextFormField(
         key: const Key('igneous'),
         focusNode: state.igneousFocusNode,
-        controller: TextEditingController(text: state.igneous ?? ''),
+        controller: state.igneousController,
         decoration: InputDecoration(
           hintText: 'igneousHint'.tr,
           hintStyle: TextStyle(

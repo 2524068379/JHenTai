@@ -48,6 +48,12 @@ class EHCommentDialogState extends State<EHCommentDialog> {
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(widget.title),

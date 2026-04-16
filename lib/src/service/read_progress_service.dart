@@ -23,21 +23,29 @@ class ReadProgressService extends GetxController with JHLifeCircleBeanErrorCatch
   @override
   Future<void> doAfterBeanReady() async {}
 
+  int? peekReadProgress(String recordKey) {
+    return _progressCache[recordKey];
+  }
+
   /// Get read progress for a gallery with cache
   Future<int> getReadProgress(int gid) async {
+    return getReadProgressByKey(gid.toString());
+  }
+
+  Future<int> getReadProgressByKey(String recordKey) async {
     // Return from cache if available
-    if (_progressCache.containsKey(gid.toString())) {
-      return _progressCache[gid.toString()]!;
+    if (_progressCache.containsKey(recordKey)) {
+      return _progressCache[recordKey]!;
     }
 
     // Read from storage
     final data = await localConfigService.read(
       configKey: ConfigEnum.readIndexRecord,
-      subConfigKey: gid.toString(),
+      subConfigKey: recordKey,
     );
 
     final progress = int.tryParse(data ?? '') ?? 0;
-    _progressCache[gid.toString()] = progress;
+    _progressCache[recordKey] = progress;
     return progress;
   }
 

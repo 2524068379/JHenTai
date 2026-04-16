@@ -249,7 +249,6 @@ class WaterFallFlowCardTagWaterFlow extends StatelessWidget {
           shrinkWrap: true,
 
           /// disable keepScrollOffset because we used [PageStorageKey], which leads to a conflict with this WaterfallFlow
-          controller: ScrollController(keepScrollOffset: false),
           gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
             crossAxisCount: computeRows,
             mainAxisSpacing: 4,

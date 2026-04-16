@@ -21,4 +21,10 @@ mixin GridBasePageState implements Scroll2TopStateMixin {
 
   @override
   ScrollController get scrollController => isAtRoot ? rootScrollController : galleryScrollController;
+
+  @override
+  Iterable<ScrollController> get disposableScrollControllers => [
+        rootScrollController,
+        galleryScrollController,
+      ];
 }

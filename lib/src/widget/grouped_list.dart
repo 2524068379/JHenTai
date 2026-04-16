@@ -50,6 +50,7 @@ class _GroupedListState<G, E> extends State<GroupedList<G, E>> {
   late int maxGalleryNum4Animation;
 
   late ScrollController scrollController;
+  late bool ownsScrollController;
 
   late GroupedListController controller;
 
@@ -70,8 +71,10 @@ class _GroupedListState<G, E> extends State<GroupedList<G, E>> {
 
     if (widget.scrollController == null) {
       scrollController = ScrollController();
+      ownsScrollController = true;
     } else {
       scrollController = widget.scrollController!;
+      ownsScrollController = false;
     }
 
     if (widget.controller == null) {
@@ -84,10 +87,12 @@ class _GroupedListState<G, E> extends State<GroupedList<G, E>> {
 
   @override
   void dispose() {
-    super.dispose();
-
+    if (ownsScrollController) {
+      scrollController.dispose();
+    }
     logic.dispose();
     controller.detach();
+    super.dispose();
   }
 
   @override

@@ -33,5 +33,6 @@ mixin SearchPageStateMixin on BasePageState {
 
   ScrollController suggestionBodyController = ScrollController();
 
+  TextEditingController searchFieldController = TextEditingController();
   FocusNode searchFieldFocusNode = FocusNode();
 }

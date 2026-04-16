@@ -32,6 +32,23 @@ class LoginPageLogic extends GetxController {
 
   final LoginPageState state = LoginPageState();
 
+  @override
+  void onClose() {
+    state.ipbMemberIdController.dispose();
+    state.ipbPassHashController.dispose();
+    state.igneousController.dispose();
+    state.passwordFocusNode.dispose();
+    state.ipbPassHashFocusNode.dispose();
+    state.igneousFocusNode.dispose();
+    super.onClose();
+  }
+
+  void _syncCookieControllers() {
+    state.ipbMemberIdController.text = state.ipbMemberId ?? '';
+    state.ipbPassHashController.text = state.ipbPassHash ?? '';
+    state.igneousController.text = state.igneous ?? '';
+  }
+
   void toggleLoginType() {
     state.loginType = (state.loginType == LoginType.cookie ? LoginType.password : LoginType.cookie);
     update([formId]);
@@ -62,6 +79,7 @@ class LoginPageLogic extends GetxController {
       state.igneous = igneous;
     }
 
+    _syncCookieControllers();
     updateSafely([cookieFormId]);
   }
 

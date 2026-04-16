@@ -39,7 +39,7 @@ class HorizontalPageLayout extends BaseLayout {
             Widget item = readPageState.readPageInfo.mode == ReadMode.online ? buildItemInOnlineMode(context, index) : buildItemInLocalMode(context, index);
 
             if (readSetting.isInFitWidthReadDirection) {
-              item = Center(child: SingleChildScrollView(controller: ScrollController(), child: item));
+              item = Center(child: SingleChildScrollView(child: item));
             }
 
             return item;

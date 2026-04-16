@@ -4,4 +4,6 @@ mixin Scroll2TopStateMixin {
   bool isScrollingDown = false;
 
   final ScrollController scrollController = ScrollController();
+
+  Iterable<ScrollController> get disposableScrollControllers => [scrollController];
 }

@@ -9,6 +9,10 @@ class LoginPageState {
   LoginType loginType = LoginType.password;
   CookieVerificationType cookieVerificationType = CookieVerificationType.normal;
 
+  TextEditingController ipbMemberIdController = TextEditingController();
+  TextEditingController ipbPassHashController = TextEditingController();
+  TextEditingController igneousController = TextEditingController();
+
   FocusNode passwordFocusNode = FocusNode();
   FocusNode ipbPassHashFocusNode = FocusNode();
   FocusNode igneousFocusNode = FocusNode();

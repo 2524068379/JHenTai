@@ -24,6 +24,13 @@ class HorizontalPageLayoutLogic extends BaseLayoutLogic {
   }
 
   @override
+  void onClose() {
+    pageController.removeListener(_readProgressListener);
+    pageController.dispose();
+    super.onClose();
+  }
+
+  @override
   void toLeft() {
     if (readSetting.isInRight2LeftDirection) {
       toNext();

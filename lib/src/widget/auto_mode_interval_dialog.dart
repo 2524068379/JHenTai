@@ -19,6 +19,12 @@ class _AutoModeIntervalDialogState extends State<AutoModeIntervalDialog> {
   FixedExtentScrollController scrollController = FixedExtentScrollController(initialItem: readSetting.autoModeInterval.value ~/ 0.5 - 1);
 
   @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AlertDialog(
       contentPadding: const EdgeInsets.only(left: 16, right: 16, top: 12, bottom: 6),

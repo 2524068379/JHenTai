@@ -17,6 +17,7 @@ class HorizontalDoubleColumnLayoutLogic extends BaseLayoutLogic {
   HorizontalDoubleColumnLayoutState state = HorizontalDoubleColumnLayoutState();
 
   Completer<void> initCompleter = Completer<void>();
+  bool _pageControllerInitialized = false;
 
   @override
   Future<void> onInit() async {
@@ -40,8 +41,18 @@ class HorizontalDoubleColumnLayoutLogic extends BaseLayoutLogic {
 
     /// record reading progress and sync thumbnails list index
     state.pageController.addListener(_readProgressListener);
+    _pageControllerInitialized = true;
 
     initCompleter.complete();
+  }
+
+  @override
+  void onClose() {
+    if (_pageControllerInitialized) {
+      state.pageController.removeListener(_readProgressListener);
+      state.pageController.dispose();
+    }
+    super.onClose();
   }
 
   @override

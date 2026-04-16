@@ -181,7 +181,6 @@ class EHGalleryListCard extends StatelessWidget {
         scrollDirection: Axis.horizontal,
 
         /// disable keepScrollOffset because we used [PageStorageKey], which leads to a conflict with this WaterfallFlow
-        controller: ScrollController(keepScrollOffset: false),
         gridDelegate: const SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
           mainAxisSpacing: 4,
@@ -238,40 +237,7 @@ class EHGalleryListCard extends StatelessWidget {
   }
 
   Widget _buildReadingProgress(BuildContext context) {
-    return GetBuilder<ReadProgressService>(
-      init: Get.find<ReadProgressService>(),
-      id: '${ReadProgressService.readProgressUpdateId}::${gallery.gid}',
-      builder: (_) {
-        return FutureBuilder<int>(
-          future: readProgressService.getReadProgress(gallery.gid),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return const SizedBox.shrink();
-            }
-
-            final readIndex = snapshot.data ?? 0;
-
-            double progress = gallery.pageCount != null && gallery.pageCount! > 0 ? ((readIndex + 1) / gallery.pageCount!).clamp(0.0, 1.0) : 0.0;
-
-            // Don't show indicator if no progress
-            if (readIndex == 0.0) {
-              return const SizedBox.shrink();
-            }
-
-            return SizedBox(
-              width: UIConfig.galleryCardReadProgressIndicatorSize,
-              height: UIConfig.galleryCardReadProgressIndicatorSize,
-              child: CircularProgressIndicator(
-                value: progress,
-                strokeWidth: 2,
-                backgroundColor: UIConfig.galleryCardTextColor(context).withOpacity(0.2),
-                valueColor: AlwaysStoppedAnimation<Color>(UIConfig.galleryCardTextColor(context)),
-              ),
-            );
-          },
-        );
-      },
-    );
+    return _ReadingProgressIndicator(gallery: gallery);
   }
 
   Widget _buildDownloadIcon(BuildContext context) => Icon(Icons.downloading, size: 11, color: UIConfig.galleryCardTextColor(context));
@@ -295,6 +261,65 @@ class EHGalleryListCard extends StatelessWidget {
           fontSize: UIConfig.galleryCardTextSize,
           color: UIConfig.galleryCardTextColor(context),
           decoration: gallery.isExpunged ? TextDecoration.lineThrough : null),
+    );
+  }
+}
+
+class _ReadingProgressIndicator extends StatefulWidget {
+  final Gallery gallery;
+
+  const _ReadingProgressIndicator({required this.gallery});
+
+  @override
+  State<_ReadingProgressIndicator> createState() => _ReadingProgressIndicatorState();
+}
+
+class _ReadingProgressIndicatorState extends State<_ReadingProgressIndicator> {
+  Future<int>? _readProgressFuture;
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<ReadProgressService>(
+      init: Get.find<ReadProgressService>(),
+      id: '${ReadProgressService.readProgressUpdateId}::${widget.gallery.gid}',
+      builder: (_) {
+        final readIndex = readProgressService.peekReadProgress(widget.gallery.gid.toString());
+        if (readIndex != null) {
+          return _buildIndicator(context, readIndex);
+        }
+
+        _readProgressFuture ??= readProgressService.getReadProgress(widget.gallery.gid);
+        return FutureBuilder<int>(
+          future: _readProgressFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return const SizedBox.shrink();
+            }
+
+            return _buildIndicator(context, snapshot.data ?? 0);
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildIndicator(BuildContext context, int readIndex) {
+    final pageCount = widget.gallery.pageCount;
+    if (readIndex <= 0 || pageCount == null || pageCount <= 0) {
+      return const SizedBox.shrink();
+    }
+
+    final progress = ((readIndex + 1) / pageCount).clamp(0.0, 1.0);
+
+    return SizedBox(
+      width: UIConfig.galleryCardReadProgressIndicatorSize,
+      height: UIConfig.galleryCardReadProgressIndicatorSize,
+      child: CircularProgressIndicator(
+        value: progress,
+        strokeWidth: 2,
+        backgroundColor: UIConfig.galleryCardTextColor(context).withOpacity(0.2),
+        valueColor: AlwaysStoppedAnimation<Color>(UIConfig.galleryCardTextColor(context)),
+      ),
     );
   }
 }

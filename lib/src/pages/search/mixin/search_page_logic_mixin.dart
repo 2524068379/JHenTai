@@ -66,14 +66,27 @@ mixin SearchPageLogicMixin on BasePageLogic {
     if (configString != null) {
       state.enableSearchHistoryTranslation = configString == 'true';
     }
+    await state.searchConfigInitCompleter.future;
+    syncSearchFieldController();
     state.enableSearchHistoryTranslationCompleter.complete();
   }
 
   @override
   void onClose() {
+    state.searchFieldController.dispose();
     state.searchFieldFocusNode.dispose();
+    state.suggestionBodyController.dispose();
     suggestDebouncing.close();
     recordDebouncing.close();
+    super.onClose();
+  }
+
+  void syncSearchFieldController() {
+    final text = state.searchConfig.keyword ?? '';
+    state.searchFieldController.value = TextEditingValue(
+      text: text,
+      selection: TextSelection.fromPosition(TextPosition(offset: text.length)),
+    );
   }
 
   @override
@@ -129,6 +142,7 @@ mixin SearchPageLogicMixin on BasePageLogic {
     state.loadingState = LoadingState.loading;
     await state.searchConfigInitCompleter.future;
     state.searchConfig.keyword = null;
+    syncSearchFieldController();
     updateSafely();
 
     try {
@@ -297,6 +311,7 @@ mixin SearchPageLogicMixin on BasePageLogic {
     } else {
       state.searchConfig.keyword = '';
     }
+    syncSearchFieldController();
     update([searchFieldId]);
   }
 

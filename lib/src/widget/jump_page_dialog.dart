@@ -17,6 +17,12 @@ class _JumpPageDialogState extends State<JumpPageDialog> {
   final TextEditingController controller = TextEditingController();
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('jumpPageTo'.tr),

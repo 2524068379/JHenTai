@@ -47,6 +47,10 @@ class _EHSearchConfigDialogState extends State<EHSearchConfigDialog> {
 
   final ScrollController _bodyScrollController = ScrollController();
   final ScrollController _suggestionScrollController = ScrollController();
+  late final TextEditingController _quickSearchNameController;
+  late final TextEditingController _keywordController;
+  late final TextEditingController _pageAtLeastController;
+  late final TextEditingController _pageAtMostController;
 
   bool _isShowingSuggestions = false;
   List<TagAutoCompletionMatch> suggestions = [];
@@ -69,16 +73,29 @@ class _EHSearchConfigDialogState extends State<EHSearchConfigDialog> {
     }
 
     quickSearchName = widget.quickSearchName;
+    _quickSearchNameController =
+        TextEditingController(text: quickSearchName ?? '');
+    _keywordController =
+        TextEditingController(text: searchConfig.keyword ?? '');
+    _pageAtLeastController =
+        TextEditingController(text: searchConfig.pageAtLeast?.toString() ?? '');
+    _pageAtMostController =
+        TextEditingController(text: searchConfig.pageAtMost?.toString() ?? '');
   }
 
   @override
   void dispose() {
-    super.dispose();
     _bodyScrollController.dispose();
     _suggestionScrollController.dispose();
+    _quickSearchNameController.dispose();
+    _keywordController.dispose();
+    _pageAtLeastController.dispose();
+    _pageAtMostController.dispose();
+    debouncing.close();
     overlayEntry?.remove();
     overlayEntry?.dispose();
     focusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -181,7 +198,7 @@ class _EHSearchConfigDialogState extends State<EHSearchConfigDialog> {
         labelText: 'quickSearchName'.tr,
         labelStyle: const TextStyle(fontSize: 12),
       ),
-      controller: TextEditingController(text: quickSearchName),
+      controller: _quickSearchNameController,
       onChanged: (title) => quickSearchName = title,
     );
   }
@@ -274,15 +291,7 @@ class _EHSearchConfigDialogState extends State<EHSearchConfigDialog> {
                 fontSize: 12,
                 color: UIConfig.searchConfigDialogFieldHintTextColor(context)),
           ),
-          controller: TextEditingController.fromValue(
-            TextEditingValue(
-              text: searchConfig.keyword ?? '',
-
-              /// make cursor stay at last letter
-              selection: TextSelection.fromPosition(
-                  TextPosition(offset: searchConfig.keyword?.length ?? 0)),
-            ),
-          ),
+          controller: _keywordController,
           onTap: hideSuggestions,
           onChanged: (keyword) {
             searchConfig.keyword = keyword;
@@ -290,6 +299,7 @@ class _EHSearchConfigDialogState extends State<EHSearchConfigDialog> {
           },
           onSubmitted: (keyword) {
             searchConfig.keyword = '';
+            _syncKeywordController();
             hideSuggestions();
 
             if (keyword.isEmpty) {
@@ -344,6 +354,7 @@ class _EHSearchConfigDialogState extends State<EHSearchConfigDialog> {
                   onTapSuggestion: (TagData tagData) {
                     hideSuggestions();
                     searchConfig.keyword = '';
+                    _syncKeywordController();
                     addSearchTag(tagData);
                   },
                 ),
@@ -642,8 +653,7 @@ class _EHSearchConfigDialogState extends State<EHSearchConfigDialog> {
             SizedBox(
               width: 40,
               child: CupertinoTextField(
-                controller: TextEditingController(
-                    text: searchConfig.pageAtLeast?.toString()),
+                controller: _pageAtLeastController,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'\d'))
                 ],
@@ -658,8 +668,7 @@ class _EHSearchConfigDialogState extends State<EHSearchConfigDialog> {
             SizedBox(
               width: 40,
               child: CupertinoTextField(
-                controller: TextEditingController(
-                    text: searchConfig.pageAtMost?.toString()),
+                controller: _pageAtMostController,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'\d'))
                 ],
@@ -772,6 +781,8 @@ class _EHSearchConfigDialogState extends State<EHSearchConfigDialog> {
       searchConfig = SearchConfig(searchType: searchConfig.searchType);
       suggestions.clear();
       isDoubleBackspace = false;
+      _syncKeywordController();
+      _syncPageRangeControllers();
     });
   }
 
@@ -888,6 +899,20 @@ class _EHSearchConfigDialogState extends State<EHSearchConfigDialog> {
     setState(() {
       searchConfig.tags!.add(tag);
     });
+  }
+
+  void _syncKeywordController() {
+    _keywordController.value = TextEditingValue(
+      text: searchConfig.keyword ?? '',
+      selection: TextSelection.fromPosition(
+        TextPosition(offset: searchConfig.keyword?.length ?? 0),
+      ),
+    );
+  }
+
+  void _syncPageRangeControllers() {
+    _pageAtLeastController.text = searchConfig.pageAtLeast?.toString() ?? '';
+    _pageAtMostController.text = searchConfig.pageAtMost?.toString() ?? '';
   }
 
   void checkAndBack() {

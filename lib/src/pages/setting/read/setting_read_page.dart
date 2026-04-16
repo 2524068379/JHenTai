@@ -9,12 +9,33 @@ import '../../../service/log.dart';
 import '../../../utils/text_input_formatter.dart';
 import '../../../utils/toast_util.dart';
 
-class SettingReadPage extends StatelessWidget {
-  final TextEditingController imageRegionWidthRatioController = TextEditingController(text: readSetting.imageRegionWidthRatio.value.toString());
-  final TextEditingController gestureRegionWidthRatioController = TextEditingController(text: readSetting.gestureRegionWidthRatio.value.toString());
-  final TextEditingController imageMaxKilobytesController = TextEditingController(text: readSetting.maxImageKilobyte.value.toString());
+class SettingReadPage extends StatefulWidget {
+  const SettingReadPage({Key? key}) : super(key: key);
 
-  SettingReadPage({Key? key}) : super(key: key);
+  @override
+  State<SettingReadPage> createState() => _SettingReadPageState();
+}
+
+class _SettingReadPageState extends State<SettingReadPage> {
+  late final TextEditingController imageRegionWidthRatioController;
+  late final TextEditingController gestureRegionWidthRatioController;
+  late final TextEditingController imageMaxKilobytesController;
+
+  @override
+  void initState() {
+    super.initState();
+    imageRegionWidthRatioController = TextEditingController(text: readSetting.imageRegionWidthRatio.value.toString());
+    gestureRegionWidthRatioController = TextEditingController(text: readSetting.gestureRegionWidthRatio.value.toString());
+    imageMaxKilobytesController = TextEditingController(text: readSetting.maxImageKilobyte.value.toString());
+  }
+
+  @override
+  void dispose() {
+    imageRegionWidthRatioController.dispose();
+    gestureRegionWidthRatioController.dispose();
+    imageMaxKilobytesController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

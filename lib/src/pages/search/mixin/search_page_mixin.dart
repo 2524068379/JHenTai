@@ -69,14 +69,7 @@ mixin SearchPageMixin<L extends SearchPageLogicMixin, S extends SearchPageStateM
           builder: (_, __) => TextField(
             focusNode: state.searchFieldFocusNode,
             textInputAction: TextInputAction.search,
-            controller: TextEditingController.fromValue(
-              TextEditingValue(
-                text: state.searchConfig.keyword ?? '',
-
-                /// make cursor stay at last letter
-                selection: TextSelection.fromPosition(TextPosition(offset: state.searchConfig.keyword?.length ?? 0)),
-              ),
-            ),
+            controller: state.searchFieldController,
             style: const TextStyle(fontSize: 15),
             textAlignVertical: TextAlignVertical.center,
             decoration: InputDecoration(
@@ -203,6 +196,7 @@ mixin SearchPageMixin<L extends SearchPageLogicMixin, S extends SearchPageStateM
             : () {
                 if (state.searchConfigInitCompleter.isCompleted) {
                   state.searchConfig.keyword = (state.searchConfig.keyword ?? '').trimLeft() + ' ' + history.rawKeyword;
+                  logic.syncSearchFieldController();
                   logic.update([logic.searchFieldId]);
                 }
               },
@@ -283,6 +277,7 @@ mixin SearchPageMixin<L extends SearchPageLogicMixin, S extends SearchPageStateM
                 state.searchConfig.keyword = (state.searchConfig.keyword?.substring(0, state.suggestions[index].matchStart) ?? '') +
                     (state.suggestions[index].operator ?? '') +
                     '${state.suggestions[index].tagData.namespace}:"${state.suggestions[index].tagData.key}\$" ';
+                logic.syncSearchFieldController();
                 state.searchFieldFocusNode.requestFocus();
                 logic.update([logic.searchFieldId]);
               }

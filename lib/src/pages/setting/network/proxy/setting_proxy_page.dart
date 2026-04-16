@@ -17,6 +17,25 @@ class _SettingProxyPageState extends State<SettingProxyPage> {
   String proxyAddress = networkSetting.proxyAddress.value;
   String? proxyUsername = networkSetting.proxyUsername.value;
   String? proxyPassword = networkSetting.proxyPassword.value;
+  late final TextEditingController proxyAddressController;
+  late final TextEditingController proxyUsernameController;
+  late final TextEditingController proxyPasswordController;
+
+  @override
+  void initState() {
+    super.initState();
+    proxyAddressController = TextEditingController(text: proxyAddress);
+    proxyUsernameController = TextEditingController(text: proxyUsername);
+    proxyPasswordController = TextEditingController(text: proxyPassword);
+  }
+
+  @override
+  void dispose() {
+    proxyAddressController.dispose();
+    proxyUsernameController.dispose();
+    proxyPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +96,7 @@ class _SettingProxyPageState extends State<SettingProxyPage> {
       trailing: SizedBox(
         width: 150,
         child: TextField(
-          controller: TextEditingController(text: networkSetting.proxyAddress.value),
+          controller: proxyAddressController,
           decoration: const InputDecoration(isDense: true, labelStyle: TextStyle(fontSize: 12)),
           textAlign: TextAlign.center,
           onChanged: (String value) => proxyAddress = value,
@@ -94,7 +113,7 @@ class _SettingProxyPageState extends State<SettingProxyPage> {
       trailing: SizedBox(
         width: 150,
         child: TextField(
-          controller: TextEditingController(text: networkSetting.proxyUsername.value),
+          controller: proxyUsernameController,
           decoration: const InputDecoration(isDense: true, labelStyle: TextStyle(fontSize: 12)),
           textAlign: TextAlign.center,
           onChanged: (String value) => proxyUsername = value,
@@ -111,7 +130,7 @@ class _SettingProxyPageState extends State<SettingProxyPage> {
       trailing: SizedBox(
         width: 150,
         child: TextField(
-          controller: TextEditingController(text: networkSetting.proxyPassword.value),
+          controller: proxyPasswordController,
           decoration: const InputDecoration(isDense: true, labelStyle: TextStyle(fontSize: 12)),
           textAlign: TextAlign.center,
           onChanged: (String value) => proxyPassword = value,

@@ -36,6 +36,13 @@ class _EHArchiveBotSettingDialogState extends State<EHArchiveBotSettingDialog> {
   }
 
   @override
+  void dispose() {
+    _apiAddressController.dispose();
+    _apiKeyController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Row(
