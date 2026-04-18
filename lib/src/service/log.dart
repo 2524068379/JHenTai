@@ -26,7 +26,12 @@ class LogService with JHLifeCircleBeanErrorCatch implements JHLifeCircleBean {
   Logger? _downloadFileLogger;
 
   LogPrinter devPrinter = PrettyPrinter(stackTraceBeginIndex: 0, methodCount: 6, levelEmojis: {Level.trace: '✔ '});
-  LogPrinter prodPrinterWithBox = PrettyPrinter(stackTraceBeginIndex: 0, methodCount: 6, colors: false, printTime: true, levelEmojis: {Level.trace: '✔ '});
+  LogPrinter prodPrinterWithBox = PrettyPrinter(
+      stackTraceBeginIndex: 0,
+      methodCount: 6,
+      colors: false,
+      dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart,
+      levelEmojis: {Level.trace: '✔ '});
   LogPrinter prodPrinterWithoutBox =
       PrettyPrinter(stackTraceBeginIndex: 0, methodCount: 6, colors: false, noBoxingByDefault: true, levelEmojis: {Level.trace: '✔ '});
 

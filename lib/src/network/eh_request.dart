@@ -25,7 +25,6 @@ import 'package:jhentai/src/utils/eh_spider_parser.dart';
 import 'package:jhentai/src/utils/proxy_util.dart';
 import 'package:jhentai/src/utils/string_uril.dart';
 import 'package:http_parser/http_parser.dart' show MediaType;
-import 'package:path/path.dart';
 import 'package:webview_flutter/webview_flutter.dart' show WebViewCookieManager;
 import '../service/jh_service.dart';
 import '../service/local_config_service.dart';
@@ -409,8 +408,6 @@ emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
       case RanklistType.allTime:
         tl = 11;
         break;
-      default:
-        tl = 15;
     }
 
     Response response = await _getWithErrorHandler('${EHConsts.ERanklist}?tl=$tl&p=$pageNo');

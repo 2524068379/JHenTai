@@ -42,14 +42,14 @@ class EHComment extends StatefulWidget {
   final Function()? onBlockUser;
 
   const EHComment({
-    Key? key,
+    super.key,
     required this.comment,
     required this.inDetailPage,
     this.disableButtons = false,
     this.onVoted,
     this.handleTapUpdateCommentButton,
     this.onBlockUser,
-  }) : super(key: key);
+  });
 
   @override
   _EHCommentState createState() => _EHCommentState();
@@ -95,9 +95,9 @@ class _EHCommentState extends State<EHComment> {
 
     if (widget.inDetailPage && widget.onBlockUser != null) {
       child = GestureDetector(
-        child: child,
         onLongPress: widget.onBlockUser == null ? null : () => _handleBlockUser(context),
         onSecondaryTap: widget.onBlockUser == null ? null : () => _handleBlockUser(context),
+        child: child,
       );
     }
 
@@ -105,7 +105,7 @@ class _EHCommentState extends State<EHComment> {
   }
 
   Future<void> _handleBlockUser(BuildContext context) async {
-    bool? result = await showDialog(context: context, builder: (_) => EHDialog(title: 'blockUser'.tr + '?'));
+    bool? result = await showDialog(context: context, builder: (_) => EHDialog(title: '${'blockUser'.tr}?'));
     if (result == true) {
       widget.onBlockUser?.call();
     }
@@ -119,12 +119,11 @@ class _EHCommentHeader extends StatelessWidget {
   final bool fromMe;
 
   const _EHCommentHeader({
-    Key? key,
     required this.inDetailPage,
     required this.username,
     required this.commentTime,
     required this.fromMe,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -161,11 +160,10 @@ class _EHCommentTextBody extends StatelessWidget {
   final dom.Element element;
 
   const _EHCommentTextBody({
-    Key? key,
     required this.inDetailPage,
     this.onBlockUser,
     required this.element,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -290,7 +288,7 @@ class _EHCommentTextBody extends StatelessWidget {
                       return Center(child: UIConfig.loadingAnimation(context));
                     case LoadState.failed:
                       return Center(
-                        child: GestureDetector(child: const Icon(Icons.sentiment_very_dissatisfied), onTap: state.reLoadImage),
+                        child: GestureDetector(onTap: state.reLoadImage, child: const Icon(Icons.sentiment_very_dissatisfied)),
                       );
                     default:
                       return null;
@@ -454,7 +452,6 @@ class _EHCommentFooter extends StatefulWidget {
   final Function(bool isVotingUp, String score)? onVoted;
 
   const _EHCommentFooter({
-    Key? key,
     required this.inDetailPage,
     required this.commentId,
     this.lastEditTime,
@@ -466,7 +463,7 @@ class _EHCommentFooter extends StatefulWidget {
     required this.votedDown,
     this.onVoted,
     this.handleTapUpdateCommentButton,
-  }) : super(key: key);
+  });
 
   @override
   State<_EHCommentFooter> createState() => _EHCommentFooterState();
@@ -597,7 +594,7 @@ class _EHCommentFooterState extends State<_EHCommentFooter> with LoginRequiredMi
     }
 
     setStateSafely(() {
-      score = newScore! >= 0 ? '+' + newScore.toString() : newScore.toString();
+      score = newScore! >= 0 ? '+$newScore' : newScore.toString();
     });
 
     widget.onVoted?.call(isVotingUp, score);

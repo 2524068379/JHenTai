@@ -13,7 +13,7 @@ import 'package:pinput/pinput.dart';
 import '../config/ui_config.dart';
 
 class LockPage extends StatefulWidget {
-  const LockPage({Key? key}) : super(key: key);
+  const LockPage({super.key});
 
   @override
   State<LockPage> createState() => _LockPageState();

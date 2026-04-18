@@ -91,12 +91,14 @@ class LocalGalleryService extends GetxController with GridBasePageServiceMixin, 
       dir.delete(recursive: true).catchError((e) {
         log.error('Delete local gallery error!', e);
         log.uploadError(e);
+        return dir;
       });
     } else {
       for (File file in imageFiles) {
         file.delete().catchError((e) {
           log.error('Delete local gallery error!', e);
           log.uploadError(e);
+          return file;
         });
       }
     }

@@ -38,7 +38,6 @@ import 'package:jhentai/src/setting/read_setting.dart';
 import 'package:jhentai/src/setting/site_setting.dart';
 import 'package:jhentai/src/setting/user_setting.dart';
 import 'package:jhentai/src/widget/app_manager.dart';
-import 'exception/upload_exception.dart';
 import 'package:jhentai/src/l18n/locale_text.dart';
 import 'package:jhentai/src/routes/getx_router_observer.dart';
 import 'package:jhentai/src/routes/routes.dart';
@@ -108,7 +107,7 @@ void main(List<String> args) async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {

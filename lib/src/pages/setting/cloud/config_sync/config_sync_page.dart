@@ -170,7 +170,8 @@ class _ConfigSyncPageState extends State<ConfigSyncPage> {
           ),
         ],
         cancelButton: CupertinoActionSheetAction(
-            child: Text('cancel'.tr), onPressed: backRoute),
+            onPressed: backRoute,
+            child: Text('cancel'.tr)),
       ),
     );
   }

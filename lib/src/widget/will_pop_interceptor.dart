@@ -7,7 +7,7 @@ import '../utils/toast_util.dart';
 class WillPopInterceptor extends StatefulWidget {
   final Widget child;
 
-  const WillPopInterceptor({Key? key, required this.child}) : super(key: key);
+  const WillPopInterceptor({super.key, required this.child});
 
   @override
   State<WillPopInterceptor> createState() => _WillPopInterceptorState();

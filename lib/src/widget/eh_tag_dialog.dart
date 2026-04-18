@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:jhentai/src/exception/eh_parse_exception.dart';
 import 'package:jhentai/src/exception/eh_site_exception.dart';
 import 'package:jhentai/src/extension/dio_exception_extension.dart';
-import 'package:jhentai/src/extension/widget_extension.dart';
 import 'package:jhentai/src/mixin/login_required_logic_mixin.dart';
 import 'package:jhentai/src/routes/routes.dart';
 import 'package:jhentai/src/setting/my_tags_setting.dart';
@@ -37,13 +36,13 @@ class EHTagDialog extends StatefulWidget {
   final ValueChanged<bool>? onTagVoted;
 
   const EHTagDialog({
-    Key? key,
+    super.key,
     required this.tagData,
     required this.gid,
     required this.token,
     required this.apikey,
     this.onTagVoted,
-  }) : super(key: key);
+  });
 
   @override
   _EHTagDialogState createState() => _EHTagDialogState();

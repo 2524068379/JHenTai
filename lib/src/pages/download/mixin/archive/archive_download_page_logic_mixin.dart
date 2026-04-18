@@ -115,7 +115,7 @@ mixin ArchiveDownloadPageLogicMixin on GetxController
   }
 
   Future<void> handleDeleteGroup(String oldGroup) async {
-    bool? success = await Get.dialog(EHDialog(title: 'deleteGroup'.tr + '?'));
+    bool? success = await Get.dialog(EHDialog(title: '${'deleteGroup'.tr}?'));
     if (success == null || !success) {
       return;
     }
@@ -222,8 +222,8 @@ mixin ArchiveDownloadPageLogicMixin on GetxController
           ),
         ],
         cancelButton: CupertinoActionSheetAction(
-          child: Text('cancel'.tr),
           onPressed: backRoute,
+          child: Text('cancel'.tr),
         ),
       ),
     );

@@ -34,7 +34,7 @@ class GalleryListDownloadPage extends StatelessWidget
         Scroll2TopPageMixin,
         MultiSelectDownloadPageMixin,
         GalleryDownloadPageMixin {
-  GalleryListDownloadPage({Key? key}) : super(key: key);
+  GalleryListDownloadPage({super.key});
 
   final GalleryListDownloadPageLogic logic =
       Get.put<GalleryListDownloadPageLogic>(GalleryListDownloadPageLogic(),
@@ -225,7 +225,7 @@ class GalleryListDownloadPage extends StatelessWidget
                 width: UIConfig.downloadPageGroupHeaderWidth,
                 child: Center(child: Icon(Icons.folder_open))),
             Text(
-              '$groupName${'(' + logic.downloadService.gallerysWithGroup(groupName).length.toString() + ')'}',
+              '$groupName${'(${logic.downloadService.gallerysWithGroup(groupName).length})'}',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

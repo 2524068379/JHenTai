@@ -86,7 +86,7 @@ mixin GalleryDownloadPageLogicMixin on GetxController
   }
 
   Future<void> handleDeleteGroup(String oldGroup) async {
-    bool? success = await Get.dialog(EHDialog(title: 'deleteGroup'.tr + '?'));
+    bool? success = await Get.dialog(EHDialog(title: '${'deleteGroup'.tr}?'));
     if (success == null || !success) {
       return;
     }
@@ -206,8 +206,8 @@ mixin GalleryDownloadPageLogicMixin on GetxController
           ),
         ],
         cancelButton: CupertinoActionSheetAction(
-          child: Text('cancel'.tr),
           onPressed: backRoute,
+          child: Text('cancel'.tr),
         ),
       ),
     );
@@ -219,7 +219,6 @@ mixin GalleryDownloadPageLogicMixin on GetxController
       builder: (BuildContext context) => CupertinoActionSheet(
         actions: [
           CupertinoActionSheetAction(
-            child: Text('${'priority'.tr} : 1 (${'highest'.tr})'),
             isDefaultAction:
                 downloadService.galleryDownloadInfos[gallery.gid]?.priority ==
                     1,
@@ -227,10 +226,10 @@ mixin GalleryDownloadPageLogicMixin on GetxController
               handleAssignPriority(gallery, 1);
               backRoute();
             },
+            child: Text('${'priority'.tr} : 1 (${'highest'.tr})'),
           ),
           ...[2, 3]
               .map((i) => CupertinoActionSheetAction(
-                    child: Text('${'priority'.tr} : $i'),
                     isDefaultAction: downloadService
                             .galleryDownloadInfos[gallery.gid]?.priority ==
                         i,
@@ -238,10 +237,10 @@ mixin GalleryDownloadPageLogicMixin on GetxController
                       handleAssignPriority(gallery, i);
                       backRoute();
                     },
+                    child: Text('${'priority'.tr} : $i'),
                   ))
-              .toList(),
+              ,
           CupertinoActionSheetAction(
-            child: Text('${'priority'.tr} : 4 (${'default'.tr})'),
             isDefaultAction:
                 downloadService.galleryDownloadInfos[gallery.gid]?.priority ==
                     4,
@@ -249,9 +248,9 @@ mixin GalleryDownloadPageLogicMixin on GetxController
               handleAssignPriority(gallery, 4);
               backRoute();
             },
+            child: Text('${'priority'.tr} : 4 (${'default'.tr})'),
           ),
           CupertinoActionSheetAction(
-            child: Text('${'priority'.tr} : 5'),
             isDefaultAction:
                 downloadService.galleryDownloadInfos[gallery.gid]?.priority ==
                     5,
@@ -259,11 +258,12 @@ mixin GalleryDownloadPageLogicMixin on GetxController
               handleAssignPriority(gallery, 5);
               backRoute();
             },
+            child: Text('${'priority'.tr} : 5'),
           ),
         ],
         cancelButton: CupertinoActionSheetAction(
-          child: Text('cancel'.tr),
           onPressed: backRoute,
+          child: Text('cancel'.tr),
         ),
       ),
     );
@@ -331,7 +331,7 @@ mixin GalleryDownloadPageLogicMixin on GetxController
         title: 'delete'.tr,
         content: 'multiDeleteHint'.tr +
             (isUpdatingDependent
-                ? '\n\n' + 'deleteUpdatingDependentHint'.tr
+                ? '\n\n${'deleteUpdatingDependentHint'.tr}'
                 : ''),
       ),
     );

@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:jhentai/src/enum/config_enum.dart';
 import 'package:jhentai/src/extension/get_logic_extension.dart';
+import 'package:jhentai/src/model/gallery_image.dart';
 import 'package:jhentai/src/service/local_config_service.dart';
 import 'package:jhentai/src/utils/screen_size_util.dart';
 
@@ -28,7 +29,8 @@ class HorizontalDoubleColumnLayoutLogic extends BaseLayoutLogic {
       subConfigKey: readPageState.readPageInfo.readProgressRecordStorageKey,
     );
     if (cacheString == null) {
-      state.isSpreadPage = List.generate(readPageState.readPageInfo.pageCount, (_) => false);
+      state.isSpreadPage =
+          List.generate(readPageState.readPageInfo.pageCount, (_) => false);
     } else {
       List list = jsonDecode(cacheString);
       state.isSpreadPage = list.map((e) => e == 1).toList();
@@ -37,7 +39,9 @@ class HorizontalDoubleColumnLayoutLogic extends BaseLayoutLogic {
 
     state.pageCount = computePageCount();
 
-    state.pageController = PageController(initialPage: computePageIndexOfImage(readPageState.readPageInfo.initialIndex));
+    state.pageController = PageController(
+        initialPage:
+            computePageIndexOfImage(readPageState.readPageInfo.initialIndex));
 
     /// record reading progress and sync thumbnails list index
     state.pageController.addListener(_readProgressListener);
@@ -132,7 +136,8 @@ class HorizontalDoubleColumnLayoutLogic extends BaseLayoutLogic {
     readPageLogic.toggleMenu();
 
     autoModeTimer = Timer.periodic(
-      Duration(milliseconds: (readSetting.autoModeInterval.value * 1000).toInt()),
+      Duration(
+          milliseconds: (readSetting.autoModeInterval.value * 1000).toInt()),
       (_) {
         /// changed read direction
         if (!readSetting.isInDoubleColumnReadDirection) {
@@ -169,17 +174,31 @@ class HorizontalDoubleColumnLayoutLogic extends BaseLayoutLogic {
     if (readPageState.imageContainerSizes[imageIndex] != null) {
       return readPageState.imageContainerSizes[imageIndex]!;
     }
-    return Size((fullScreenWidth - readSetting.imageSpace.value) / 2, double.infinity);
+    return Size(
+        (fullScreenWidth - readSetting.imageSpace.value) / 2, double.infinity);
   }
 
-  FittedSizes getImageFittedSizeIncludeSpread(Size imageSize, bool isSpreadPage) {
+  FittedSizes getImageFittedSizeIncludeSpread(
+      Size imageSize, bool isSpreadPage) {
     return applyBoxFit(
       BoxFit.contain,
       Size(imageSize.width, imageSize.height),
       Size(
-        isSpreadPage ? readPageState.displayRegionSize.width : (readPageState.displayRegionSize.width - readSetting.imageSpace.value) / 2,
+        isSpreadPage
+            ? readPageState.displayRegionSize.width
+            : (readPageState.displayRegionSize.width -
+                    readSetting.imageSpace.value) /
+                2,
         readPageState.displayRegionSize.height,
       ),
+    );
+  }
+
+  @override
+  FittedSizes getImageFittedSizeByGalleryImage(GalleryImage image) {
+    return getImageFittedSizeIncludeSpread(
+      Size(image.width!, image.height!),
+      image.width! > image.height!,
     );
   }
 
@@ -188,7 +207,9 @@ class HorizontalDoubleColumnLayoutLogic extends BaseLayoutLogic {
 
     /// has recognized from cache
     if (state.isSpreadPage[imageIndex]) {
-      galleryDownloadService.updateSafely(['${galleryDownloadService.downloadImageId}::${readPageState.readPageInfo.gid}::$imageIndex']);
+      galleryDownloadService.updateSafely([
+        '${galleryDownloadService.downloadImageId}::${readPageState.readPageInfo.gid}::$imageIndex'
+      ]);
       return;
     }
 
@@ -196,7 +217,8 @@ class HorizontalDoubleColumnLayoutLogic extends BaseLayoutLogic {
     state.pageCount = computePageCount();
 
     updateSafely([BaseLayoutLogic.pageId]);
-    if (computePageIndexOfImage(imageIndex) <= state.pageController.page!.toInt()) {
+    if (computePageIndexOfImage(imageIndex) <=
+        state.pageController.page!.toInt()) {
       jump2ImageIndex(readPageState.readPageInfo.currentImageIndex);
     }
 

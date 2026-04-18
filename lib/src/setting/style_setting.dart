@@ -55,9 +55,9 @@ class StyleSetting
 
     themeMode.value = ThemeMode.values[map['themeMode']];
     lightThemeColor.value =
-        Color(map['lightThemeColor'] ?? lightThemeColor.value.value);
+        Color(map['lightThemeColor'] ?? lightThemeColor.value.toARGB32());
     darkThemeColor.value =
-        Color(map['darkThemeColor'] ?? darkThemeColor.value.value);
+        Color(map['darkThemeColor'] ?? darkThemeColor.value.toARGB32());
     listMode.value = ListMode.values[map['listMode']];
     crossAxisCountInWaterFallFlow.value = map['crossAxisCountInWaterFallFlow'];
     crossAxisCountInGridDownloadPageForGroup.value =
@@ -79,8 +79,8 @@ class StyleSetting
   String toConfigString() {
     return jsonEncode({
       'themeMode': themeMode.value.index,
-      'lightThemeColor': lightThemeColor.value.value,
-      'darkThemeColor': darkThemeColor.value.value,
+      'lightThemeColor': lightThemeColor.value.toARGB32(),
+      'darkThemeColor': darkThemeColor.value.toARGB32(),
       'listMode': listMode.value.index,
       'crossAxisCountInWaterFallFlow': crossAxisCountInWaterFallFlow.value,
       'crossAxisCountInGridDownloadPageForGroup':
@@ -113,13 +113,13 @@ class StyleSetting
 
   Future<void> saveLightThemeColor(Color color) async {
     log.debug('saveLightThemeColor:$color');
-    this.lightThemeColor.value = color;
+    lightThemeColor.value = color;
     await saveBeanConfig();
   }
 
   Future<void> saveDarkThemeColor(Color color) async {
     log.debug('saveDarkThemeColor:$color');
-    this.darkThemeColor.value = color;
+    darkThemeColor.value = color;
     await saveBeanConfig();
   }
 
@@ -165,9 +165,9 @@ class StyleSetting
   Future<void> savePageListMode(String routeName, ListMode? listMode) async {
     log.debug('savePageListMode:$routeName, $listMode');
     if (listMode == null) {
-      this.pageListMode.remove(routeName);
+      pageListMode.remove(routeName);
     } else {
-      this.pageListMode[routeName] = listMode;
+      pageListMode[routeName] = listMode;
     }
     await saveBeanConfig();
   }
@@ -180,7 +180,7 @@ class StyleSetting
 
   Future<void> saveLayoutMode(LayoutMode layoutMode) async {
     log.debug('saveLayoutMode:${layoutMode.name}');
-    this.layout.value = layoutMode;
+    layout.value = layoutMode;
     await saveBeanConfig();
   }
 }

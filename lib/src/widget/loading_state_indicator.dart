@@ -42,7 +42,7 @@ class LoadingStateIndicator extends StatelessWidget {
   final bool successWidgetSameWithIdle;
 
   const LoadingStateIndicator({
-    Key? key,
+    super.key,
     this.height,
     this.width,
     required this.loadingState,
@@ -59,7 +59,7 @@ class LoadingStateIndicator extends StatelessWidget {
     this.errorWidgetBuilder,
     this.errorWidgetSameWithIdle = false,
     this.successWidgetSameWithIdle = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +79,7 @@ class LoadingStateIndicator extends StatelessWidget {
                 ? idleWidgetBuilder!.call()
                 : GestureDetector(
                     onTap: errorTapCallback,
-                    child: FaIcon(FontAwesomeIcons.redoAlt,
+                    child: FaIcon(FontAwesomeIcons.rotateRight,
                         size: indicatorRadius * 2,
                         color:
                             UIConfig.loadingStateIndicatorButtonColor(context)),

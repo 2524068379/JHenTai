@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:extended_image/extended_image.dart';
@@ -25,12 +24,11 @@ import '../../../enum/config_type_enum.dart';
 import '../../../routes/routes.dart';
 import '../../../service/isolate_service.dart';
 import '../../../utils/byte_util.dart';
-import '../../../utils/permission_util.dart';
 import '../../../utils/route_util.dart';
 import '../../../widget/eh_config_type_select_dialog.dart';
 
 class SettingAdvancedPage extends StatefulWidget {
-  const SettingAdvancedPage({Key? key}) : super(key: key);
+  const SettingAdvancedPage({super.key});
 
   @override
   _SettingAdvancedPageState createState() => _SettingAdvancedPageState();

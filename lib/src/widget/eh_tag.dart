@@ -16,7 +16,7 @@ class EHTag extends StatefulWidget {
   final bool inDeleteMode;
 
   const EHTag({
-    Key? key,
+    super.key,
     required this.tag,
     this.addNameSpaceColor = false,
     this.onTap,
@@ -24,7 +24,7 @@ class EHTag extends StatefulWidget {
     this.onLongPress,
     this.showTagStatus = false,
     this.inDeleteMode = false,
-  }) : super(key: key);
+  });
 
   @override
   State<EHTag> createState() => _EHTagState();
@@ -86,13 +86,13 @@ class _EHTagState extends State<EHTag> with AnimationMixin {
           duration: UIConfig.ehTagAnimationDuration,
           child: inDeleteMode
               ? Container(
-                  child: const Icon(Icons.close, size: 10),
                   margin: const EdgeInsets.only(left: 4),
                   padding: const EdgeInsets.all(1.5),
                   decoration: BoxDecoration(
                     color: UIConfig.ehTagDeleteButtonBackGroundColor(context),
                     borderRadius: BorderRadius.circular(8),
                   ),
+                  child: const Icon(Icons.close, size: 10),
                 )
               : const SizedBox(),
         ),

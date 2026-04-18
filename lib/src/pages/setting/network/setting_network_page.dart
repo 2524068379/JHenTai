@@ -11,7 +11,7 @@ import '../../../utils/text_input_formatter.dart';
 import '../../../utils/toast_util.dart';
 
 class SettingNetworkPage extends StatefulWidget {
-  const SettingNetworkPage({Key? key}) : super(key: key);
+  const SettingNetworkPage({super.key});
 
   @override
   State<SettingNetworkPage> createState() => _SettingNetworkPageState();
@@ -82,11 +82,11 @@ class _SettingNetworkPageState extends State<SettingNetworkPage> {
         alignment: AlignmentDirectional.centerEnd,
         onChanged: (Duration? newValue) => networkSetting.savePageCacheMaxAge(newValue!),
         items: [
-          DropdownMenuItem(child: Text('1m'.tr), value: const Duration(minutes: 1)),
-          DropdownMenuItem(child: Text('10m'.tr), value: const Duration(minutes: 10)),
-          DropdownMenuItem(child: Text('1h'.tr), value: const Duration(hours: 1)),
-          DropdownMenuItem(child: Text('1d'.tr), value: const Duration(days: 1)),
-          DropdownMenuItem(child: Text('3d'.tr), value: const Duration(days: 3)),
+          DropdownMenuItem(value: const Duration(minutes: 1), child: Text('1m'.tr)),
+          DropdownMenuItem(value: const Duration(minutes: 10), child: Text('10m'.tr)),
+          DropdownMenuItem(value: const Duration(hours: 1), child: Text('1h'.tr)),
+          DropdownMenuItem(value: const Duration(days: 1), child: Text('1d'.tr)),
+          DropdownMenuItem(value: const Duration(days: 3), child: Text('3d'.tr)),
         ],
       ),
     );
@@ -102,13 +102,13 @@ class _SettingNetworkPageState extends State<SettingNetworkPage> {
         alignment: AlignmentDirectional.centerEnd,
         onChanged: (Duration? newValue) => networkSetting.saveCacheImageExpireDuration(newValue!),
         items: [
-          DropdownMenuItem(child: Text('1d'.tr), value: const Duration(days: 1)),
-          DropdownMenuItem(child: Text('2d'.tr), value: const Duration(days: 2)),
-          DropdownMenuItem(child: Text('3d'.tr), value: const Duration(days: 3)),
-          DropdownMenuItem(child: Text('5d'.tr), value: const Duration(days: 5)),
-          DropdownMenuItem(child: Text('7d'.tr), value: const Duration(days: 7)),
-          DropdownMenuItem(child: Text('14d'.tr), value: const Duration(days: 14)),
-          DropdownMenuItem(child: Text('30d'.tr), value: const Duration(days: 30)),
+          DropdownMenuItem(value: const Duration(days: 1), child: Text('1d'.tr)),
+          DropdownMenuItem(value: const Duration(days: 2), child: Text('2d'.tr)),
+          DropdownMenuItem(value: const Duration(days: 3), child: Text('3d'.tr)),
+          DropdownMenuItem(value: const Duration(days: 5), child: Text('5d'.tr)),
+          DropdownMenuItem(value: const Duration(days: 7), child: Text('7d'.tr)),
+          DropdownMenuItem(value: const Duration(days: 14), child: Text('14d'.tr)),
+          DropdownMenuItem(value: const Duration(days: 30), child: Text('30d'.tr)),
         ],
       ),
     );

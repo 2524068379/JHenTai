@@ -22,7 +22,7 @@ import '../utils/snack_util.dart';
 
 /// Core widget to decide which layout to be applied
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();

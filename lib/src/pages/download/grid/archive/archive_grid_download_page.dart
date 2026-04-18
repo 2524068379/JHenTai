@@ -27,7 +27,7 @@ class ArchiveGridDownloadPage extends StatelessWidget
         MultiSelectDownloadPageMixin,
         ArchiveDownloadPageMixin,
         GridBasePage {
-  ArchiveGridDownloadPage({Key? key}) : super(key: key);
+  ArchiveGridDownloadPage({super.key});
 
   @override
   final DownloadPageGalleryType galleryType = DownloadPageGalleryType.archive;
@@ -180,9 +180,9 @@ class ArchiveGridDownloadPage extends StatelessWidget
                     blur: 1,
                     blurColor: UIConfig.downloadPageGridCoverBlurColor,
                     colorOpacity: 0.6,
-                    child: cover,
                     overlay: const Icon(Icons.download,
                         color: UIConfig.downloadPageGridCoverOverlayColor),
+                    child: cover,
                   ),
                 );
               },

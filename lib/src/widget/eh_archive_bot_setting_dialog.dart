@@ -18,8 +18,8 @@ class EHArchiveBotSettingDialog extends StatefulWidget {
 }
 
 class _EHArchiveBotSettingDialogState extends State<EHArchiveBotSettingDialog> {
-  TextEditingController _apiAddressController = TextEditingController();
-  TextEditingController _apiKeyController = TextEditingController();
+  final TextEditingController _apiAddressController = TextEditingController();
+  final TextEditingController _apiKeyController = TextEditingController();
   late bool _useProxy;
 
   @override

@@ -11,7 +11,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../../../../utils/toast_util.dart';
 
 class LogPage extends StatefulWidget {
-  const LogPage({Key? key}) : super(key: key);
+  const LogPage({super.key});
 
   @override
   _LogPageState createState() => _LogPageState();
@@ -61,10 +61,13 @@ class _LogPageState extends State<LogPage> {
   }
 
   void _shareLog() {
-    Share.shareXFiles(
-      [XFile(log.path)],
-      text: basename(log.path),
-      sharePositionOrigin: Rect.fromLTWH(0, 0, fullScreenWidth, screenHeight * 2 / 3),
+    SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(log.path)],
+        text: basename(log.path),
+        sharePositionOrigin:
+            Rect.fromLTWH(0, 0, fullScreenWidth, screenHeight * 2 / 3),
+      ),
     );
   }
 

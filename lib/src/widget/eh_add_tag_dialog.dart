@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:jhentai/src/config/ui_config.dart';
 import 'package:jhentai/src/extension/get_logic_extension.dart';
 import 'package:jhentai/src/extension/list_extension.dart';
-import 'package:jhentai/src/extension/widget_extension.dart';
 import 'package:jhentai/src/pages/search/mixin/search_page_mixin.dart';
 import 'package:throttling/throttling.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -89,7 +88,7 @@ class EHAddTagDialog extends StatelessWidget {
             contentPadding: EdgeInsets.zero,
             prefixIcon: MouseRegion(
               cursor: SystemMouseCursors.click,
-              child: GestureDetector(child: const Icon(Icons.search), onTap: logic.waitAndSearchTags),
+              child: GestureDetector(onTap: logic.waitAndSearchTags, child: const Icon(Icons.search)),
             ),
             suffixIcon: _buildLoadingIndicator(),
           ),

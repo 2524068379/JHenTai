@@ -8,7 +8,7 @@ import '../../../utils/route_util.dart';
 import '../../../widget/eh_log_out_dialog.dart';
 
 class SettingAccountPage extends StatelessWidget {
-  const SettingAccountPage({Key? key}) : super(key: key);
+  const SettingAccountPage({super.key});
 
   @override
   Widget build(BuildContext context) {

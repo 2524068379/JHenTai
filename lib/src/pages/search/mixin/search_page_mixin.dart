@@ -81,7 +81,7 @@ mixin SearchPageMixin<L extends SearchPageLogicMixin, S extends SearchPageStateM
               labelText: state.searchConfig.tags?.isEmpty ?? true ? null : state.searchConfig.computeTagKeywords(withTranslation: false, separator: ' / '),
               prefixIcon: MouseRegion(
                 cursor: SystemMouseCursors.click,
-                child: GestureDetector(child: const Icon(Icons.search), onTap: logic.handleClearAndRefresh),
+                child: GestureDetector(onTap: logic.handleClearAndRefresh, child: const Icon(Icons.search)),
               ),
               prefixIconConstraints: BoxConstraints(
                 minHeight: UIConfig.mobileV2SearchBarHeight,
@@ -89,7 +89,7 @@ mixin SearchPageMixin<L extends SearchPageLogicMixin, S extends SearchPageStateM
               ),
               suffixIcon: MouseRegion(
                 cursor: SystemMouseCursors.click,
-                child: GestureDetector(child: const Icon(Icons.cancel), onTap: logic.handleTapClearButton),
+                child: GestureDetector(onTap: logic.handleTapClearButton, child: const Icon(Icons.cancel)),
               ),
               suffixIconConstraints: BoxConstraints(
                 minHeight: UIConfig.mobileV2SearchBarHeight,
@@ -188,14 +188,14 @@ mixin SearchPageMixin<L extends SearchPageLogicMixin, S extends SearchPageStateM
           if (state.inDeleteSearchHistoryMode) {
             logic.handleDeleteSearchHistory(history);
           } else {
-            newSearch(keyword: history.rawKeyword + ' ');
+            newSearch(keyword: '${history.rawKeyword} ');
           }
         },
         onLongPress: state.inDeleteSearchHistoryMode
             ? null
             : () {
                 if (state.searchConfigInitCompleter.isCompleted) {
-                  state.searchConfig.keyword = (state.searchConfig.keyword ?? '').trimLeft() + ' ' + history.rawKeyword;
+                  state.searchConfig.keyword = '${(state.searchConfig.keyword ?? '').trimLeft()} ${history.rawKeyword}';
                   logic.syncSearchFieldController();
                   logic.update([logic.searchFieldId]);
                 }
@@ -274,9 +274,7 @@ mixin SearchPageMixin<L extends SearchPageLogicMixin, S extends SearchPageStateM
             visualDensity: const VisualDensity(vertical: -1),
             onTap: () {
               if (state.searchConfigInitCompleter.isCompleted) {
-                state.searchConfig.keyword = (state.searchConfig.keyword?.substring(0, state.suggestions[index].matchStart) ?? '') +
-                    (state.suggestions[index].operator ?? '') +
-                    '${state.suggestions[index].tagData.namespace}:"${state.suggestions[index].tagData.key}\$" ';
+                state.searchConfig.keyword = '${state.searchConfig.keyword?.substring(0, state.suggestions[index].matchStart) ?? ''}${state.suggestions[index].operator ?? ''}${state.suggestions[index].tagData.namespace}:"${state.suggestions[index].tagData.key}\$" ';
                 logic.syncSearchFieldController();
                 state.searchFieldFocusNode.requestFocus();
                 logic.update([logic.searchFieldId]);

@@ -172,7 +172,7 @@ class _CookiePageState extends State<CookiePage> {
         _refreshIgneousState = LoadingState.error;
       });
       return;
-    } catch (e, s) {
+    } catch (e) {
       log.error('Refresh igneous failed: $e');
       snack('refreshIgneousFailed'.tr, e.toString());
       setStateSafely(() {
@@ -192,7 +192,7 @@ class _CookiePageState extends State<CookiePage> {
       receiveTimeout: Duration(milliseconds: networkSetting.receiveTimeout.value),
     ));
 
-    EHIpProvider _ehIpProvider = RoundRobinIpProvider(NetworkSetting.host2IPs);
+    EHIpProvider ehIpProvider = RoundRobinIpProvider(NetworkSetting.host2IPs);
 
     _dio!.interceptors.add(InterceptorsWrapper(
       onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
@@ -203,12 +203,12 @@ class _CookiePageState extends State<CookiePage> {
 
         String rawPath = options.path;
         String host = options.uri.host;
-        if (!_ehIpProvider.supports(host)) {
+        if (!ehIpProvider.supports(host)) {
           handler.next(options);
           return;
         }
 
-        String ip = _ehIpProvider.nextIP(host);
+        String ip = ehIpProvider.nextIP(host);
         handler.next(options.copyWith(
           path: rawPath.replaceFirst(host, ip),
           headers: {...options.headers, 'host': host},
@@ -224,7 +224,7 @@ class _CookiePageState extends State<CookiePage> {
         if (e.type == DioExceptionType.connectionTimeout || e.type == DioExceptionType.badResponse || e.type == DioExceptionType.connectionError) {
           String host = e.requestOptions.extra[EHRequest.domainFrontingExtraKey]['host'];
           String ip = e.requestOptions.extra[EHRequest.domainFrontingExtraKey]['ip'];
-          _ehIpProvider.addUnavailableIp(host, ip);
+          ehIpProvider.addUnavailableIp(host, ip);
           log.info('Refresh igneous, add unavailable host-ip: $host-$ip');
         }
 

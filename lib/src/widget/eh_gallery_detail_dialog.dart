@@ -13,8 +13,7 @@ import '../utils/toast_util.dart';
 class EHGalleryDetailDialog extends StatelessWidget {
   final GalleryDetail galleryDetail;
 
-  const EHGalleryDetailDialog({Key? key, required this.galleryDetail})
-      : super(key: key);
+  const EHGalleryDetailDialog({super.key, required this.galleryDetail});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +55,7 @@ class _Item extends StatelessWidget {
   final String name;
   final String? value;
 
-  const _Item({Key? key, required this.name, this.value}) : super(key: key);
+  const _Item({required this.name, this.value});
 
   @override
   Widget build(BuildContext context) {

@@ -18,7 +18,7 @@ class SearchPageMobileV2 extends BasePage<SearchPageMobileV2Logic, SearchPageMob
   final String tag = newUUID();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
-  SearchPageMobileV2({Key? key}) : super(key: key, showJumpButton: true, showScroll2TopButton: true) {
+  SearchPageMobileV2({super.key}) : super(showJumpButton: true, showScroll2TopButton: true) {
     logic = Get.put(SearchPageMobileV2Logic(), tag: tag);
     state = logic.state;
   }
@@ -62,7 +62,7 @@ class SearchPageMobileV2 extends BasePage<SearchPageMobileV2Logic, SearchPageMob
       title: state.totalCount == null ? null : Text(state.totalCount!.toPrintString()),
       titleSpacing: 0,
       titleTextStyle: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 16),
-      bottom: PreferredSize(child: buildSearchField(), preferredSize: const Size(double.infinity, UIConfig.mobileV2SearchBarHeight)),
+      bottom: PreferredSize(preferredSize: const Size(double.infinity, UIConfig.mobileV2SearchBarHeight), child: buildSearchField()),
       actions: buildActionButtons(visualDensity: const VisualDensity(horizontal: -4)),
     );
   }

@@ -9,6 +9,7 @@ import 'package:jhentai/src/model/gallery_image.dart';
 import 'package:jhentai/src/setting/advanced_setting.dart';
 import 'package:jhentai/src/setting/style_setting.dart';
 import 'dart:io' as io;
+import 'dart:math' as math;
 
 import '../service/gallery_download_service.dart';
 
@@ -42,7 +43,7 @@ class EHImage extends StatelessWidget {
   final CompletedWidgetBuilder? completedWidgetBuilder;
 
   const EHImage({
-    Key? key,
+    super.key,
     required this.galleryImage,
     this.autoLayout = false,
     this.containerHeight,
@@ -62,10 +63,10 @@ class EHImage extends StatelessWidget {
     this.pausedWidgetBuilder,
     this.loadingWidgetBuilder,
     this.completedWidgetBuilder,
-  }) : super(key: key);
+  });
 
   const EHImage.autoLayout({
-    Key? key,
+    super.key,
     required this.galleryImage,
     this.autoLayout = true,
     this.containerHeight,
@@ -85,7 +86,7 @@ class EHImage extends StatelessWidget {
     this.pausedWidgetBuilder,
     this.loadingWidgetBuilder,
     this.completedWidgetBuilder,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +95,10 @@ class EHImage extends StatelessWidget {
         : galleryImage.path == null
             ? buildNetworkImage(context)
             : buildFileImage(context);
+
+    if (galleryImage.isGif) {
+      child = RepaintBoundary(child: child);
+    }
 
     if (heroTag != null && styleSetting.isInMobileLayout) {
       child = Hero(tag: heroTag!, child: child);
@@ -121,11 +126,15 @@ class EHImage extends StatelessWidget {
   }
 
   Widget buildNetworkImage(BuildContext context) {
+    final Size? decodeCacheSize = _computeDecodeCacheSize(context);
+
     return ExtendedImage.network(
       _replaceEXUrl(galleryImage.url),
       fit: fit,
       height: containerHeight,
       width: containerWidth,
+      cacheWidth: decodeCacheSize?.width.toInt(),
+      cacheHeight: decodeCacheSize?.height.toInt(),
       handleLoadingProgress: loadingProgressWidgetBuilder != null,
       printError: kDebugMode,
       enableSlideOutPage: enableSlideOutPage,
@@ -141,8 +150,8 @@ class EHImage extends StatelessWidget {
             return failedWidgetBuilder?.call(state) ??
                 Center(
                   child: GestureDetector(
-                      child: const Icon(Icons.sentiment_very_dissatisfied),
-                      onTap: state.reLoadImage),
+                      onTap: state.reLoadImage,
+                      child: const Icon(Icons.sentiment_very_dissatisfied)),
                 );
           case LoadState.completed:
             state.returnLoadStateChangedWidget = true;
@@ -151,13 +160,13 @@ class EHImage extends StatelessWidget {
                 _buildExtendedRawImage(state);
 
             if (borderRadius != BorderRadius.zero) {
-              child = ClipRRect(child: child, borderRadius: borderRadius);
+              child = ClipRRect(borderRadius: borderRadius, child: child);
             }
 
             if (state.slidePageState != null) {
               child = ExtendedImageSlidePageHandler(
-                  child: child,
-                  extendedImageSlidePageState: state.slidePageState);
+                  extendedImageSlidePageState: state.slidePageState,
+                  child: child);
             }
 
             child = Center(
@@ -190,6 +199,8 @@ class EHImage extends StatelessWidget {
           const Center(child: CircularProgressIndicator());
     }
 
+    final Size? decodeCacheSize = _computeDecodeCacheSize(context);
+
     return ExtendedImage.file(
       io.File(GalleryDownloadService
           .computeImageDownloadAbsolutePathFromRelativePath(
@@ -197,6 +208,8 @@ class EHImage extends StatelessWidget {
       fit: fit,
       height: containerHeight,
       width: containerWidth,
+      cacheWidth: decodeCacheSize?.width.toInt(),
+      cacheHeight: decodeCacheSize?.height.toInt(),
       enableLoadState: loadingWidgetBuilder != null ||
           failedWidgetBuilder != null ||
           completedWidgetBuilder != null,
@@ -214,8 +227,8 @@ class EHImage extends StatelessWidget {
             return failedWidgetBuilder?.call(state) ??
                 Center(
                   child: GestureDetector(
-                      child: const Icon(Icons.sentiment_very_dissatisfied),
-                      onTap: state.reLoadImage),
+                      onTap: state.reLoadImage,
+                      child: const Icon(Icons.sentiment_very_dissatisfied)),
                 );
           case LoadState.completed:
             state.returnLoadStateChangedWidget = true;
@@ -224,13 +237,13 @@ class EHImage extends StatelessWidget {
                 _buildExtendedRawImage(state);
 
             if (borderRadius != BorderRadius.zero) {
-              child = ClipRRect(child: child, borderRadius: borderRadius);
+              child = ClipRRect(borderRadius: borderRadius, child: child);
             }
 
             if (state.slidePageState != null) {
               child = ExtendedImageSlidePageHandler(
-                  child: child,
-                  extendedImageSlidePageState: state.slidePageState);
+                  extendedImageSlidePageState: state.slidePageState,
+                  child: child);
             }
 
             child = Center(
@@ -306,5 +319,58 @@ class EHImage extends StatelessWidget {
     }
 
     return forceFadeIn || !state.wasSynchronouslyLoaded;
+  }
+
+  Size? _computeDecodeCacheSize(BuildContext context) {
+    if (!galleryImage.isGif ||
+        galleryImage.width == null ||
+        galleryImage.height == null) {
+      return null;
+    }
+
+    final double sourceWidth = galleryImage.width!;
+    final double sourceHeight = galleryImage.height!;
+    final double widthConstraint =
+        _finitePositive(containerWidth) ?? sourceWidth;
+    final double heightConstraint =
+        _finitePositive(containerHeight) ?? sourceHeight;
+
+    if (widthConstraint <= 0 || heightConstraint <= 0) {
+      return null;
+    }
+
+    final FittedSizes fittedSizes = applyBoxFit(
+      fit,
+      Size(sourceWidth, sourceHeight),
+      Size(widthConstraint, heightConstraint),
+    );
+
+    final double pixelRatio =
+        MediaQuery.maybeOf(context)?.devicePixelRatio ?? 1.0;
+    final double targetWidth = math.min(
+      sourceWidth,
+      fittedSizes.destination.width * pixelRatio,
+    );
+    final double targetHeight = math.min(
+      sourceHeight,
+      fittedSizes.destination.height * pixelRatio,
+    );
+
+    if (!targetWidth.isFinite ||
+        !targetHeight.isFinite ||
+        targetWidth <= 0 ||
+        targetHeight <= 0) {
+      return null;
+    }
+
+    return Size(targetWidth.ceilToDouble(), targetHeight.ceilToDouble());
+  }
+
+  double? _finitePositive(double? value) {
+    if (value == null || !value.isFinite || value <= 0) {
+      return null;
+    }
+
+    return value;
   }
 }

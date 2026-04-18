@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jhentai/src/config/ui_config.dart';
 import 'package:jhentai/src/extension/get_logic_extension.dart';
-import 'package:jhentai/src/extension/widget_extension.dart';
 
 import '../../../../../service/local_block_rule_service.dart';
 import '../../../../../widget/eh_wheel_speed_controller.dart';
@@ -38,14 +37,14 @@ class ConfigureBlockingRulePage extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 80, left: 8, right: 8),
           controller: state.scrollController,
           children: [
-            ...state.rules.map((rule) => _buildRuleForm(rule).marginOnly(bottom: 12)).toList(),
+            ...state.rules.map((rule) => _buildRuleForm(rule).marginOnly(bottom: 12)),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 OutlinedButton(
-                  child: const Icon(Icons.add),
                   style: FilledButton.styleFrom(shape: const CircleBorder(), padding: EdgeInsets.zero),
                   onPressed: logic.addRuleForm,
+                  child: const Icon(Icons.add),
                 ),
               ],
             ).marginOnly(top: 12),
@@ -75,7 +74,7 @@ class ConfigureBlockingRulePage extends StatelessWidget {
                       rule.pattern = LocalBlockPatternEnum.withAttribute(rule.attribute).first;
                       logic.updateSafely([logic.bodyId]);
                     },
-                    items: LocalBlockTargetEnum.values.map((e) => DropdownMenuItem(child: Text(e.desc.tr), value: e, alignment: Alignment.center)).toList(),
+                    items: LocalBlockTargetEnum.values.map((e) => DropdownMenuItem(value: e, alignment: Alignment.center, child: Text(e.desc.tr))).toList(),
                   ),
                 ),
                 ListTile(
@@ -89,7 +88,7 @@ class ConfigureBlockingRulePage extends StatelessWidget {
                       logic.updateSafely([logic.bodyId]);
                     },
                     items: LocalBlockAttributeEnum.withTarget(rule.target)
-                        .map((e) => DropdownMenuItem(child: Text(e.desc.tr), value: e, alignment: Alignment.center))
+                        .map((e) => DropdownMenuItem(value: e, alignment: Alignment.center, child: Text(e.desc.tr)))
                         .toList(),
                   ),
                 ),
@@ -103,7 +102,7 @@ class ConfigureBlockingRulePage extends StatelessWidget {
                       logic.updateSafely([logic.bodyId]);
                     },
                     items: LocalBlockPatternEnum.withAttribute(rule.attribute)
-                        .map((e) => DropdownMenuItem(child: Text(e.desc.tr), value: e, alignment: Alignment.center))
+                        .map((e) => DropdownMenuItem(value: e, alignment: Alignment.center, child: Text(e.desc.tr)))
                         .toList(),
                   ),
                 ),
@@ -130,11 +129,11 @@ class ConfigureBlockingRulePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             OutlinedButton(
-              child: const Icon(Icons.remove),
               style: FilledButton.styleFrom(shape: const CircleBorder(), padding: EdgeInsets.zero),
               onPressed: () {
                 logic.removeRuleForm(rule);
               },
+              child: const Icon(Icons.remove),
             ),
           ],
         ),

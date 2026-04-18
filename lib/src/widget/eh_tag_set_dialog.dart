@@ -49,7 +49,7 @@ class _EHTagSetDialogState extends State<EHTagSetDialog> {
         if (_loadingState == LoadingState.error)
           GestureDetector(
             onTap: _getTagSet,
-            child: FaIcon(FontAwesomeIcons.redoAlt,
+            child: FaIcon(FontAwesomeIcons.rotateRight,
                 size: 24,
                 color: UIConfig.loadingStateIndicatorButtonColor(context)),
           ),
@@ -64,7 +64,7 @@ class _EHTagSetDialogState extends State<EHTagSetDialog> {
                       result: (tagSetNo: tagSet.number, remember: remember)),
                 ),
               )
-              .toList(),
+              ,
         if (_loadingState == LoadingState.success &&
             preferenceSetting.enableDefaultTagSet.isTrue)
           ListTile(

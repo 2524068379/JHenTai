@@ -16,7 +16,7 @@ class LoginPage extends StatelessWidget {
   final LoginPageLogic logic = Get.put<LoginPageLogic>(LoginPageLogic());
   final LoginPageState state = Get.find<LoginPageLogic>().state;
 
-  LoginPage({Key? key}) : super(key: key);
+  LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -265,28 +265,28 @@ class LoginPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Expanded(child: SizedBox()),
-          Text('useWebview'.tr),
-          Radio<CookieVerificationType>(
-            value: CookieVerificationType.webview,
+          RadioGroup<CookieVerificationType>(
             groupValue: state.cookieVerificationType,
-            toggleable: true,
             onChanged: (value) {
               state.cookieVerificationType =
                   value ?? CookieVerificationType.normal;
               logic.updateSafely([LoginPageLogic.cookieVerificationTypeId]);
             },
-          ),
-          const SizedBox(width: 60),
-          Text('skipCookieVerification'.tr),
-          Radio<CookieVerificationType>(
-            value: CookieVerificationType.skip,
-            groupValue: state.cookieVerificationType,
-            toggleable: true,
-            onChanged: (value) {
-              state.cookieVerificationType =
-                  value ?? CookieVerificationType.normal;
-              logic.updateSafely([LoginPageLogic.cookieVerificationTypeId]);
-            },
+            child: Row(
+              children: [
+                Text('useWebview'.tr),
+                const Radio<CookieVerificationType>(
+                  value: CookieVerificationType.webview,
+                  toggleable: true,
+                ),
+                const SizedBox(width: 60),
+                Text('skipCookieVerification'.tr),
+                const Radio<CookieVerificationType>(
+                  value: CookieVerificationType.skip,
+                  toggleable: true,
+                ),
+              ],
+            ),
           ),
           const Expanded(child: SizedBox()),
         ],
@@ -343,7 +343,7 @@ class LoginPage extends StatelessWidget {
 }
 
 class _TopArea extends StatelessWidget {
-  const _TopArea({Key? key}) : super(key: key);
+  const _TopArea();
 
   @override
   Widget build(BuildContext context) {

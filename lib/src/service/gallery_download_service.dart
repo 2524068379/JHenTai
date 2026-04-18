@@ -556,7 +556,7 @@ class GalleryDownloadService extends GetxController with GridBasePageServiceMixi
       }
 
       GalleryDownloadedData gallery = GalleryDownloadedData.fromJson(metadata['gallery']);
-      List<GalleryImage?> images = (jsonDecode(metadata['images']) as List).map((_map) => _map == null ? null : GalleryImage.fromJson(_map)).toList();
+      List<GalleryImage?> images = (jsonDecode(metadata['images']) as List).map((map) => map == null ? null : GalleryImage.fromJson(map)).toList();
 
       /// skip if exists
       if (galleryDownloadInfos.containsKey(gallery.gid)) {
@@ -756,6 +756,7 @@ class GalleryDownloadService extends GetxController with GridBasePageServiceMixi
   }
 
   /// shutdown executor
+  // ignore: unused_element
   Future<void> _shutdownExecutor() async {
     log.info('Shutdown download executor');
 
@@ -776,6 +777,7 @@ class GalleryDownloadService extends GetxController with GridBasePageServiceMixi
         log.error('Executor exception!', e, stackTrace);
         log.uploadError(e);
       }
+      return null;
     });
   }
 

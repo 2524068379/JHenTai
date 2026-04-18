@@ -231,12 +231,6 @@ class _ReadPageState extends State<ReadPage> with ScrollStatusListener {
                 return const SizedBox();
               }
               return ElevatedButton(
-                child: Icon(
-                  Icons.looks_one,
-                  color: state.displayFirstPageAlone
-                      ? UIConfig.readPageActiveButtonColor(context)
-                      : UIConfig.readPageButtonColor,
-                ),
                 onPressed: logic.toggleDisplayFirstPageAlone,
                 style: ElevatedButton.styleFrom(
                   elevation: 0,
@@ -246,15 +240,17 @@ class _ReadPageState extends State<ReadPage> with ScrollStatusListener {
                   shadowColor: Colors.transparent,
                   minimumSize: const Size(56, 56),
                 ),
+                child: Icon(
+                  Icons.looks_one,
+                  color: state.displayFirstPageAlone
+                      ? UIConfig.readPageActiveButtonColor(context)
+                      : UIConfig.readPageButtonColor,
+                ),
               );
             }),
             GetBuilder<ReadPageLogic>(
               id: logic.autoModeId,
               builder: (_) => ElevatedButton(
-                child: Icon(Icons.schedule,
-                    color: state.autoMode
-                        ? UIConfig.readPageActiveButtonColor(context)
-                        : UIConfig.readPageButtonColor),
                 onPressed: logic.toggleAutoMode,
                 style: ElevatedButton.styleFrom(
                   elevation: 0,
@@ -264,12 +260,14 @@ class _ReadPageState extends State<ReadPage> with ScrollStatusListener {
                   shadowColor: Colors.transparent,
                   minimumSize: const Size(56, 56),
                 ),
+                child: Icon(Icons.schedule,
+                    color: state.autoMode
+                        ? UIConfig.readPageActiveButtonColor(context)
+                        : UIConfig.readPageButtonColor),
               ),
             ),
             if (readSetting.enableBottomMenu.isFalse)
               ElevatedButton(
-                child: const Icon(Icons.settings,
-                    color: UIConfig.readPageButtonColor),
                 onPressed: () {
                   logic.restoreImmersiveMode();
                   toRoute(Routes.settingRead)?.then((_) {
@@ -285,6 +283,8 @@ class _ReadPageState extends State<ReadPage> with ScrollStatusListener {
                   shadowColor: Colors.transparent,
                   minimumSize: const Size(56, 56),
                 ),
+                child: const Icon(Icons.settings,
+                    color: UIConfig.readPageButtonColor),
               ),
           ],
         ),
@@ -508,7 +508,8 @@ class _ReadPageState extends State<ReadPage> with ScrollStatusListener {
               itemBuilder: (_) => ReadDirection.values
                   .map(
                     (e) => PopupMenuItem<ReadDirection>(
-                        child: Text(e.name.tr), value: e),
+                        value: e,
+                        child: Text(e.name.tr)),
                   )
                   .toList(),
               onSelected: (ReadDirection value) =>
@@ -524,7 +525,8 @@ class _ReadPageState extends State<ReadPage> with ScrollStatusListener {
               itemBuilder: (_) => DeviceDirection.values
                   .map(
                     (e) => PopupMenuItem<DeviceDirection>(
-                        child: Text(e.name.tr), value: e),
+                        value: e,
+                        child: Text(e.name.tr)),
                   )
                   .toList(),
               onSelected: (DeviceDirection value) =>

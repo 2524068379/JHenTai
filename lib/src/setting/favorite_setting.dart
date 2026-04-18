@@ -43,14 +43,15 @@ class FavoriteSetting with JHLifeCircleBeanWithConfigStorage implements JHLifeCi
   void applyBeanConfig(String configString) {
     Map map = jsonDecode(configString);
 
-    favoriteTagNames.value = (jsonDecode(map['favoriteTagNames']) as List).cast<String>();
+    favoriteTagNames.assignAll(
+        (jsonDecode(map['favoriteTagNames']) as List).cast<String>());
     favoriteCounts = (jsonDecode(map['favoriteCounts']) as List).cast<int>();
   }
 
   @override
   String toConfigString() {
     return jsonEncode({
-      'favoriteTagNames': jsonEncode(favoriteTagNames.value),
+      'favoriteTagNames': jsonEncode(favoriteTagNames.toList()),
       'favoriteCounts': jsonEncode(favoriteCounts),
     });
   }

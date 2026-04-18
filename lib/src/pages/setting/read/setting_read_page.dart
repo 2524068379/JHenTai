@@ -5,12 +5,11 @@ import 'package:jhentai/src/config/ui_config.dart';
 import 'package:jhentai/src/extension/widget_extension.dart';
 import 'package:jhentai/src/setting/read_setting.dart';
 
-import '../../../service/log.dart';
 import '../../../utils/text_input_formatter.dart';
 import '../../../utils/toast_util.dart';
 
 class SettingReadPage extends StatefulWidget {
-  const SettingReadPage({Key? key}) : super(key: key);
+  const SettingReadPage({super.key});
 
   @override
   State<SettingReadPage> createState() => _SettingReadPageState();
@@ -154,28 +153,28 @@ class _SettingReadPageState extends State<SettingReadPage> {
         },
         items: const [
           DropdownMenuItem(
-            child: Text('0'),
             value: 0,
+            child: Text('0'),
           ),
           DropdownMenuItem(
-            child: Text('2'),
             value: 2,
+            child: Text('2'),
           ),
           DropdownMenuItem(
-            child: Text('4'),
             value: 4,
+            child: Text('4'),
           ),
           DropdownMenuItem(
-            child: Text('6'),
             value: 6,
+            child: Text('6'),
           ),
           DropdownMenuItem(
-            child: Text('8'),
             value: 7,
+            child: Text('8'),
           ),
           DropdownMenuItem(
-            child: Text('10'),
             value: 10,
+            child: Text('10'),
           ),
         ],
       ),
@@ -294,9 +293,9 @@ class _SettingReadPageState extends State<SettingReadPage> {
         elevation: 4,
         onChanged: (DeviceDirection? newValue) => readSetting.saveDeviceDirection(newValue!),
         items: [
-          DropdownMenuItem(child: Text('followSystem'.tr), value: DeviceDirection.followSystem),
-          DropdownMenuItem(child: Text('landscape'.tr), value: DeviceDirection.landscape),
-          DropdownMenuItem(child: Text('portrait'.tr), value: DeviceDirection.portrait),
+          DropdownMenuItem(value: DeviceDirection.followSystem, child: Text('followSystem'.tr)),
+          DropdownMenuItem(value: DeviceDirection.landscape, child: Text('landscape'.tr)),
+          DropdownMenuItem(value: DeviceDirection.portrait, child: Text('portrait'.tr)),
         ],
       ).marginOnly(right: 12),
     );
@@ -309,7 +308,7 @@ class _SettingReadPageState extends State<SettingReadPage> {
         value: readSetting.readDirection.value,
         elevation: 4,
         onChanged: (ReadDirection? newValue) => readSetting.saveReadDirection(newValue!),
-        items: ReadDirection.values.map((e) => DropdownMenuItem(child: Text(e.name.tr), value: e)).toList(),
+        items: ReadDirection.values.map((e) => DropdownMenuItem(value: e, child: Text(e.name.tr))).toList(),
       ).marginOnly(right: 12),
     );
   }
@@ -425,13 +424,13 @@ class _SettingReadPageState extends State<SettingReadPage> {
               readSetting.savePreloadDistance(newValue!);
             },
             items: const [
-              DropdownMenuItem(child: Text('0'), value: 0),
-              DropdownMenuItem(child: Text('1'), value: 1),
-              DropdownMenuItem(child: Text('2'), value: 2),
-              DropdownMenuItem(child: Text('3'), value: 3),
-              DropdownMenuItem(child: Text('5'), value: 5),
-              DropdownMenuItem(child: Text('8'), value: 8),
-              DropdownMenuItem(child: Text('10'), value: 10),
+              DropdownMenuItem(value: 0, child: Text('0')),
+              DropdownMenuItem(value: 1, child: Text('1')),
+              DropdownMenuItem(value: 2, child: Text('2')),
+              DropdownMenuItem(value: 3, child: Text('3')),
+              DropdownMenuItem(value: 5, child: Text('5')),
+              DropdownMenuItem(value: 8, child: Text('8')),
+              DropdownMenuItem(value: 10, child: Text('10')),
             ],
           ),
           Text('ScreenHeight'.tr, style: UIConfig.settingPageListTileTrailingTextStyle(context)).marginSymmetric(horizontal: 12),
@@ -453,13 +452,13 @@ class _SettingReadPageState extends State<SettingReadPage> {
               readSetting.savePreloadDistanceLocal(newValue!);
             },
             items: const [
-              DropdownMenuItem(child: Text('0'), value: 0),
-              DropdownMenuItem(child: Text('1'), value: 1),
-              DropdownMenuItem(child: Text('2'), value: 2),
-              DropdownMenuItem(child: Text('3'), value: 3),
-              DropdownMenuItem(child: Text('5'), value: 5),
-              DropdownMenuItem(child: Text('8'), value: 8),
-              DropdownMenuItem(child: Text('10'), value: 10),
+              DropdownMenuItem(value: 0, child: Text('0')),
+              DropdownMenuItem(value: 1, child: Text('1')),
+              DropdownMenuItem(value: 2, child: Text('2')),
+              DropdownMenuItem(value: 3, child: Text('3')),
+              DropdownMenuItem(value: 5, child: Text('5')),
+              DropdownMenuItem(value: 8, child: Text('8')),
+              DropdownMenuItem(value: 10, child: Text('10')),
             ],
           ),
           Text('ScreenHeight'.tr, style: UIConfig.settingPageListTileTrailingTextStyle(context)).marginSymmetric(horizontal: 12),
@@ -478,13 +477,13 @@ class _SettingReadPageState extends State<SettingReadPage> {
           readSetting.savePreloadPageCount(newValue!);
         },
         items: const [
-          DropdownMenuItem(child: Text('0'), value: 0),
-          DropdownMenuItem(child: Text('1'), value: 1),
-          DropdownMenuItem(child: Text('2'), value: 2),
-          DropdownMenuItem(child: Text('3'), value: 3),
-          DropdownMenuItem(child: Text('5'), value: 5),
-          DropdownMenuItem(child: Text('8'), value: 8),
-          DropdownMenuItem(child: Text('10'), value: 10),
+          DropdownMenuItem(value: 0, child: Text('0')),
+          DropdownMenuItem(value: 1, child: Text('1')),
+          DropdownMenuItem(value: 2, child: Text('2')),
+          DropdownMenuItem(value: 3, child: Text('3')),
+          DropdownMenuItem(value: 5, child: Text('5')),
+          DropdownMenuItem(value: 8, child: Text('8')),
+          DropdownMenuItem(value: 10, child: Text('10')),
         ],
       ).marginOnly(right: 12),
     );
@@ -500,13 +499,13 @@ class _SettingReadPageState extends State<SettingReadPage> {
           readSetting.savePreloadPageCountLocal(newValue!);
         },
         items: const [
-          DropdownMenuItem(child: Text('0'), value: 0),
-          DropdownMenuItem(child: Text('1'), value: 1),
-          DropdownMenuItem(child: Text('2'), value: 2),
-          DropdownMenuItem(child: Text('3'), value: 3),
-          DropdownMenuItem(child: Text('5'), value: 5),
-          DropdownMenuItem(child: Text('8'), value: 8),
-          DropdownMenuItem(child: Text('10'), value: 10),
+          DropdownMenuItem(value: 0, child: Text('0')),
+          DropdownMenuItem(value: 1, child: Text('1')),
+          DropdownMenuItem(value: 2, child: Text('2')),
+          DropdownMenuItem(value: 3, child: Text('3')),
+          DropdownMenuItem(value: 5, child: Text('5')),
+          DropdownMenuItem(value: 8, child: Text('8')),
+          DropdownMenuItem(value: 10, child: Text('10')),
         ],
       ).marginOnly(right: 12),
     );
@@ -529,8 +528,8 @@ class _SettingReadPageState extends State<SettingReadPage> {
         alignment: AlignmentDirectional.centerEnd,
         onChanged: (AutoModeStyle? newValue) => readSetting.saveAutoModeStyle(newValue!),
         items: [
-          DropdownMenuItem(child: Text('scroll'.tr), value: AutoModeStyle.scroll),
-          DropdownMenuItem(child: Text('turnPage'.tr), value: AutoModeStyle.turnPage),
+          DropdownMenuItem(value: AutoModeStyle.scroll, child: Text('scroll'.tr)),
+          DropdownMenuItem(value: AutoModeStyle.turnPage, child: Text('turnPage'.tr)),
         ],
       ).marginOnly(right: 12),
     );
@@ -545,9 +544,9 @@ class _SettingReadPageState extends State<SettingReadPage> {
         elevation: 4,
         onChanged: (TurnPageMode? newValue) => readSetting.saveTurnPageMode(newValue!),
         items: [
-          DropdownMenuItem(child: Text('image'.tr), value: TurnPageMode.image),
-          DropdownMenuItem(child: Text('screen'.tr), value: TurnPageMode.screen),
-          DropdownMenuItem(child: Text('adaptive'.tr), value: TurnPageMode.adaptive),
+          DropdownMenuItem(value: TurnPageMode.image, child: Text('image'.tr)),
+          DropdownMenuItem(value: TurnPageMode.screen, child: Text('screen'.tr)),
+          DropdownMenuItem(value: TurnPageMode.adaptive, child: Text('adaptive'.tr)),
         ],
       ).marginOnly(right: 12),
     );

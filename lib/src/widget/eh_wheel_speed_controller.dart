@@ -5,8 +5,7 @@ class EHWheelSpeedController extends StatelessWidget {
   final Widget child;
 
   const EHWheelSpeedController(
-      {Key? key, required this.controller, required this.child})
-      : super(key: key);
+      {super.key, required this.controller, required this.child});
 
   @override
   Widget build(BuildContext context) {

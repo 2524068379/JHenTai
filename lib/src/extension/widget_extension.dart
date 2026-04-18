@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_protected_member
+
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:jhentai/src/config/ui_config.dart';
@@ -12,7 +14,7 @@ extension WidgetExtension on Widget {
   }
 
   Widget fadeOut([Key? key]) {
-    return FadeOut(key: key, child: this, animate: true);
+    return FadeOut(key: key, animate: true, child: this);
   }
 
   Widget withListTileTheme(BuildContext context) {

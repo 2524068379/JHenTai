@@ -8,7 +8,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 typedef OnPageStartedCallback = Future<void> Function(String url, WebViewController controller);
 
 class WebviewPage extends StatefulWidget {
-  const WebviewPage({Key? key}) : super(key: key);
+  const WebviewPage({super.key});
 
   @override
   _WebviewPageState createState() => _WebviewPageState();

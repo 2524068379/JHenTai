@@ -34,7 +34,7 @@ class ArchiveListDownloadPage extends StatelessWidget
         Scroll2TopPageMixin,
         MultiSelectDownloadPageMixin,
         ArchiveDownloadPageMixin {
-  ArchiveListDownloadPage({Key? key}) : super(key: key);
+  ArchiveListDownloadPage({super.key});
 
   final ArchiveListDownloadPageLogic logic =
       Get.put<ArchiveListDownloadPageLogic>(ArchiveListDownloadPageLogic(),
@@ -219,7 +219,7 @@ class ArchiveListDownloadPage extends StatelessWidget
                 width: UIConfig.downloadPageGroupHeaderWidth,
                 child: Center(child: Icon(Icons.folder_open))),
             Text(
-              '$groupName${'(' + archiveDownloadService.archivesWithGroup(groupName).length.toString() + ')'}',
+              '$groupName${'(${archiveDownloadService.archivesWithGroup(groupName).length})'}',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

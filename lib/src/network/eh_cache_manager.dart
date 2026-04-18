@@ -142,7 +142,7 @@ class EHCacheManager extends Interceptor {
       return true;
     }
 
-    if (!allowedStatusCodes.contains(response?.statusCode)) {
+    if (!allowedStatusCodes.contains(response.statusCode)) {
       return true;
     }
 
@@ -190,13 +190,13 @@ class CacheOptions {
 
   static const _extraKey = '@cache_options@';
 
-  static get noCacheOptions => CacheOptions(policy: CachePolicy.noCache, expire: networkSetting.pageCacheMaxAge.value);
+  static CacheOptions get noCacheOptions => CacheOptions(policy: CachePolicy.noCache, expire: networkSetting.pageCacheMaxAge.value);
 
-  static get noCacheOptionsIgnoreParams => CacheOptions(policy: CachePolicy.noCache, expire: networkSetting.pageCacheMaxAge.value, ignoreParams: true);
+  static CacheOptions get noCacheOptionsIgnoreParams => CacheOptions(policy: CachePolicy.noCache, expire: networkSetting.pageCacheMaxAge.value, ignoreParams: true);
 
-  static get cacheOptions => CacheOptions(policy: CachePolicy.cache, expire: networkSetting.pageCacheMaxAge.value);
+  static CacheOptions get cacheOptions => CacheOptions(policy: CachePolicy.cache, expire: networkSetting.pageCacheMaxAge.value);
 
-  static get cacheOptionsIgnoreParams => CacheOptions(policy: CachePolicy.cache, expire: networkSetting.pageCacheMaxAge.value, ignoreParams: true);
+  static CacheOptions get cacheOptionsIgnoreParams => CacheOptions(policy: CachePolicy.cache, expire: networkSetting.pageCacheMaxAge.value, ignoreParams: true);
 
   const CacheOptions({this.policy = CachePolicy.cache, required this.expire, this.store, this.ignoreParams = false});
 
@@ -331,7 +331,7 @@ class SqliteCacheStore {
   }
 
   Future<void> deleteWithUrlPrefix(String urlPrefix) {
-    return DioCacheDao.deleteCacheLikeUrl(urlPrefix + '%');
+    return DioCacheDao.deleteCacheLikeUrl('$urlPrefix%');
   }
 
   Future<CacheResponse?> get(String key) {

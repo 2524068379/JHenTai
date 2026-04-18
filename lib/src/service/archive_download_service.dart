@@ -962,7 +962,7 @@ class ArchiveDownloadService extends GetxController with GridBasePageServiceMixi
     downloadPath = replacedUri.toString();
 
     if (archiveDownloadInfo.parseSource == ArchiveParseSource.official.code) {
-      archiveDownloadInfo.downloadUrl = 'https://' + Uri.parse(archiveDownloadInfo.downloadPageUrl!).host + downloadPath;
+      archiveDownloadInfo.downloadUrl = 'https://${Uri.parse(archiveDownloadInfo.downloadPageUrl!).host}$downloadPath';
     } else {
       archiveDownloadInfo.downloadUrl = downloadPath;
     }

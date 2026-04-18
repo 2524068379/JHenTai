@@ -24,12 +24,12 @@ class EHArchiveDialog extends StatefulWidget {
   final String archivePageUrl;
 
   const EHArchiveDialog({
-    Key? key,
+    super.key,
     required this.title,
     this.currentGroup,
     required this.candidates,
     required this.archivePageUrl,
-  }) : super(key: key);
+  });
 
   @override
   _EHArchiveDialogState createState() => _EHArchiveDialogState();
@@ -204,13 +204,12 @@ class _ArchiveButtonSet extends StatelessWidget {
   final VoidCallback? callback;
 
   const _ArchiveButtonSet({
-    Key? key,
     this.cost,
     this.size,
     this.text,
     this.icon,
     this.callback,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

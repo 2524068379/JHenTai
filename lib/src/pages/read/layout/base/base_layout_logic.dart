@@ -9,7 +9,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/get_instance.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get_utils/get_utils.dart';
@@ -161,7 +160,8 @@ abstract class BaseLayoutLogic extends GetxController
             ),
         ],
         cancelButton: CupertinoActionSheetAction(
-            child: Text('cancel'.tr), onPressed: backRoute),
+            onPressed: backRoute,
+            child: Text('cancel'.tr)),
       ),
     );
   }
@@ -203,7 +203,8 @@ abstract class BaseLayoutLogic extends GetxController
           ),
         ],
         cancelButton: CupertinoActionSheetAction(
-            child: Text('cancel'.tr), onPressed: backRoute),
+            onPressed: backRoute,
+            child: Text('cancel'.tr)),
       ),
     );
   }
@@ -228,29 +229,41 @@ abstract class BaseLayoutLogic extends GetxController
     String fileName =
         '${readPageState.readPageInfo.gid!}_${readPageState.readPageInfo.token!}_$index$ext';
 
-    Share.shareXFiles(
-      [XFile.fromData(data)],
-      sharePositionOrigin: Rect.fromLTWH(0, 0, fullScreenWidth,
-          readPageState.displayRegionSize.height * 2 / 3),
-      fileNameOverrides: [fileName],
+    SharePlus.instance.share(
+      ShareParams(
+        files: [XFile.fromData(data)],
+        sharePositionOrigin: Rect.fromLTWH(
+          0,
+          0,
+          fullScreenWidth,
+          readPageState.displayRegionSize.height * 2 / 3,
+        ),
+        fileNameOverrides: [fileName],
+      ),
     );
   }
 
   void shareLocalImage(int index) {
-    Share.shareXFiles(
-      [
-        XFile(
-          GalleryDownloadService
-              .computeImageDownloadAbsolutePathFromRelativePath(
-            galleryDownloadService
-                .galleryDownloadInfos[readPageState.readPageInfo.gid!]!
-                .images[index]!
-                .path!,
+    SharePlus.instance.share(
+      ShareParams(
+        files: [
+          XFile(
+            GalleryDownloadService
+                .computeImageDownloadAbsolutePathFromRelativePath(
+              galleryDownloadService
+                  .galleryDownloadInfos[readPageState.readPageInfo.gid!]!
+                  .images[index]!
+                  .path!,
+            ),
           ),
-        )
-      ],
-      sharePositionOrigin: Rect.fromLTWH(0, 0, fullScreenWidth,
-          readPageState.displayRegionSize.height * 2 / 3),
+        ],
+        sharePositionOrigin: Rect.fromLTWH(
+          0,
+          0,
+          fullScreenWidth,
+          readPageState.displayRegionSize.height * 2 / 3,
+        ),
+      ),
     );
   }
 
@@ -407,6 +420,10 @@ abstract class BaseLayoutLogic extends GetxController
     );
   }
 
+  FittedSizes getImageFittedSizeByGalleryImage(GalleryImage image) {
+    return getImageFittedSize(Size(image.width!, image.height!));
+  }
+
   bool get hasAnimatedImages =>
       readPageState.images.any((image) => image?.isGif ?? false);
 
@@ -436,26 +453,6 @@ abstract class BaseLayoutLogic extends GetxController
         hasAnimatedImages ? min(configuredPageCount, 1.0) : configuredPageCount;
 
     return doubleColumn ? (effectivePageCount + 1) / 2 : effectivePageCount;
-  }
-
-  Alignment _computeAlignmentByTapOffset(Offset offset) {
-    return Alignment((offset.dx - Get.size.width / 2) / (Get.size.width / 2),
-        (offset.dy - Get.size.height / 2) / (Get.size.height / 2));
-  }
-
-  Future<bool> _saveImage2Album(Uint8List imageData, String fileName) async {
-    await requestAlbumPermission();
-
-    SaveResult saveResult = await SaverGallery.saveImage(
-      imageData,
-      fileName: fileName,
-      androidRelativePath: "Pictures/JHenTai",
-      skipIfExists: false,
-    );
-
-    log.info('Save image to album: $saveResult');
-
-    return saveResult.isSuccess;
   }
 
   Future<bool> _saveFile2Album(String filePath, String fileName) async {

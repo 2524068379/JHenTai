@@ -135,7 +135,7 @@ class Routes {
     ),
     EHPage(
       name: read,
-      page: () => ReadPage(),
+      page: ReadPage.new,
       transition: defaultTransition,
     ),
     EHPage(
@@ -150,12 +150,12 @@ class Routes {
     ),
     EHPage(
       name: details,
-      page: () => DetailsPage(),
+      page: DetailsPage.new,
       transition: defaultTransition,
     ),
     EHPage(
       name: imagePage,
-      page: () => GalleryImagePage(),
+      page: GalleryImagePage.new,
       transition: defaultTransition,
     ),
     EHPage(
@@ -185,7 +185,7 @@ class Routes {
     ),
     EHPage(
       name: history,
-      page: () => HistoryPage(),
+      page: HistoryPage.new,
       transition: defaultTransition,
     ),
     EHPage(
@@ -195,12 +195,12 @@ class Routes {
     ),
     EHPage(
       name: mobileV2Search,
-      page: () => SearchPageMobileV2(),
+      page: SearchPageMobileV2.new,
       transition: defaultTransition,
     ),
     EHPage(
       name: downloadSearch,
-      page: () => DownloadSearchPage(),
+      page: DownloadSearchPage.new,
       transition: defaultTransition,
     ),
     EHPage(
@@ -238,17 +238,17 @@ class Routes {
     ),
     EHPage(
       name: settingRead,
-      page: () => SettingReadPage(),
+      page: SettingReadPage.new,
       transition: defaultTransition,
     ),
     EHPage(
       name: settingPreference,
-      page: () => SettingPreferencePage(),
+      page: SettingPreferencePage.new,
       transition: defaultTransition,
     ),
     EHPage(
       name: settingNetwork,
-      page: () => SettingNetworkPage(),
+      page: SettingNetworkPage.new,
       transition: defaultTransition,
     ),
     EHPage(
@@ -258,7 +258,7 @@ class Routes {
     ),
     EHPage(
       name: settingPerformance,
-      page: () => SettingPerformancePage(),
+      page: SettingPerformancePage.new,
       transition: defaultTransition,
     ),
     EHPage(
@@ -288,7 +288,7 @@ class Routes {
     ),
     EHPage(
       name: login,
-      page: () => LoginPage(),
+      page: LoginPage.new,
       transition: defaultTransition,
       offAllBefore: false,
     ),
@@ -306,31 +306,31 @@ class Routes {
     ),
     EHPage(
       name: pageListStyle,
-      page: () => SettingPageListStylePage(),
+      page: SettingPageListStylePage.new,
       transition: defaultTransition,
       offAllBefore: false,
     ),
     EHPage(
       name: profile,
-      page: () => SettingEHProfilePage(),
+      page: SettingEHProfilePage.new,
       transition: defaultTransition,
       offAllBefore: false,
     ),
     EHPage(
       name: tagSets,
-      page: () => TagSetsPage(),
+      page: TagSetsPage.new,
       transition: defaultTransition,
       offAllBefore: false,
     ),
     EHPage(
       name: blockingRules,
-      page: () => BlockingRulePage(),
+      page: BlockingRulePage.new,
       transition: defaultTransition,
       offAllBefore: false,
     ),
     EHPage(
       name: configureBlockingRules,
-      page: () => ConfigureBlockingRulePage(),
+      page: ConfigureBlockingRulePage.new,
       transition: defaultTransition,
       offAllBefore: false,
     ),
@@ -372,7 +372,7 @@ class Routes {
     ),
     EHPage(
       name: thumbnails,
-      page: () => ThumbnailsPage(),
+      page: ThumbnailsPage.new,
       transition: defaultTransition,
       offAllBefore: false,
     ),

@@ -11,7 +11,7 @@ import '../base/base_layout.dart';
 import 'vertical_list_layout_logic.dart';
 
 class VerticalListLayout extends BaseLayout {
-  VerticalListLayout({Key? key}) : super(key: key);
+  VerticalListLayout({super.key});
 
   @override
   final VerticalListLayoutLogic logic = Get.put<VerticalListLayoutLogic>(

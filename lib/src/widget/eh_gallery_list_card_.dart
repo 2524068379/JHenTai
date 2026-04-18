@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:jhentai/src/config/ui_config.dart';
-import 'package:jhentai/src/extension/widget_extension.dart';
 import 'package:jhentai/src/model/gallery.dart';
 import 'package:jhentai/src/model/gallery_tag.dart';
 import 'package:jhentai/src/setting/preference_setting.dart';
@@ -32,7 +31,7 @@ class EHGalleryListCard extends StatelessWidget {
   final bool withTags;
 
   const EHGalleryListCard({
-    Key? key,
+    super.key,
     required this.gallery,
     required this.downloaded,
     required this.listMode,
@@ -40,7 +39,7 @@ class EHGalleryListCard extends StatelessWidget {
     this.withTags = true,
     this.handleLongPressCard,
     this.handleSecondaryTapCard,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +100,6 @@ class EHGalleryListCard extends StatelessWidget {
         blur: 8,
         blurColor: UIConfig.backGroundColor(context),
         colorOpacity: 0.7,
-        child: child,
         overlay: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -109,6 +107,7 @@ class EHGalleryListCard extends StatelessWidget {
             Text('filtered'.tr, style: TextStyle(color: UIConfig.onBackGroundColor(context))),
           ],
         ),
+        child: child,
       );
     }
 
@@ -245,7 +244,7 @@ class EHGalleryListCard extends StatelessWidget {
   Widget _buildFavoriteIcon() => Icon(Icons.favorite, size: 11, color: UIConfig.favoriteTagColor[gallery.favoriteTagIndex!]);
 
   Text _buildPageCount(BuildContext context) =>
-      Text(gallery.pageCount.toString() + 'P', style: TextStyle(fontSize: UIConfig.galleryCardTextSize, color: UIConfig.galleryCardTextColor(context)));
+      Text('${gallery.pageCount}P', style: TextStyle(fontSize: UIConfig.galleryCardTextSize, color: UIConfig.galleryCardTextColor(context)));
 
   Text _buildLanguage(BuildContext context) {
     return Text(
@@ -317,7 +316,7 @@ class _ReadingProgressIndicatorState extends State<_ReadingProgressIndicator> {
       child: CircularProgressIndicator(
         value: progress,
         strokeWidth: 2,
-        backgroundColor: UIConfig.galleryCardTextColor(context).withOpacity(0.2),
+        backgroundColor: UIConfig.galleryCardTextColor(context).withValues(alpha: 0.2),
         valueColor: AlwaysStoppedAnimation<Color>(UIConfig.galleryCardTextColor(context)),
       ),
     );

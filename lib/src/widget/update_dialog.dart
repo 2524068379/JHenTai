@@ -9,7 +9,7 @@ class UpdateDialog extends StatelessWidget {
   final String currentVersion;
   final String latestVersion;
 
-  const UpdateDialog({Key? key, required this.currentVersion, required this.latestVersion}) : super(key: key);
+  const UpdateDialog({super.key, required this.currentVersion, required this.latestVersion});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class UpdateDialog extends StatelessWidget {
           },
         ),
         TextButton(
-          child: Text('check'.tr + ' ->'),
+          child: Text('${'check'.tr} ->'),
           onPressed: () {
             backRoute();
             launchUrlString('https://github.com/jiangtian616/JHenTai/releases', mode: LaunchMode.externalApplication);

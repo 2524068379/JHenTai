@@ -10,7 +10,7 @@ import 'package:jhentai/src/utils/route_util.dart';
 import 'package:jhentai/src/utils/toast_util.dart';
 
 class SettingThemeColorPage extends StatefulWidget {
-  const SettingThemeColorPage({Key? key}) : super(key: key);
+  const SettingThemeColorPage({super.key});
 
   @override
   State<SettingThemeColorPage> createState() => _SettingThemeColorPageState();
@@ -101,7 +101,7 @@ class _ColorSettingDialog extends StatefulWidget {
   final Color initialColor;
   final Color resetColor;
 
-  const _ColorSettingDialog({Key? key, required this.initialColor, required this.resetColor}) : super(key: key);
+  const _ColorSettingDialog({required this.initialColor, required this.resetColor});
 
   @override
   State<_ColorSettingDialog> createState() => _ColorSettingDialogState();
@@ -153,8 +153,8 @@ class _ColorSettingDialogState extends State<_ColorSettingDialog> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             TextButton(
-              child: Text('cancel'.tr),
               onPressed: backRoute,
+              child: Text('cancel'.tr),
             ),
             TextButton(
               child: Text('reset'.tr),

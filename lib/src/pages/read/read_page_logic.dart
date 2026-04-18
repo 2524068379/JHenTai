@@ -7,7 +7,6 @@ import 'package:executor/executor.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:jhentai/src/enum/config_enum.dart';
 import 'package:jhentai/src/exception/eh_parse_exception.dart';
 import 'package:jhentai/src/exception/eh_site_exception.dart';
 import 'package:jhentai/src/extension/dio_exception_extension.dart';
@@ -18,7 +17,6 @@ import 'package:jhentai/src/pages/read/layout/horizontal_list/horizontal_list_la
 import 'package:jhentai/src/pages/read/layout/horizontal_page/horizontal_page_layout_logic.dart';
 import 'package:jhentai/src/pages/read/layout/vertical_list/vertical_list_layout_logic.dart';
 import 'package:jhentai/src/pages/read/read_page_state.dart';
-import 'package:jhentai/src/service/local_config_service.dart';
 import 'package:jhentai/src/service/volume_service.dart';
 import 'package:jhentai/src/utils/eh_executor.dart';
 import 'package:retry/retry.dart';
@@ -29,9 +27,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../model/detail_page_info.dart';
 import '../../model/gallery_image.dart';
-import '../../model/read_page_info.dart';
 import '../../network/eh_request.dart';
-import '../../service/storage_service.dart';
 import '../../setting/read_setting.dart';
 import '../../utils/eh_spider_parser.dart';
 import '../../service/log.dart';
@@ -406,13 +402,13 @@ class ReadPageLogic extends GetxController {
 
   void applyCurrentBrightness() {
     if (readSetting.enableCustomReadBrightness.isTrue) {
-      ScreenBrightness().setScreenBrightness(
+      ScreenBrightness().setApplicationScreenBrightness(
           readSetting.customBrightness.value.toDouble() / 100);
     }
   }
 
   void resetBrightness() {
-    ScreenBrightness().resetScreenBrightness();
+    ScreenBrightness().resetApplicationScreenBrightness();
   }
 
   void updateDeviceOrientation() {

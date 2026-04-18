@@ -26,7 +26,6 @@ import 'package:jhentai/src/widget/eh_tag.dart';
 import 'package:jhentai/src/widget/eh_thumbnail.dart';
 import 'package:jhentai/src/widget/eh_wheel_speed_controller.dart';
 import 'package:jhentai/src/widget/icon_text_button.dart';
-import 'package:jhentai/src/widget/keep_alive.dart';
 import 'package:jhentai/src/widget/loading_state_indicator.dart';
 
 import '../../database/database.dart';
@@ -464,7 +463,7 @@ class DetailsPage extends StatelessWidget with Scroll2TopPageMixin {
                   bool? result = await showDialog(
                       context: context,
                       builder: (_) =>
-                          EHDialog(title: 'blockUploaderLocally'.tr + '?'));
+                          EHDialog(title: '${'blockUploaderLocally'.tr}?'));
                   if (result == true) {
                     logic.blockUploader(logic.uploader);
                   }
@@ -1369,6 +1368,7 @@ class DetailsPage extends StatelessWidget with Scroll2TopPageMixin {
     );
   }
 
+  // ignore: unused_element
   Widget _buildStatisticButton(BuildContext context) {
     return GetBuilder<DetailsPageLogic>(
       id: DetailsPageLogic.detailsId,

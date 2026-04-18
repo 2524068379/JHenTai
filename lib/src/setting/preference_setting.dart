@@ -252,7 +252,7 @@ class PreferenceSetting
 
   Future<void> saveTagSearchConfig(SearchBehaviour tagSearchConfig) async {
     log.debug('saveTagSearchConfig:$tagSearchConfig');
-    this.searchBehaviour.value = tagSearchConfig;
+    searchBehaviour.value = tagSearchConfig;
     await saveBeanConfig();
   }
 

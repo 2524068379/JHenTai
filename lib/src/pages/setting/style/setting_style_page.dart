@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:jhentai/src/config/ui_config.dart';
 import 'package:jhentai/src/extension/widget_extension.dart';
 import 'package:jhentai/src/setting/style_setting.dart';
 
@@ -9,7 +8,7 @@ import '../../../routes/routes.dart';
 import '../../../utils/route_util.dart';
 
 class SettingStylePage extends StatelessWidget {
-  const SettingStylePage({Key? key}) : super(key: key);
+  const SettingStylePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +46,11 @@ class SettingStylePage extends StatelessWidget {
         onChanged: (ThemeMode? newValue) =>
             styleSetting.saveThemeMode(newValue!),
         items: [
-          DropdownMenuItem(child: Text('light'.tr), value: ThemeMode.light),
-          DropdownMenuItem(child: Text('dark'.tr), value: ThemeMode.dark),
+          DropdownMenuItem(value: ThemeMode.light, child: Text('light'.tr)),
+          DropdownMenuItem(value: ThemeMode.dark, child: Text('dark'.tr)),
           DropdownMenuItem(
-              child: Text('followSystem'.tr), value: ThemeMode.system),
+              value: ThemeMode.system,
+              child: Text('followSystem'.tr)),
         ],
       ),
     );
@@ -73,24 +73,25 @@ class SettingStylePage extends StatelessWidget {
         alignment: AlignmentDirectional.centerEnd,
         onChanged: (ListMode? newValue) => styleSetting.saveListMode(newValue!),
         items: [
-          DropdownMenuItem(child: Text('flat'.tr), value: ListMode.flat),
+          DropdownMenuItem(value: ListMode.flat, child: Text('flat'.tr)),
           DropdownMenuItem(
-              child: Text('flatWithoutTags'.tr),
-              value: ListMode.flatWithoutTags),
+              value: ListMode.flatWithoutTags,
+              child: Text('flatWithoutTags'.tr)),
           DropdownMenuItem(
-              child: Text('listWithTags'.tr), value: ListMode.listWithTags),
+              value: ListMode.listWithTags,
+              child: Text('listWithTags'.tr)),
           DropdownMenuItem(
-              child: Text('listWithoutTags'.tr),
-              value: ListMode.listWithoutTags),
+              value: ListMode.listWithoutTags,
+              child: Text('listWithoutTags'.tr)),
           DropdownMenuItem(
-              child: Text('waterfallFlowSmall'.tr),
-              value: ListMode.waterfallFlowSmall),
+              value: ListMode.waterfallFlowSmall,
+              child: Text('waterfallFlowSmall'.tr)),
           DropdownMenuItem(
-              child: Text('waterfallFlowMedium'.tr),
-              value: ListMode.waterfallFlowMedium),
+              value: ListMode.waterfallFlowMedium,
+              child: Text('waterfallFlowMedium'.tr)),
           DropdownMenuItem(
-              child: Text('waterfallFlowBig'.tr),
-              value: ListMode.waterfallFlowBig),
+              value: ListMode.waterfallFlowBig,
+              child: Text('waterfallFlowBig'.tr)),
         ],
       ),
     );
@@ -105,12 +106,12 @@ class SettingStylePage extends StatelessWidget {
         alignment: AlignmentDirectional.centerEnd,
         onChanged: styleSetting.saveCrossAxisCountInWaterFallFlow,
         items: [
-          DropdownMenuItem(child: Text('auto'.tr), value: null),
-          DropdownMenuItem(child: Text('2'.tr), value: 2),
-          DropdownMenuItem(child: Text('3'.tr), value: 3),
-          DropdownMenuItem(child: Text('4'.tr), value: 4),
-          DropdownMenuItem(child: Text('5'.tr), value: 5),
-          DropdownMenuItem(child: Text('6'.tr), value: 6),
+          DropdownMenuItem(value: null, child: Text('auto'.tr)),
+          DropdownMenuItem(value: 2, child: Text('2'.tr)),
+          DropdownMenuItem(value: 3, child: Text('3'.tr)),
+          DropdownMenuItem(value: 4, child: Text('4'.tr)),
+          DropdownMenuItem(value: 5, child: Text('5'.tr)),
+          DropdownMenuItem(value: 6, child: Text('6'.tr)),
         ],
       ),
     );
@@ -125,12 +126,12 @@ class SettingStylePage extends StatelessWidget {
         alignment: AlignmentDirectional.centerEnd,
         onChanged: styleSetting.saveCrossAxisCountInGridDownloadPageForGroup,
         items: [
-          DropdownMenuItem(child: Text('auto'.tr), value: null),
-          DropdownMenuItem(child: Text('2'.tr), value: 2),
-          DropdownMenuItem(child: Text('3'.tr), value: 3),
-          DropdownMenuItem(child: Text('4'.tr), value: 4),
-          DropdownMenuItem(child: Text('5'.tr), value: 5),
-          DropdownMenuItem(child: Text('6'.tr), value: 6),
+          DropdownMenuItem(value: null, child: Text('auto'.tr)),
+          DropdownMenuItem(value: 2, child: Text('2'.tr)),
+          DropdownMenuItem(value: 3, child: Text('3'.tr)),
+          DropdownMenuItem(value: 4, child: Text('4'.tr)),
+          DropdownMenuItem(value: 5, child: Text('5'.tr)),
+          DropdownMenuItem(value: 6, child: Text('6'.tr)),
         ],
       ),
     );
@@ -145,12 +146,12 @@ class SettingStylePage extends StatelessWidget {
         alignment: AlignmentDirectional.centerEnd,
         onChanged: styleSetting.saveCrossAxisCountInGridDownloadPageForGallery,
         items: [
-          DropdownMenuItem(child: Text('auto'.tr), value: null),
-          DropdownMenuItem(child: Text('2'.tr), value: 2),
-          DropdownMenuItem(child: Text('3'.tr), value: 3),
-          DropdownMenuItem(child: Text('4'.tr), value: 4),
-          DropdownMenuItem(child: Text('5'.tr), value: 5),
-          DropdownMenuItem(child: Text('6'.tr), value: 6),
+          DropdownMenuItem(value: null, child: Text('auto'.tr)),
+          DropdownMenuItem(value: 2, child: Text('2'.tr)),
+          DropdownMenuItem(value: 3, child: Text('3'.tr)),
+          DropdownMenuItem(value: 4, child: Text('4'.tr)),
+          DropdownMenuItem(value: 5, child: Text('5'.tr)),
+          DropdownMenuItem(value: 6, child: Text('6'.tr)),
         ],
       ),
     );
@@ -165,12 +166,12 @@ class SettingStylePage extends StatelessWidget {
         alignment: AlignmentDirectional.centerEnd,
         onChanged: styleSetting.saveCrossAxisCountInDetailPage,
         items: [
-          DropdownMenuItem(child: Text('auto'.tr), value: null),
-          DropdownMenuItem(child: Text('2'.tr), value: 2),
-          DropdownMenuItem(child: Text('3'.tr), value: 3),
-          DropdownMenuItem(child: Text('4'.tr), value: 4),
-          DropdownMenuItem(child: Text('5'.tr), value: 5),
-          DropdownMenuItem(child: Text('6'.tr), value: 6),
+          DropdownMenuItem(value: null, child: Text('auto'.tr)),
+          DropdownMenuItem(value: 2, child: Text('2'.tr)),
+          DropdownMenuItem(value: 3, child: Text('3'.tr)),
+          DropdownMenuItem(value: 4, child: Text('4'.tr)),
+          DropdownMenuItem(value: 5, child: Text('5'.tr)),
+          DropdownMenuItem(value: 6, child: Text('6'.tr)),
         ],
       ),
     );
@@ -207,8 +208,8 @@ class SettingStylePage extends StatelessWidget {
             styleSetting.saveLayoutMode(newValue!),
         items: LayoutMode.values
             .map((mode) => DropdownMenuItem(
-                  child: Text(mode.name),
                   value: mode,
+                  child: Text(mode.name),
                 ))
             .toList(),
       ),

@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:jhentai/src/enum/config_enum.dart';
 import 'package:jhentai/src/pages/download/grid/local/local_gallery_grid_page.dart';
 import 'package:jhentai/src/service/local_config_service.dart';
-import 'package:jhentai/src/service/storage_service.dart';
 import 'package:simple_animations/animation_controller_extension/animation_controller_extension.dart';
 import 'package:simple_animations/animation_mixin/animation_mixin.dart';
 import '../../config/ui_config.dart';
@@ -17,7 +16,7 @@ import 'list/gallery/gallery_list_download_page.dart';
 import 'list/local/local_gallery_list_page.dart';
 
 class DownloadPage extends StatefulWidget {
-  const DownloadPage({Key? key}) : super(key: key);
+  const DownloadPage({super.key});
 
   @override
   State<DownloadPage> createState() => _DownloadPageState();
@@ -102,8 +101,7 @@ class DownloadPageBodyTypeChangeNotification extends Notification {
 class DownloadPageSegmentControl extends StatelessWidget {
   final DownloadPageGalleryType galleryType;
 
-  const DownloadPageSegmentControl({Key? key, required this.galleryType})
-      : super(key: key);
+  const DownloadPageSegmentControl({super.key, required this.galleryType});
 
   @override
   Widget build(BuildContext context) {
@@ -151,7 +149,7 @@ class DownloadPageSegmentControl extends StatelessWidget {
 class GroupOpenIndicator extends StatefulWidget {
   final bool isOpen;
 
-  const GroupOpenIndicator({Key? key, required this.isOpen}) : super(key: key);
+  const GroupOpenIndicator({super.key, required this.isOpen});
 
   @override
   State<GroupOpenIndicator> createState() => _GroupOpenIndicatorState();

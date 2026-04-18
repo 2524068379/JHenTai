@@ -27,7 +27,7 @@ class GroupedList<G, E> extends StatefulWidget {
   final GroupedListController? controller;
 
   const GroupedList({
-    Key? key,
+    super.key,
     required this.groups,
     required this.elements,
     required this.elementGroup,
@@ -38,7 +38,7 @@ class GroupedList<G, E> extends StatefulWidget {
     required this.maxGalleryNum4Animation,
     this.scrollController,
     this.controller,
-  }) : super(key: key);
+  });
 
   @override
   State<GroupedList<G, E>> createState() => _GroupedListState<G, E>();
@@ -106,45 +106,7 @@ class _GroupedListState<G, E> extends State<GroupedList<G, E>> {
 
   @override
   Widget build(BuildContext context) {
-    // return _buildInListView();
-
     return _buildInCustomScrollView(context);
-  }
-
-  EHWheelSpeedController _buildInListView() {
-    return EHWheelSpeedController(
-      controller: scrollController,
-      child: ListView.builder(
-        controller: scrollController,
-        cacheExtent: 200,
-        itemCount: _groups.length + widget.elements.length,
-        itemBuilder: (context, index) {
-          int i = 0;
-          int groupIndex = 0;
-          while (true) {
-            G group = _groups.keys.elementAt(groupIndex);
-
-            if (i == index) {
-              return _buildGroup(group, context);
-            }
-
-            List<E> elements = _group2Elements[group] ?? [];
-
-            if (i + 1 + elements.length > index) {
-              return _buildElement(
-                context,
-                elements[index - i - 1],
-                group,
-                elements.length <= maxGalleryNum4Animation,
-              );
-            }
-
-            i += 1 + elements.length;
-            groupIndex++;
-          }
-        },
-      ),
-    );
   }
 
   EHWheelSpeedController _buildInCustomScrollView(BuildContext context) {
@@ -198,7 +160,7 @@ class _GroupedListState<G, E> extends State<GroupedList<G, E>> {
     );
   }
 
-  GetBuilder<GroupedListLogic> _buildGroup(group, BuildContext context) {
+  GetBuilder<GroupedListLogic> _buildGroup(G group, BuildContext context) {
     return GetBuilder<GroupedListLogic>(
       id: 'group::${widget.groupUniqueKey(group)}',
       global: false,
@@ -261,11 +223,11 @@ class _GroupedListState<G, E> extends State<GroupedList<G, E>> {
   }
 
   void _initGroupsAndElements(GroupedList<G, E> widget) {
-    this._groups.clear();
-    this._group2Elements.clear();
+    _groups.clear();
+    _group2Elements.clear();
 
-    this._groups.addAll(widget.groups);
-    this._group2Elements = widget.elements.groupListsBy<G>((e) => widget.elementGroup(e));
+    _groups.addAll(widget.groups);
+    _group2Elements = widget.elements.groupListsBy<G>((e) => widget.elementGroup(e));
   }
 }
 
