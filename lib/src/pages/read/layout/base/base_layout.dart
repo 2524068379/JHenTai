@@ -4,6 +4,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jhentai/src/extension/get_logic_extension.dart';
+import 'package:jhentai/src/model/gallery_image.dart';
 import 'package:jhentai/src/setting/read_setting.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
@@ -184,20 +185,24 @@ abstract class BaseLayout extends StatelessWidget {
     return GestureDetector(
       onLongPress: () => logic.showBottomMenuInOnlineMode(index, context),
       onSecondaryTap: () => logic.showBottomMenuInOnlineMode(index, context),
-      child: EHImage(
-        galleryImage: readPageState.images[index]!,
-        containerWidth: displaySize.width,
-        containerHeight: displaySize.height,
-        clearMemoryCacheWhenDispose: true,
-        loadingProgressWidgetBuilder: (double progress) =>
-            _loadingProgressWidgetBuilder(index, progress),
-        failedWidgetBuilder: (ExtendedImageState state) =>
-            _failedWidgetBuilder(index, state),
-        completedWidgetBuilder: (state) =>
-            completedWidgetBuilderCallBack(index, state),
-        maxBytes: readSetting.enableMaxImageKilobyte.isTrue
-            ? readSetting.maxImageKilobyte.toInt() * 1024
-            : null,
+      child: GetBuilder<ReadPageLogic>(
+        id: '${readPageLogic.gifPlaybackId}::$index',
+        builder: (_) => EHImage(
+          galleryImage: readPageState.images[index]!,
+          containerWidth: displaySize.width,
+          containerHeight: displaySize.height,
+          clearMemoryCacheWhenDispose: true,
+          loadingProgressWidgetBuilder: (double progress) =>
+              _loadingProgressWidgetBuilder(index, progress),
+          failedWidgetBuilder: (ExtendedImageState state) =>
+              _failedWidgetBuilder(index, state),
+          completedWidgetBuilder: (state) =>
+              completedWidgetBuilderCallBack(index, state),
+          maxBytes: readSetting.enableMaxImageKilobyte.isTrue
+              ? readSetting.maxImageKilobyte.toInt() * 1024
+              : null,
+          gifPlaybackConfig: _buildReadGifPlaybackConfig(index),
+        ),
       ),
     );
   }
@@ -342,22 +347,45 @@ abstract class BaseLayout extends StatelessWidget {
     return GestureDetector(
       onLongPress: () => logic.showBottomMenuInLocalMode(index, context),
       onSecondaryTap: () => logic.showBottomMenuInLocalMode(index, context),
-      child: EHImage(
-        galleryImage: readPageState.images[index]!,
-        containerWidth: displaySize.width,
-        containerHeight: displaySize.height,
-        clearMemoryCacheWhenDispose: true,
-        downloadingWidgetBuilder: () => _downloadingWidgetBuilder(index),
-        pausedWidgetBuilder: () => _pausedWidgetBuilder(index),
-        loadingWidgetBuilder: () => _loadingWidgetBuilder(context, index),
-        failedWidgetBuilder: (state) =>
-            _failedWidgetBuilderForLocalMode(index, state),
-        completedWidgetBuilder: (state) =>
-            completedWidgetBuilderForLocalModeCallBack(index, state),
-        maxBytes: readSetting.enableMaxImageKilobyte.isTrue
-            ? readSetting.maxImageKilobyte.toInt() * 1024
-            : null,
+      child: GetBuilder<ReadPageLogic>(
+        id: '${readPageLogic.gifPlaybackId}::$index',
+        builder: (_) => EHImage(
+          galleryImage: readPageState.images[index]!,
+          containerWidth: displaySize.width,
+          containerHeight: displaySize.height,
+          clearMemoryCacheWhenDispose: true,
+          downloadingWidgetBuilder: () => _downloadingWidgetBuilder(index),
+          pausedWidgetBuilder: () => _pausedWidgetBuilder(index),
+          loadingWidgetBuilder: () => _loadingWidgetBuilder(context, index),
+          failedWidgetBuilder: (state) =>
+              _failedWidgetBuilderForLocalMode(index, state),
+          completedWidgetBuilder: (state) =>
+              completedWidgetBuilderForLocalModeCallBack(index, state),
+          maxBytes: readSetting.enableMaxImageKilobyte.isTrue
+              ? readSetting.maxImageKilobyte.toInt() * 1024
+              : null,
+          gifPlaybackConfig: _buildReadGifPlaybackConfig(index),
+        ),
       ),
+    );
+  }
+
+  EHImageGifPlaybackConfig? _buildReadGifPlaybackConfig(int index) {
+    final GalleryImage? image = readPageState.images[index];
+    if (image == null || !image.isGif) {
+      return null;
+    }
+
+    return EHImageGifPlaybackConfig(
+      enabled: readPageLogic.isGifEnabled(index),
+      playbackVersion: readPageLogic.gifPlaybackVersionOf(index),
+      frameCount: readPageLogic.gifFrameCountOf(index),
+      onGifFrameCountResolved: (frameCount) =>
+          readPageLogic.cacheGifFrameCount(index, frameCount),
+      onGifFirstLoopCompleted: () =>
+          readPageLogic.markGifFirstLoopCompleted(index),
+      onGifPauseRequested: () => readPageLogic.pauseGifPlayback(index),
+      onGifPlayRequested: () => readPageLogic.resumeGifPlayback(index),
     );
   }
 

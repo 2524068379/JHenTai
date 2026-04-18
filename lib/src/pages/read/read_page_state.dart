@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jhentai/src/mixin/scroll_status_listener_state.dart';
 import 'package:jhentai/src/model/read_page_info.dart';
+import 'package:jhentai/src/pages/read/read_gif_playback_controller.dart';
 import 'package:jhentai/src/setting/site_setting.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
@@ -34,6 +35,8 @@ class ReadPageState with ScrollStatusListerState {
   int batteryLevel = 100;
   bool displayFirstPageAlone = readSetting.displayFirstPageAlone.value;
   FocusNode focusNode = FocusNode();
+  final ReadGifPlaybackController gifPlaybackController =
+      ReadGifPlaybackController();
 
   late Size displayRegionSize;
 
@@ -67,7 +70,6 @@ class ReadPageState with ScrollStatusListerState {
     parseImageUrlStates =
         List.generate(readPageInfo.pageCount, (_) => LoadingState.idle);
     imageContainerSizes = List.generate(readPageInfo.pageCount, (_) => null);
-    parseImageUrlErrorMsg = List.generate(readPageInfo.pageCount, (_) => null);
     parseImageUrlErrorMsg = List.generate(readPageInfo.pageCount, (_) => null);
   }
 }

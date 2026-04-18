@@ -25,6 +25,8 @@ class zh_TW {
       'you': '你',
       'retryHint': '請重新整理後再試一次',
       'stop': '停止',
+      'stopGifPlayback': '停止GIF播放',
+      'continueGifPlayback': '繼續GIF播放',
       'attention': '注意',
       'jump': '跳轉',
       'deleteAll': '刪除全部',

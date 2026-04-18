@@ -124,10 +124,27 @@ abstract class BaseLayoutLogic extends GetxController
   }
 
   void showBottomMenuInOnlineMode(int index, BuildContext context) {
+    final bool isGif = readPageState.images[index]?.isGif ?? false;
+    final bool isGifPlaying = readPageLogic.isGifPlaying(index);
+
     showCupertinoModalPopup(
       context: context,
       builder: (_) => CupertinoActionSheet(
         actions: <CupertinoActionSheetAction>[
+          if (isGif)
+            CupertinoActionSheetAction(
+              child: Text(
+                  (isGifPlaying ? 'stopGifPlayback' : 'continueGifPlayback')
+                      .tr),
+              onPressed: () {
+                backRoute();
+                if (isGifPlaying) {
+                  readPageLogic.pauseGifPlayback(index);
+                } else {
+                  readPageLogic.resumeGifPlayback(index);
+                }
+              },
+            ),
           CupertinoActionSheetAction(
             child: Text('reload'.tr),
             onPressed: () {
@@ -175,10 +192,27 @@ abstract class BaseLayoutLogic extends GetxController
       return;
     }
 
+    final bool isGif = readPageState.images[index]?.isGif ?? false;
+    final bool isGifPlaying = readPageLogic.isGifPlaying(index);
+
     showCupertinoModalPopup(
       context: context,
       builder: (_) => CupertinoActionSheet(
         actions: <CupertinoActionSheetAction>[
+          if (isGif)
+            CupertinoActionSheetAction(
+              child: Text(
+                  (isGifPlaying ? 'stopGifPlayback' : 'continueGifPlayback')
+                      .tr),
+              onPressed: () {
+                backRoute();
+                if (isGifPlaying) {
+                  readPageLogic.pauseGifPlayback(index);
+                } else {
+                  readPageLogic.resumeGifPlayback(index);
+                }
+              },
+            ),
           CupertinoActionSheetAction(
             child: Text('share'.tr),
             onPressed: () {

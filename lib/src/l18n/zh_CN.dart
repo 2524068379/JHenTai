@@ -25,6 +25,8 @@ class zh_CN {
       'you': '你',
       'retryHint': '请刷新后重试',
       'stop': '停止',
+      'stopGifPlayback': '停止GIF播放',
+      'continueGifPlayback': '继续GIF播放',
       'attention': '注意',
       'jump': '跳转',
       'deleteAll': '删除全部',

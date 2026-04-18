@@ -50,6 +50,7 @@ class ReadPageLogic extends GetxController {
   final String pageNoId = 'pageNoId';
   final String thumbnailNoId = 'thumbnailsId';
   final String sliderId = 'sliderId';
+  final String gifPlaybackId = 'gifPlaybackId';
 
   ReadPageState state = ReadPageState();
 
@@ -346,6 +347,9 @@ class ReadPageLogic extends GetxController {
     if (!hadAnimatedImages && image.isGif) {
       updateSafely([layoutId]);
     }
+    if (state.readPageInfo.currentImageIndex == index) {
+      syncGifPlaybackWithCandidate(index);
+    }
     updateSafely(['$onlineImageId::$index']);
   }
 
@@ -603,6 +607,7 @@ class ReadPageLogic extends GetxController {
 
   void recordReadProgress(int index) {
     state.readPageInfo.currentImageIndex = index;
+    syncGifPlaybackWithCandidate(index);
     update([sliderId, pageNoId, thumbnailNoId]);
   }
 
@@ -616,5 +621,66 @@ class ReadPageLogic extends GetxController {
   void clearImageContainerSized() {
     state.imageContainerSizes =
         List.generate(state.readPageInfo.pageCount, (_) => null);
+  }
+
+  bool isGifPlaying(int index) {
+    return state.gifPlaybackController.isGifPlaying(index);
+  }
+
+  bool isGifEnabled(int index) {
+    return state.gifPlaybackController.isGifPlaying(index);
+  }
+
+  int? gifFrameCountOf(int index) {
+    return state.gifPlaybackController.frameCountOf(index);
+  }
+
+  int gifPlaybackVersionOf(int index) {
+    return state.gifPlaybackController.playbackVersionOf(index);
+  }
+
+  void cacheGifFrameCount(int index, int frameCount) {
+    if (state.gifPlaybackController.frameCountOf(index) == frameCount) {
+      return;
+    }
+
+    state.gifPlaybackController.cacheFrameCount(index, frameCount);
+    updateSafely(['$gifPlaybackId::$index']);
+  }
+
+  void pauseGifPlayback(int index) {
+    _updateGifPlayback(state.gifPlaybackController.pause(index));
+  }
+
+  void resumeGifPlayback(int index) {
+    _updateGifPlayback(state.gifPlaybackController.resume(index));
+  }
+
+  void markGifFirstLoopCompleted(int index) {
+    _updateGifPlayback(state.gifPlaybackController.markFirstLoopCompleted(index));
+  }
+
+  void syncGifPlaybackWithCandidate(int? index) {
+    final GalleryImage? image =
+        index == null || index < 0 || index >= state.images.length
+            ? null
+            : state.images[index];
+
+    _updateGifPlayback(
+      state.gifPlaybackController.syncAutoCandidate(
+        index,
+        isGifCandidate: image?.isGif ?? false,
+      ),
+    );
+  }
+
+  void _updateGifPlayback(Set<int> affectedIndexes) {
+    if (affectedIndexes.isEmpty) {
+      return;
+    }
+
+    updateSafely(
+      affectedIndexes.map((index) => '$gifPlaybackId::$index').toList(),
+    );
   }
 }

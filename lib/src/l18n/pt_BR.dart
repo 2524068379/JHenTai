@@ -25,6 +25,8 @@ class pt_BR {
       'you': 'Você',
       'retryHint': 'Please retry after refresh',
       'stop': 'Stop',
+      'stopGifPlayback': 'Stop GIF Playback',
+      'continueGifPlayback': 'Continue GIF Playback',
       'attention': 'Attention',
       'jump': 'Jump',
       'deleteAll': 'Delete All',

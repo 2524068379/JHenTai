@@ -25,6 +25,8 @@ class ko_KR {
       'you': '사용자',
       'retryHint': '새로고침 후 다시 시도하세요.',
       'stop': '멈춤',
+      'stopGifPlayback': 'GIF 재생 중지',
+      'continueGifPlayback': 'GIF 재생 계속',
       'attention': '경고',
       'jump': 'Jump',
       'deleteAll': 'Delete All',

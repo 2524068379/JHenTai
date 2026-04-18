@@ -25,6 +25,8 @@ class ru_RU {
       'you': 'Вы',
       'retryHint': 'Пожалуйста, повторите попытку после обновления',
       'stop': 'Остановить',
+      'stopGifPlayback': 'Остановить GIF',
+      'continueGifPlayback': 'Продолжить GIF',
       'attention': 'Внимание',
       'jump': 'Перейти',
       'deleteAll': 'Удалить все',
