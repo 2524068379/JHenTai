@@ -204,6 +204,13 @@ class HorizontalListLayoutLogic extends BaseLayoutLogic {
     );
   }
 
+  @override
+  void onClose() {
+    state.itemPositionsListener.itemPositions.removeListener(_readProgressListener);
+    state.photoViewController.dispose();
+    super.onClose();
+  }
+
   List<ItemPosition> getCurrentVisibleItems() {
     return readPageLogic.filterAndSortItems(state.itemPositionsListener.itemPositions.value);
   }

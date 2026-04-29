@@ -55,7 +55,9 @@ class DesktopSearchPageLogic extends GetxController with Scroll2TopLogicMixin {
     state.tabs.add(DesktopSearchPageTabView(key: ValueKey(newUUID()), logic: newTabLogic));
 
     state.currentTabIndex = state.tabs.length - 1;
+    final oldPageController = state.pageController;
     state.pageController = PageController(initialPage: state.currentTabIndex);
+    oldPageController.dispose();
     state.tabViewKey = Key(newUUID());
     updateSafely([pageId]);
 
@@ -72,14 +74,18 @@ class DesktopSearchPageLogic extends GetxController with Scroll2TopLogicMixin {
 
     if (index == state.currentTabIndex) {
       state.currentTabIndex = min(state.tabs.length - 1, state.currentTabIndex);
+      final oldPageController = state.pageController;
       state.pageController = PageController(initialPage: state.currentTabIndex);
+      oldPageController.dispose();
       state.tabViewKey = Key(newUUID());
       updateSafely([pageId]);
     }
 
     if (index < state.currentTabIndex) {
       state.currentTabIndex = state.currentTabIndex - 1;
+      final oldPageController = state.pageController;
       state.pageController = PageController(initialPage: state.currentTabIndex);
+      oldPageController.dispose();
       updateSafely([pageId]);
     }
 
@@ -88,5 +94,15 @@ class DesktopSearchPageLogic extends GetxController with Scroll2TopLogicMixin {
 
   void jump2Index(int index) {
     return state.pageController.jumpToPage(index);
+  }
+
+  @override
+  void onClose() {
+    for (final tabLogic in state.tabLogics) {
+      tabLogic.onClose();
+    }
+    state.pageController.dispose();
+    state.tabController.dispose();
+    super.onClose();
   }
 }

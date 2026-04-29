@@ -191,7 +191,9 @@ class ReadPageLogic extends GetxController {
 
     state.focusNode.dispose();
     refreshCurrentTimeAndBatteryLevelTimer.cancel();
+    toggleTurnPageByVolumeKeyLister.dispose();
     toggleCurrentImmersiveModeLister.dispose();
+    toggleDeviceOrientationLister.dispose();
     readDirectionLister.dispose();
     imageSpaceLister.dispose();
     flushReadProgressTimer.cancel();
@@ -199,6 +201,7 @@ class ReadPageLogic extends GetxController {
     enableCustomBrightnessListener.dispose();
     customBrightnessListener.dispose();
     preloadListener.dispose();
+    _thr.close();
 
     restoreVolumeListener();
 

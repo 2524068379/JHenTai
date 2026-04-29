@@ -117,6 +117,9 @@ void main(List<String> args) async {
     await bean.initBean();
   }
 
+  PaintingBinding.instance.imageCache.maximumSize = 500;
+  PaintingBinding.instance.imageCache.maximumSizeBytes = 100 * 1024 * 1024;
+
   runApp(const MyApp());
 }
 

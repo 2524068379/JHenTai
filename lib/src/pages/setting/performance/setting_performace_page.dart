@@ -8,10 +8,21 @@ import '../../../setting/performance_setting.dart';
 import '../../../utils/text_input_formatter.dart';
 import '../../../utils/toast_util.dart';
 
-class SettingPerformancePage extends StatelessWidget {
-  SettingPerformancePage({super.key});
+class SettingPerformancePage extends StatefulWidget {
+  const SettingPerformancePage({super.key});
 
+  @override
+  State<SettingPerformancePage> createState() => _SettingPerformancePageState();
+}
+
+class _SettingPerformancePageState extends State<SettingPerformancePage> {
   final TextEditingController maxGalleryNum4AnimationController = TextEditingController(text: performanceSetting.maxGalleryNum4Animation.value.toString());
+
+  @override
+  void dispose() {
+    maxGalleryNum4AnimationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

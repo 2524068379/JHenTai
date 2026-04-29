@@ -29,6 +29,12 @@ class _LockPageState extends State<LockPage> with WindowListener, WindowWidgetMi
   TextEditingController controller = TextEditingController();
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     if (securitySetting.enableBiometricAuth.isTrue) {
       SchedulerBinding.instance.addPostFrameCallback((_) => biometricAuth());

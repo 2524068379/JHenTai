@@ -56,6 +56,7 @@ class RoundRobinIpProvider implements EHIpProvider {
       _host2UnavailableIps[host] = {};
     }
     _host2UnavailableIps[host]![ip] = DateTime.now();
+    _host2UnavailableIps[host]!.removeWhere((_, time) => DateTime.now().difference(time).inMinutes >= 5);
     log.info('RoundRobinIpProvider addUnavailableIp: $host -> $ip');
   }
 }

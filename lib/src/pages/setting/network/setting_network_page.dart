@@ -10,12 +10,25 @@ import '../../../utils/route_util.dart';
 import '../../../utils/text_input_formatter.dart';
 import '../../../utils/toast_util.dart';
 
-class SettingNetworkPage extends StatelessWidget {
+class SettingNetworkPage extends StatefulWidget {
+  const SettingNetworkPage({Key? key}) : super(key: key);
+
+  @override
+  State<SettingNetworkPage> createState() => _SettingNetworkPageState();
+}
+
+class _SettingNetworkPageState extends State<SettingNetworkPage> {
   final TextEditingController proxyAddressController = TextEditingController(text: networkSetting.proxyAddress.value);
   final TextEditingController connectTimeoutController = TextEditingController(text: networkSetting.connectTimeout.value.toString());
   final TextEditingController receiveTimeoutController = TextEditingController(text: networkSetting.receiveTimeout.value.toString());
 
-  SettingNetworkPage({Key? key}) : super(key: key);
+  @override
+  void dispose() {
+    proxyAddressController.dispose();
+    connectTimeoutController.dispose();
+    receiveTimeoutController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

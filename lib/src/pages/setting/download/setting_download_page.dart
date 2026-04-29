@@ -193,6 +193,11 @@ class _SettingDownloadPageState extends State<SettingDownloadPage> {
           DropdownMenuItem(child: Text('6'), value: 6),
           DropdownMenuItem(child: Text('8'), value: 8),
           DropdownMenuItem(child: Text('10'), value: 10),
+          DropdownMenuItem(child: Text('12'), value: 12),
+          DropdownMenuItem(child: Text('14'), value: 14),
+          DropdownMenuItem(child: Text('16'), value: 16),
+          DropdownMenuItem(child: Text('18'), value: 18),
+          DropdownMenuItem(child: Text('20'), value: 20),
         ],
       ),
     );

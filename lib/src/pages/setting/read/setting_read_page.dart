@@ -10,12 +10,25 @@ import '../../../service/log.dart';
 import '../../../utils/text_input_formatter.dart';
 import '../../../utils/toast_util.dart';
 
-class SettingReadPage extends StatelessWidget {
+class SettingReadPage extends StatefulWidget {
+  const SettingReadPage({Key? key}) : super(key: key);
+
+  @override
+  State<SettingReadPage> createState() => _SettingReadPageState();
+}
+
+class _SettingReadPageState extends State<SettingReadPage> {
   final TextEditingController imageRegionWidthRatioController = TextEditingController(text: readSetting.imageRegionWidthRatio.value.toString());
   final TextEditingController gestureRegionWidthRatioController = TextEditingController(text: readSetting.gestureRegionWidthRatio.value.toString());
   final TextEditingController imageMaxKilobytesController = TextEditingController(text: readSetting.maxImageKilobyte.value.toString());
 
-  SettingReadPage({Key? key}) : super(key: key);
+  @override
+  void dispose() {
+    imageRegionWidthRatioController.dispose();
+    gestureRegionWidthRatioController.dispose();
+    imageMaxKilobytesController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

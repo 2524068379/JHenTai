@@ -68,9 +68,11 @@ mixin SearchPageLogicMixin on BasePageLogic {
 
   @override
   void onClose() {
+    state.suggestionBodyController.dispose();
     state.searchFieldFocusNode.dispose();
     suggestDebouncing.close();
     recordDebouncing.close();
+    super.onClose();
   }
 
   @override

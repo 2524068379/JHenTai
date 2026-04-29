@@ -123,6 +123,7 @@ class GalleryDownloadService extends GetxController with GridBasePageServiceMixi
     super.onClose();
 
     _downloadSettingListener?.dispose();
+    executor.close();
   }
 
   bool containGallery(int gid) => galleryDownloadInfos.containsKey(gid);

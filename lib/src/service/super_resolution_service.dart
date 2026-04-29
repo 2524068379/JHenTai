@@ -50,6 +50,12 @@ class SuperResolutionService extends GetxController with JHLifeCircleBeanErrorCa
     ..add(archiveDownloadService);
 
   @override
+  void onClose() {
+    super.onClose();
+    executor.close();
+  }
+
+  @override
   Future<void> doInitBean() async {
     Get.put(this, permanent: true);
 
