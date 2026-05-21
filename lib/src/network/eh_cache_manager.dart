@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:jhentai/src/database/dao/dio_cache_dao.dart';
 import 'package:jhentai/src/setting/network_setting.dart';
 import 'package:jhentai/src/service/log.dart';
+import 'package:jhentai/src/service/isolate_service.dart';
 
 import '../database/database.dart';
 
@@ -55,7 +56,8 @@ class EHCacheManager extends Interceptor {
 
       log.trace('cache hit: ${options.uri.toString()}');
       cacheResponse = await _updateCacheResponse(cacheResponse, cacheOptions);
-      return handler.resolve(cacheResponse.toResponse(options), true);
+      final Response resolvedResponse = await cacheResponse.toResponseAsync(options);
+      return handler.resolve(resolvedResponse, true);
     }
     handler.next(options);
   }
@@ -150,7 +152,7 @@ class EHCacheManager extends Interceptor {
   }
 
   Future<void> _saveResponse(Response response, CacheOptions cacheOptions) async {
-    CacheResponse cacheResponse = CacheResponse.fromResponse(response, cacheOptions);
+    CacheResponse cacheResponse = await CacheResponse.fromResponseAsync(response, cacheOptions);
 
     await _getCacheStore(cacheOptions).upsertCache(cacheResponse);
 
@@ -246,11 +248,69 @@ class CacheResponse {
     );
   }
 
+  static List<Uint8List> _serializeInBackground(List<dynamic> args) {
+    final ResponseType type = args[0] as ResponseType;
+    final dynamic contentData = args[1];
+    final Map<String, List<String>> headersMap = args[2] as Map<String, List<String>>;
+
+    final Uint8List serializedContent = CacheResponse._serializeContent(type, contentData);
+    final Uint8List serializedHeaders = utf8.encode(jsonEncode(headersMap));
+    return [serializedContent, serializedHeaders];
+  }
+
+  static Future<CacheResponse> fromResponseAsync(Response response, CacheOptions options) async {
+    final List<Uint8List> results = await isolateService.run(
+      _serializeInBackground,
+      [response.requestOptions.responseType, response.data, response.headers.map],
+      debugLabel: 'cacheSerialize',
+    );
+
+    return CacheResponse(
+      content: results[0],
+      expireDate: DateTime.now().add(options.expire),
+      headers: results[1],
+      cacheKey: CacheOptions.defaultCacheKeyBuilder(response.requestOptions),
+      url: response.requestOptions.extra[EHCacheManager.realUriExtraKey] ?? response.requestOptions.uri.toString(),
+    );
+  }
+
   Response toResponse(RequestOptions options) {
     return Response(
       data: _deserializeContent(options.responseType, content),
       extra: {extraKey: cacheKey},
       headers: _getHeaders(),
+      statusCode: 304,
+      requestOptions: options,
+    );
+  }
+
+  static List<dynamic> _deserializeInBackground(List<dynamic> args) {
+    final ResponseType type = args[0] as ResponseType;
+    final Uint8List contentBytes = args[1] as Uint8List;
+    final Uint8List headersBytes = args[2] as Uint8List;
+
+    final dynamic deserializedContent = CacheResponse._deserializeContent(type, contentBytes);
+    final Map<String, dynamic> headersMap = jsonDecode(utf8.decode(headersBytes)) as Map<String, dynamic>;
+    return [deserializedContent, headersMap];
+  }
+
+  Future<Response> toResponseAsync(RequestOptions options) async {
+    final List<dynamic> results = await isolateService.run(
+      _deserializeInBackground,
+      [options.responseType, content, headers],
+      debugLabel: 'cacheDeserialize',
+    );
+
+    final dynamic data = results[0];
+    final Map<String, dynamic> headersMap = results[1] as Map<String, dynamic>;
+
+    Headers h = Headers();
+    headersMap.forEach((key, value) => h.set(key, value));
+
+    return Response(
+      data: data,
+      extra: {extraKey: cacheKey},
+      headers: h,
       statusCode: 304,
       requestOptions: options,
     );

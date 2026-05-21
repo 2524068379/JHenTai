@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_socks_proxy/socks_proxy.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
@@ -37,6 +38,13 @@ import 'eh_cookie_manager.dart';
 
 EHRequest ehRequest = EHRequest();
 
+T _isolateHtmlParserExecutor<T>(List<dynamic> params) {
+  final HtmlParser<T> parser = params[0] as HtmlParser<T>;
+  final Headers headers = params[1] as Headers;
+  final dynamic data = params[2];
+  return parser(headers, data);
+}
+
 class EHRequest with JHLifeCircleBeanErrorCatch implements JHLifeCircleBean {
   late final Dio _dio;
   late final EHCookieManager _cookieManager;
@@ -57,6 +65,18 @@ class EHRequest with JHLifeCircleBeanErrorCatch implements JHLifeCircleBean {
       connectTimeout: Duration(milliseconds: networkSetting.connectTimeout.value),
       receiveTimeout: Duration(milliseconds: networkSetting.receiveTimeout.value),
     ));
+
+    if (_dio.httpClientAdapter is IOHttpClientAdapter) {
+      (_dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
+        final client = HttpClient();
+        client.maxConnectionsPerHost = 64;
+        client.idleTimeout = const Duration(seconds: 15);
+        client.badCertificateCallback = (_, String host, __) {
+          return networkSetting.allIPs.contains(host);
+        };
+        return client;
+      };
+    }
 
     systemProxyAddress = await getSystemProxyAddress();
     await _initProxy();
@@ -946,7 +966,11 @@ emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
     if (parser == null) {
       return response as T;
     }
-    return isolateService.run((list) => parser(list[0], list[1]), [response.headers, response.data]);
+    return isolateService.run(
+      _isolateHtmlParserExecutor,
+      [parser, response.headers, response.data],
+      debugLabel: 'isolateHtmlParser',
+    );
   }
 
   Future<Response> _getWithErrorHandler<T>(
