@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:jhentai/src/database/dao/tag_count_dao.dart';
 import 'package:jhentai/src/database/dao/tag_dao.dart';
+import 'package:jhentai/src/service/isolate_service.dart';
 import 'package:jhentai/src/enum/eh_namespace.dart';
 import 'package:jhentai/src/extension/dio_exception_extension.dart';
 import 'package:jhentai/src/network/eh_request.dart';
@@ -103,13 +104,12 @@ class TagTranslationService with JHLifeCircleBeanErrorCatch implements JHLifeCir
 
     log.info('Tag translation data downloaded');
 
-    /// format
+    /// format 仅提取 TimeStamp 字段快速校对，无需构建海量映射，防止卡顿
     String json = io.File(savePath).readAsStringSync();
     Map dataMap = jsonDecode(json);
     Map head = dataMap['head'] as Map;
     Map committer = head['committer'] as Map;
     String newTimeStamp = committer['when'] as String;
-    List dataList = dataMap['data'] as List;
 
     if (newTimeStamp == timeStamp.value) {
       log.info('Tag translation data is up to date, timestamp: $timeStamp');
@@ -118,27 +118,12 @@ class TagTranslationService with JHLifeCircleBeanErrorCatch implements JHLifeCir
       return;
     }
 
-    List<TagData> tagList = [];
-    for (final data in dataList) {
-      String namespace = data['namespace'];
-      Map tags = data['data'] as Map;
-      tags.forEach((key, value) {
-        String _key = key as String;
-        String tagName = RegExp(r'.*>(.+)<.*').firstMatch((value['name']))!.group(1)!;
-        String fullTagName = value['name'];
-        String intro = value['intro'];
-        String links = value['links'];
-        tagList.add(TagData(
-          namespace: namespace,
-          key: _key,
-          translatedNamespace: EHNamespace.findNameSpaceFromDescOrAbbr(namespace)?.chineseDesc,
-          tagName: tagName,
-          fullTagName: fullTagName,
-          intro: intro,
-          links: links,
-        ));
-      });
-    }
+    // 转派耗时的大 JSON 文件读取、解析、正则清洗以及数万个 TagData 对象创建等 CPU 密集型任务到 Isolate 后台
+    final List<TagData> tagList = await isolateService.run(
+      _parseTagTranslationInBackground,
+      savePath,
+      debugLabel: 'parseTagTranslation',
+    );
 
     /// save
     timeStamp.value = null;
@@ -347,4 +332,53 @@ class TagTranslationService with JHLifeCircleBeanErrorCatch implements JHLifeCir
       );
     }).toList();
   }
+}
+
+/// 后台 Isolate 中运行的大文件提取及实体映射逻辑
+List<TagData> _parseTagTranslationInBackground(String savePath) {
+  final io.File file = io.File(savePath);
+  if (!file.existsSync()) {
+    return [];
+  }
+
+  final String jsonStr = file.readAsStringSync();
+  final Map dataMap = jsonDecode(jsonStr);
+  final List dataList = dataMap['data'] as List;
+
+  final List<TagData> tagList = [];
+  final RegExp nameReg = RegExp(r'.*>(.+)<.*');
+
+  for (final data in dataList) {
+    if (data is! Map) continue;
+    final String namespace = data['namespace'] as String;
+    final Map tags = data['data'] as Map;
+
+    tags.forEach((key, value) {
+      if (value is! Map) return;
+      final String _key = key as String;
+
+      // 正则提取純中文名
+      final String fullTagName = value['name'] as String;
+      final Match? match = nameReg.firstMatch(fullTagName);
+      final String tagName = match != null ? match.group(1)! : fullTagName;
+
+      final String intro = value['intro'] as String? ?? '';
+      final String links = value['links'] as String? ?? '';
+
+      final EHNamespace? ehNs = EHNamespace.findNameSpaceFromDescOrAbbr(namespace);
+      final String? translatedNamespace = ehNs?.chineseDesc;
+
+      tagList.add(TagData(
+        namespace: namespace,
+        key: _key,
+        translatedNamespace: translatedNamespace,
+        tagName: tagName,
+        fullTagName: fullTagName,
+        intro: intro,
+        links: links,
+      ));
+    });
+  }
+
+  return tagList;
 }
