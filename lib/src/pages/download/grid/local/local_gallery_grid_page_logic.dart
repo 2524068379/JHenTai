@@ -33,7 +33,7 @@ class LocalGalleryGridPageLogic extends GetxController with Scroll2TopLogicMixin
 
   @override
   Future<void> doRemoveItem(LocalGallery gallery) async {
-    localGalleryService.deleteGallery(gallery, currentPath);
+    await localGalleryService.deleteGallery(gallery, currentPath);
   }
 
   @override

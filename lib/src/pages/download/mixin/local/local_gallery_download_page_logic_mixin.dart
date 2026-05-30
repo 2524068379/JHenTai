@@ -88,7 +88,7 @@ mixin LocalGalleryDownloadPageLogicMixin on GetxController {
       String? string = await localConfigService.read(configKey: ConfigEnum.readIndexRecord, subConfigKey: gallery.cover.path!);
       int readIndexRecord = (string == null ? 0 : (int.tryParse(string) ?? 0));
 
-      List<GalleryImage> images = localGalleryService.getGalleryImages(gallery);
+      List<GalleryImage> images = await localGalleryService.getGalleryImages(gallery);
 
       route.toRoute(
         Routes.read,

@@ -429,7 +429,13 @@ class ArchiveDownloadService extends GetxController with GridBasePageServiceMixi
         continue;
       }
 
-      Map metadata = jsonDecode(metadataFile.readAsStringSync());
+      Map metadata;
+      try {
+        metadata = jsonDecode(await metadataFile.readAsString());
+      } catch (e) {
+        log.error('Failed to parse archive metadata file', e);
+        continue;
+      }
 
       /// compatible with new field
       metadata.putIfAbsent('sortOrder', () => 0);

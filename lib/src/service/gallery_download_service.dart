@@ -538,7 +538,13 @@ class GalleryDownloadService extends GetxController with GridBasePageServiceMixi
         continue;
       }
 
-      Map metadata = jsonDecode(metadataFile.readAsStringSync());
+      Map metadata;
+      try {
+        metadata = jsonDecode(metadataFile.readAsStringSync());
+      } catch (e) {
+        log.error('Failed to parse gallery metadata file', e);
+        continue;
+      }
 
       /// compatible with new field
       (metadata['gallery'] as Map).putIfAbsent('downloadOriginalImage', () => false);
@@ -1242,7 +1248,13 @@ class GalleryDownloadService extends GetxController with GridBasePageServiceMixi
 
       /// what we downloaded is not an valid image
       if (!response.isRedirect && (response.headers[Headers.contentTypeHeader]?.contains("text/html; charset=UTF-8") ?? false)) {
-        String data = io.File(path).readAsStringSync();
+        String data;
+        try {
+          data = io.File(path).readAsStringSync();
+        } catch (e) {
+          log.error('Failed to read downloaded file for error detection', e);
+          data = '';
+        }
 
         EHImageException? exception = imageData2Exception(data);
         log.error('Download ${gallery.title} image: $serialNo failed: $exception');

@@ -107,14 +107,25 @@ class TagTranslationService with JHLifeCircleBeanErrorCatch implements JHLifeCir
     /// format 仅提取 TimeStamp 字段快速校对，无需构建海量映射，防止卡顿
     String json = io.File(savePath).readAsStringSync();
     Map dataMap = jsonDecode(json);
-    Map head = dataMap['head'] as Map;
-    Map committer = head['committer'] as Map;
-    String newTimeStamp = committer['when'] as String;
+    Map? head = dataMap['head'] as Map?;
+    Map? committer = head?['committer'] as Map?;
+    String? newTimeStamp = committer?['when'] as String?;
+
+    if (newTimeStamp == null) {
+      log.error('Invalid tag translation data: missing timestamp');
+      loadingState.value = LoadingState.error;
+      await localConfigService.write(configKey: ConfigEnum.tagTranslationServiceLoadingState, value: loadingState.value.index.toString());
+      return;
+    }
 
     if (newTimeStamp == timeStamp.value) {
       log.info('Tag translation data is up to date, timestamp: $timeStamp');
       loadingState.value = LoadingState.success;
-      io.File(savePath).delete();
+      try {
+        io.File(savePath).deleteSync();
+      } catch (e) {
+        log.warning('Failed to delete tag translation file: $e');
+      }
       return;
     }
 
@@ -124,6 +135,13 @@ class TagTranslationService with JHLifeCircleBeanErrorCatch implements JHLifeCir
       savePath,
       debugLabel: 'parseTagTranslation',
     );
+
+    if (tagList.isEmpty) {
+      log.error('Tag translation parsing returned empty list');
+      loadingState.value = LoadingState.error;
+      await localConfigService.write(configKey: ConfigEnum.tagTranslationServiceLoadingState, value: loadingState.value.index.toString());
+      return;
+    }
 
     /// save
     timeStamp.value = null;
@@ -150,7 +168,11 @@ class TagTranslationService with JHLifeCircleBeanErrorCatch implements JHLifeCir
     await localConfigService.write(configKey: ConfigEnum.tagTranslationServiceLoadingState, value: loadingState.value.index.toString());
     await localConfigService.write(configKey: ConfigEnum.tagTranslationServiceTimestamp, value: newTimeStamp);
 
-    io.File(savePath).delete();
+    try {
+      io.File(savePath).deleteSync();
+    } catch (e) {
+      log.warning('Failed to delete tag translation file: $e');
+    }
     log.info('Update tag translation database success, timestamp: $timeStamp');
   }
 
@@ -253,21 +275,27 @@ class TagTranslationService with JHLifeCircleBeanErrorCatch implements JHLifeCir
       return map;
     });
 
-    String firstChar = searchText.characters.skip(matchStart).first;
-    String? operator = firstChar == '-' || firstChar == '~' ? firstChar : null;
+    String? firstChar;
+    try {
+      firstChar = searchText.characters.skip(matchStart).first;
+    } catch (e) {
+      firstChar = '';
+    }
+    String? operator = (firstChar == '-' || firstChar == '~') ? firstChar : null;
 
     return tagDatas.map((tagData) {
       int keyIndex = tagData.key.indexOf(sKey.toLowerCase());
       int tagNameIndex = tagData.tagName?.indexOf(sKey.toLowerCase()) ?? -1;
+      final int count = tagCountMap[tagData] ?? 0;
       return (
         searchText: searchText,
         matchStart: matchStart,
         matchEnd: matchEnd,
         tagData: tagData,
         operator: operator,
-        score: tagCountMap[tagData]!.toDouble(),
+        score: count.toDouble(),
         namespaceMatch: sNamespace != null ? (start: 0, end: tagData.namespace.length) : null,
-        translatedNamespaceMatch: sNamespace != null ? (start: 0, end: tagData.translatedNamespace!.length) : null,
+        translatedNamespaceMatch: sNamespace != null ? (start: 0, end: tagData.translatedNamespace?.length ?? 0) : null,
         keyMatch: keyIndex != -1 ? (start: keyIndex, end: keyIndex + sKey.length) : null,
         tagNameMatch: tagNameIndex != -1 ? (start: tagNameIndex, end: tagNameIndex + sKey.length) : null
       );
@@ -293,29 +321,35 @@ class TagTranslationService with JHLifeCircleBeanErrorCatch implements JHLifeCir
       EHNamespace.rows: 0,
     };
 
-    String firstChar = searchText.characters.skip(matchStart).first;
-    String? operator = firstChar == '-' || firstChar == '~' ? firstChar : null;
+    String? firstChar;
+    try {
+      firstChar = searchText.characters.skip(matchStart).first;
+    } catch (e) {
+      firstChar = '';
+    }
+    String? operator = (firstChar == '-' || firstChar == '~') ? firstChar : null;
 
     return tagDatas.map((tagData) {
       double score = 0;
+      final EHNamespace? namespace = EHNamespace.findNameSpaceFromDescOrAbbr(tagData.namespace);
+      final double namespaceScore = namespace != null ? (namespaceScoreMap[namespace] ?? 0) : 0;
 
       int keyIndex = tagData.key.indexOf(sKey.toLowerCase());
       if (keyIndex != -1) {
-        score +=
-            namespaceScoreMap[EHNamespace.findNameSpaceFromDescOrAbbr(tagData.namespace)]! * (sKey.length + 1) / tagData.key.length * (keyIndex == 0 ? 2 : 1);
+        score += namespaceScore * (sKey.length + 1) / tagData.key.length * (keyIndex == 0 ? 2 : 1);
       }
 
       int tagNameIndex = tagData.tagName?.indexOf(sKey) ?? -1;
       if (tagNameIndex != -1) {
-        score += namespaceScoreMap[EHNamespace.findNameSpaceFromDescOrAbbr(tagData.namespace)]! *
+        score += namespaceScore *
             (sKey.length + 1) /
-            tagData.tagName!.length *
+            (tagData.tagName?.length ?? 1) *
             (tagNameIndex == 0 ? 2 : 1);
       }
 
       bool introContains = tagData.intro?.contains(sKey.toLowerCase()) ?? false;
       if (introContains) {
-        score += namespaceScoreMap[EHNamespace.findNameSpaceFromDescOrAbbr(tagData.namespace)]! * (sKey.length + 1) / tagData.intro!.length * 0.5;
+        score += namespaceScore * (sKey.length + 1) / (tagData.intro?.length ?? 1) * 0.5;
       }
 
       return (
@@ -326,7 +360,7 @@ class TagTranslationService with JHLifeCircleBeanErrorCatch implements JHLifeCir
         operator: operator,
         score: score,
         namespaceMatch: sNamespace != null ? (start: 0, end: tagData.namespace.length) : null,
-        translatedNamespaceMatch: sNamespace != null ? (start: 0, end: tagData.translatedNamespace!.length) : null,
+        translatedNamespaceMatch: sNamespace != null ? (start: 0, end: tagData.translatedNamespace?.length ?? 0) : null,
         keyMatch: keyIndex != -1 ? (start: keyIndex, end: keyIndex + sKey.length) : null,
         tagNameMatch: tagNameIndex != -1 ? (start: tagNameIndex, end: tagNameIndex + sKey.length) : null,
       );
@@ -343,42 +377,65 @@ List<TagData> _parseTagTranslationInBackground(String savePath) {
 
   final String jsonStr = file.readAsStringSync();
   final Map dataMap = jsonDecode(jsonStr);
-  final List dataList = dataMap['data'] as List;
+  final List? dataList = dataMap['data'] as List?;
+
+  if (dataList == null) {
+    return [];
+  }
 
   final List<TagData> tagList = [];
-  final RegExp nameReg = RegExp(r'.*>(.+)<.*');
 
   for (final data in dataList) {
     if (data is! Map) continue;
-    final String namespace = data['namespace'] as String;
-    final Map tags = data['data'] as Map;
 
-    tags.forEach((key, value) {
-      if (value is! Map) return;
-      final String _key = key as String;
+    try {
+      final String? namespace = data['namespace'] as String?;
+      if (namespace == null) continue;
 
-      // 正则提取純中文名
-      final String fullTagName = value['name'] as String;
-      final Match? match = nameReg.firstMatch(fullTagName);
-      final String tagName = match != null ? match.group(1)! : fullTagName;
+      final Map? tags = data['data'] as Map?;
+      if (tags == null) continue;
 
-      final String intro = value['intro'] as String? ?? '';
-      final String links = value['links'] as String? ?? '';
+      tags.forEach((key, value) {
+        if (value is! Map) return;
+        try {
+          final String _key = key as String;
 
-      final EHNamespace? ehNs = EHNamespace.findNameSpaceFromDescOrAbbr(namespace);
-      final String? translatedNamespace = ehNs?.chineseDesc;
+          // 正则提取純中文名
+          final String? fullTagName = value['name'] as String?;
+          if (fullTagName == null) return;
 
-      tagList.add(TagData(
-        namespace: namespace,
-        key: _key,
-        translatedNamespace: translatedNamespace,
-        tagName: tagName,
-        fullTagName: fullTagName,
-        intro: intro,
-        links: links,
-      ));
-    });
+          final Match? match = _htmlTagRegex.firstMatch(fullTagName);
+          final String tagName = match?.group(1) ?? fullTagName;
+
+          final String? introValue = value['intro'];
+          final String intro = introValue?.toString() ?? '';
+
+          final String? linksValue = value['links'];
+          final String links = linksValue?.toString() ?? '';
+
+          final EHNamespace? ehNs = EHNamespace.findNameSpaceFromDescOrAbbr(namespace);
+          final String? translatedNamespace = ehNs?.chineseDesc;
+
+          tagList.add(TagData(
+            namespace: namespace,
+            key: _key,
+            translatedNamespace: translatedNamespace,
+            tagName: tagName,
+            fullTagName: fullTagName,
+            intro: intro,
+            links: links,
+          ));
+        } catch (e) {
+          // Silently skip malformed tags to continue parsing others
+        }
+      });
+    } catch (e) {
+      // Silently skip malformed namespace entries to continue parsing others
+    }
   }
 
   return tagList;
 }
+
+/// Pre-compiled regex for extracting Chinese name from HTML tags
+final RegExp _htmlTagRegex = RegExp(r'.*>(.+)<.*');

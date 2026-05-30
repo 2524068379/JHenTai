@@ -192,7 +192,7 @@ class LocalGalleryListPage extends StatelessWidget with Scroll2TopPageMixin {
           afterAnimation: (bool show, bool isInit) {
             if (!show && !isInit) {
               Get.engine.addPostFrameCallback(
-                (_) => localGalleryService.deleteGallery(gallery, state.currentPath),
+                (_) async => await localGalleryService.deleteGallery(gallery, state.currentPath),
               );
               state.removedGalleryTitles.remove(gallery.title);
             }

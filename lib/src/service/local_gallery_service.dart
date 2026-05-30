@@ -65,8 +65,8 @@ class LocalGalleryService extends GetxController with GridBasePageServiceMixin, 
     });
   }
 
-  List<GalleryImage> getGalleryImages(LocalGallery gallery) {
-    List<File> imageFiles = Directory(gallery.path).listSync().whereType<File>().where((image) => FileUtil.isImageExtension(image.path)).toList()
+  Future<List<GalleryImage>> getGalleryImages(LocalGallery gallery) async {
+    List<File> imageFiles = (await Directory(gallery.path).list().where((entity) => entity is File && FileUtil.isImageExtension(entity.path)).toList()).cast<File>()
       ..sort(FileUtil.naturalCompareFile);
 
     return imageFiles
@@ -80,25 +80,32 @@ class LocalGalleryService extends GetxController with GridBasePageServiceMixin, 
         .toList();
   }
 
-  void deleteGallery(LocalGallery gallery, String parentPath) {
+  Future<void> deleteGallery(LocalGallery gallery, String parentPath) async {
     log.info('Delete local gallery: ${gallery.title}');
 
     Directory dir = Directory(gallery.path);
 
-    List<File> allFiles = dir.listSync().whereType<File>().toList();
-    List<File> imageFiles = dir.listSync().whereType<File>().where((image) => FileUtil.isImageExtension(image.path)).toList();
-    if (allFiles.length == imageFiles.length) {
-      dir.delete(recursive: true).catchError((e) {
-        log.error('Delete local gallery error!', e);
-        log.uploadError(e);
-      });
-    } else {
-      for (File file in imageFiles) {
-        file.delete().catchError((e) {
+    try {
+      List<FileSystemEntity> allEntities = await dir.list().toList();
+      List<File> allFiles = allEntities.whereType<File>().toList();
+      List<File> imageFiles = allFiles.where((image) => FileUtil.isImageExtension(image.path)).toList();
+
+      if (allFiles.length == imageFiles.length) {
+        await dir.delete(recursive: true).catchError((e) {
           log.error('Delete local gallery error!', e);
           log.uploadError(e);
         });
+      } else {
+        for (File file in imageFiles) {
+          await file.delete().catchError((e) {
+            log.error('Delete local gallery error!', e);
+            log.uploadError(e);
+          });
+        }
       }
+    } catch (e) {
+      log.error('Delete local gallery error!', e);
+      log.uploadError(e);
     }
 
     allGallerys.removeWhere((g) => g.title == gallery.title);
