@@ -23,7 +23,7 @@ class DownloadSetting with JHLifeCircleBeanWithConfigStorage implements JHLifeCi
   late RxList<String> extraGalleryScanPath;
   late RxString singleImageSavePath;
   late RxString tempDownloadPath;
-  RxInt downloadTaskConcurrency = 6.obs;
+  RxInt downloadTaskConcurrency = 30.obs;
   RxInt maximum = 2.obs;
   Rx<Duration> period = const Duration(seconds: 1).obs;
   RxBool downloadAllGallerysOfSamePriority = false.obs;
